@@ -1,0 +1,2518 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mobile Banking Demo</title>
+  <style>
+    @font-face {
+      font-family: "DemoSFText";
+      src: local("SF Pro Text"), local(".SF NS Text"), local("SFProText-Regular");
+      font-style: normal;
+      font-weight: 100 900;
+    }
+
+    @font-face {
+      font-family: "DemoSFDisplay";
+      src: local("SF Pro Display"), local(".SF NS Display"), local("SFProDisplay-Regular");
+      font-style: normal;
+      font-weight: 100 900;
+    }
+
+    :root {
+      --ui-font: "DemoSFText", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --display-font: "DemoSFDisplay", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: var(--ui-font);
+      background: #e9eef5;
+      color: #fff;
+      font-kerning: normal;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+    .stage {
+      width: calc(589px * var(--phone-scale, 1));
+      height: calc(1280px * var(--phone-scale, 1));
+      overflow: hidden;
+    }
+    .phone {
+      position: relative;
+      width: 589px;
+      height: 1280px;
+      overflow: hidden;
+      transform: scale(var(--phone-scale, 1));
+      transform-origin: top left;
+      background:
+        linear-gradient(180deg,
+          #0400a9 0%,
+          #000bc0 16%,
+          #0029e7 31%,
+          #087df0 45%,
+          #22c1d2 63%,
+          #f8fbfc 83%,
+          #fff 100%);
+      box-shadow: 0 18px 52px rgba(12, 21, 56, .24);
+    }
+    .content { padding: 34px 35px 136px; }
+    .demo-badge {
+      position: absolute;
+      right: 34px;
+      bottom: 126px;
+      z-index: 2;
+      padding: 3px 7px;
+      border: 1px solid rgba(70, 70, 70, .18);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .82);
+      color: rgba(35, 39, 48, .55);
+      text-align: center;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .9px;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 28px;
+      padding: 0 30px;
+      font-family: var(--display-font);
+      font-size: 28px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .status div { display: flex; align-items: center; gap: 8px; }
+    .arrow {
+      width: 20px;
+      height: 20px;
+      transform: rotate(41deg);
+      background: #fff;
+      clip-path: polygon(0 0, 100% 50%, 0 100%, 26% 50%);
+    }
+    .signal { display: flex; align-items: end; gap: 4px; height: 21px; }
+    .signal i { width: 5px; border-radius: 3px; background: #fff; }
+    .signal i:nth-child(1) { height: 8px; opacity: .7; }
+    .signal i:nth-child(2) { height: 12px; opacity: .82; }
+    .signal i:nth-child(3) { height: 16px; }
+    .signal i:nth-child(4) { height: 20px; }
+    .network { font-size: 21px; font-weight: 800; }
+    .battery {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 20px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .78);
+      color: #16149c;
+      font-size: 15px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 76px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--display-font);
+      font-size: 28px;
+      font-weight: 820;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .brand-mark {
+      display: block;
+      width: 25px;
+      height: 25px;
+      flex: 0 0 auto;
+      margin-right: 1px;
+    }
+    .brand-mark .brand-stroke {
+      stroke: var(--brand-mark-color, #ff2a38);
+      stroke-width: 2.15;
+      stroke-linecap: square;
+    }
+    .brand-mark .brand-rib {
+      stroke: var(--brand-mark-color, #ff2a38);
+      stroke-width: 1.55;
+      stroke-linecap: square;
+    }
+    .brand-divider {
+      width: 2px;
+      height: 27px;
+      margin: 0 4px 0 5px;
+      background: rgba(255,255,255,.72);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 23px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .links .bar {
+      width: 1px;
+      height: 29px;
+      background: #fff;
+      opacity: .9;
+    }
+    .balance { margin-top: 46px; }
+    .account-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .edit {
+      border: 1.5px solid rgba(255,255,255,.95);
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .amount {
+      margin-top: 14px;
+      font-family: var(--display-font);
+      font-size: 32px;
+      font-weight: 780;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .caption {
+      margin-top: 5px;
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 1.08;
+    }
+    .quick-card {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
+      height: 122px;
+      margin-top: 34px;
+      border-radius: 22px;
+      background: #dcebfa;
+      color: #4f5664;
+      box-shadow: 0 7px 14px rgba(0,0,0,.06);
+    }
+    .quick-action {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    .paynow-logo {
+      width: 64px;
+      height: 43px;
+      overflow: visible;
+    }
+    .paynow-logo text {
+      fill: var(--quick-icon-color, #60646e);
+      font-family: var(--display-font);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .paynow-logo .paynow-spark {
+      fill: var(--quick-icon-color, #60646e);
+    }
+    .quick-icon {
+      width: 58px;
+      height: 44px;
+      overflow: visible;
+    }
+    .quick-icon * {
+      vector-effect: non-scaling-stroke;
+    }
+    .quick-icon .line {
+      fill: none;
+      stroke: var(--quick-icon-color, #60646e);
+      stroke-width: 3.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .tool-icon {
+      width: 58px;
+      height: 50px;
+      overflow: visible;
+    }
+    .tool-icon .white {
+      fill: #fff;
+    }
+    .tool-icon .cut {
+      fill: var(--tool-cut-color, #21bcca);
+    }
+    .tool-icon .stroke-white {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 4.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav-icon {
+      width: 39px;
+      height: 39px;
+      overflow: visible;
+    }
+    .nav-icon .nav-line {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav-icon .nav-fill {
+      fill: currentColor;
+    }
+    .custom-icon-image {
+      display: block;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+    .brand .custom-icon-image {
+      margin-right: 1px;
+    }
+    .quick-action .custom-icon-image {
+      max-width: 76px;
+      max-height: 52px;
+    }
+    .tool .custom-icon-image {
+      max-width: 68px;
+      max-height: 58px;
+    }
+    .nav-item .custom-icon-image {
+      max-width: 44px;
+      max-height: 44px;
+    }
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 39px;
+    }
+    .tool {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      min-height: 129px;
+      gap: 13px;
+      text-align: center;
+      font-size: 19px;
+      line-height: 1.25;
+      font-weight: 400;
+    }
+    .badge {
+      position: absolute;
+      top: 42px;
+      right: 0;
+      min-width: 91px;
+      height: 25px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      background: #d93622;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+    .insight-card {
+      display: grid;
+      grid-template-columns: 1fr 185px;
+      height: 360px;
+      margin-top: 41px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: #fff;
+      color: #555a66;
+      box-shadow: 0 2px 8px rgba(0,0,0,.11);
+    }
+    .insight-copy { padding: 24px 0 27px 23px; }
+    .date {
+      display: inline-block;
+      padding-bottom: 8px;
+      border-bottom: 4px solid #0b55d8;
+      color: #5b6070;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .headline {
+      margin-top: 12px;
+      font-family: var(--display-font);
+      color: #252735;
+      font-size: 30px;
+      line-height: 1.03;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .body-text {
+      margin-top: 12px;
+      max-width: 286px;
+      color: #5a5d67;
+      font-size: 25px;
+      line-height: 1.29;
+      font-weight: 400;
+    }
+    .money-art { position: relative; min-height: 330px; }
+    .money-art svg {
+      position: absolute;
+      top: 44px;
+      right: 4px;
+      width: 174px;
+      height: 180px;
+    }
+    .view-link {
+      margin-top: 22px;
+      text-align: center;
+      color: #0057d6;
+      font-size: 25px;
+      font-weight: 500;
+      line-height: 1.1;
+    }
+    .teasers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+      height: 70px;
+      margin-top: 51px;
+      overflow: hidden;
+    }
+    .teaser {
+      border-radius: 8px 8px 0 0;
+      background: linear-gradient(135deg, #ffe7b7, #c05a21 43%, #244a42 44%, #d8f0e6);
+    }
+    .teaser:nth-child(2) {
+      background: radial-gradient(circle at 65% 30%, #d40018 0 18%, transparent 19%), linear-gradient(135deg, #200007, #780010 58%, #111);
+    }
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: start;
+      height: 122px;
+      padding-top: 9px;
+      background: rgba(255,255,255,.92);
+      color: #45464e;
+      box-shadow: 0 -4px 16px rgba(0,0,0,.1);
+      backdrop-filter: blur(12px);
+    }
+    .nav-item {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.05;
+    }
+    .nav-item.active {
+      color: var(--active-nav-color, #0069ee);
+      font-weight: 700;
+    }
+    .editor-panel {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 50;
+      width: min(340px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .18);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .22);
+      color: #182033;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    .editor-panel h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .editor-panel label {
+      display: grid;
+      gap: 5px;
+      margin-top: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #354055;
+    }
+    .editor-panel input,
+    .editor-panel select,
+    .editor-panel textarea {
+      width: 100%;
+      padding: 8px 9px;
+      border: 1px solid #c8d0dc;
+      border-radius: 7px;
+      font: inherit;
+      font-size: 13px;
+      color: #182033;
+      background: #fff;
+    }
+    .editor-panel textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+    .editor-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .editor-actions button {
+      flex: 1;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 7px;
+      background: #0a67e8;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .editor-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .editor-help {
+      margin: 8px 0 12px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #33435c;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    body.layout-edit [data-layout-id] {
+      cursor: grab;
+      touch-action: none;
+    }
+    body.layout-edit [data-layout-id]:hover {
+      outline: 2px dashed rgba(255, 255, 255, .78);
+      outline-offset: 4px;
+    }
+    body.layout-edit [data-layout-id].layout-selected {
+      outline: 2px solid #ffdc3d;
+      outline-offset: 4px;
+      cursor: grabbing;
+    }
+    body.inline-edit [data-field],
+    body.inline-edit svg {
+      cursor: pointer;
+    }
+    body.inline-edit [data-field]:hover {
+      outline: 2px solid rgba(255, 220, 61, .9);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    body.inline-edit svg:hover {
+      filter: drop-shadow(0 0 0 #ffdc3d) drop-shadow(0 0 5px rgba(255, 220, 61, .9));
+    }
+    .layout-tag {
+      position: fixed;
+      z-index: 60;
+      display: none;
+      padding: 4px 7px;
+      border-radius: 6px;
+      background: rgba(20, 30, 48, .88);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      pointer-events: none;
+    }
+    .inline-edit-toolbar {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      z-index: 70;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px 9px 13px;
+      border-radius: 999px;
+      background: rgba(20, 30, 48, .92);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      transform: translateX(-50%);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .28);
+    }
+    .inline-edit-toolbar button,
+    .inline-edit-toolbar a,
+    .inline-popover button {
+      border: 0;
+      border-radius: 7px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .inline-edit-toolbar button,
+    .inline-edit-toolbar a {
+      padding: 7px 10px;
+      background: #fff;
+      color: #1d2a3d;
+      text-decoration: none;
+    }
+    .inline-popover {
+      position: fixed;
+      z-index: 80;
+      width: min(310px, calc(100vw - 24px));
+      padding: 12px;
+      border: 1px solid rgba(20, 31, 50, .18);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .98);
+      color: #182033;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .25);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    .inline-popover label {
+      display: grid;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #344055;
+    }
+    .inline-popover textarea,
+    .inline-popover input,
+    .inline-popover select {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #c8d0dc;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+      color: #182033;
+      background: #fff;
+    }
+    .inline-popover textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+    .inline-icon-preview {
+      display: grid;
+      place-items: center;
+      min-height: 70px;
+      margin: 10px 0;
+      border: 1px dashed #c8d0dc;
+      border-radius: 9px;
+      background: #f7f9fc;
+    }
+    .inline-icon-preview img {
+      display: block;
+      max-width: 120px;
+      max-height: 70px;
+      object-fit: contain;
+    }
+    .inline-popover-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .inline-popover-actions button {
+      flex: 1;
+      padding: 8px 10px;
+    }
+    .inline-popover-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .reference-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 45;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: var(--reference-opacity, .45);
+      transform:
+        translate3d(var(--reference-x, 0px), var(--reference-y, 0px), 0)
+        scale(var(--reference-scale, 1));
+      transform-origin: top left;
+      mix-blend-mode: var(--reference-blend, normal);
+      pointer-events: none;
+      display: none;
+    }
+    .reference-overlay.visible {
+      display: block;
+    }
+    .compare-panel {
+      position: fixed;
+      left: 14px;
+      top: 14px;
+      z-index: 75;
+      width: min(330px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .18);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .97);
+      color: #182033;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .24);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    body.compare-mode .compare-panel {
+      width: calc(100vw - 28px);
+      max-width: 1600px;
+    }
+    .compare-panel h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .compare-note {
+      margin: 0 0 12px;
+      color: #4f5d74;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .compare-panel label {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+      color: #344055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .compare-panel input,
+    .compare-panel select {
+      width: 100%;
+      padding: 8px 9px;
+      border: 1px solid #c8d0dc;
+      border-radius: 8px;
+      background: #fff;
+      color: #182033;
+      font: inherit;
+      font-size: 13px;
+    }
+    .compare-panel input[type="range"] {
+      padding: 0;
+    }
+    .compare-stats {
+      display: grid;
+      gap: 4px;
+      margin-top: 11px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #33435c;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .compare-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .compare-actions button {
+      flex: 1;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 7px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .compare-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .compare-board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .compare-frame {
+      overflow: hidden;
+      border: 1px solid #d4dbe7;
+      border-radius: 10px;
+      background: #f6f8fb;
+    }
+    .compare-frame-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-bottom: 1px solid #d4dbe7;
+      color: #334055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .compare-frame canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 589 / 1280;
+      background: #e5ebf3;
+    }
+    .compare-empty {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 589 / 1280;
+      color: #68758a;
+      font-size: 12px;
+      text-align: center;
+      padding: 18px;
+    }
+    .compare-dropzone {
+      margin-top: 10px;
+      padding: 12px;
+      border: 2px dashed #b8c4d6;
+      border-radius: 10px;
+      background: #f7faff;
+      color: #46566f;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .compare-dropzone.drag-over {
+      border-color: #0a67e8;
+      background: #eaf3ff;
+      color: #0a4db0;
+    }
+    .compare-threshold {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .compare-threshold output {
+      min-width: 34px;
+      text-align: right;
+      color: #334055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    @media (max-width: 900px) {
+      .compare-board {
+        grid-template-columns: 1fr;
+      }
+    }
+    .generator-launcher {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 90;
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 999px;
+      background: #0a67e8;
+      color: #fff;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, .28);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .generator-launcher:hover {
+      background: #0059cf;
+    }
+    .generator-intro {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 10px;
+      border-radius: 9px;
+      background: #eef5ff;
+      color: #33435c;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .generator-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0 14px;
+    }
+    .generator-tools button,
+    .generator-tools a {
+      display: grid;
+      place-items: center;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .generator-tools button.secondary,
+    .generator-tools a.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+  <main class="phone" aria-label="과제용 모바일 뱅킹 데모 화면">
+    <div class="demo-badge" data-layout-id="demoBadge">DEMO UI</div>
+    <section class="content">
+      <header class="status" data-layout-id="statusBar">
+        <div><span data-field="time">9:34</span><span class="arrow" aria-hidden="true"></span></div>
+        <div>
+          <span class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="network" data-field="network">4G</span>
+          <span class="battery" data-field="battery">56</span>
+        </div>
+      </header>
+
+      <nav class="topbar" data-layout-id="brandHeader">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 24 26" aria-hidden="true">
+            <path class="brand-stroke" d="M2.5 3.5v19"></path>
+            <path class="brand-stroke" d="M7 3.5v19"></path>
+            <path class="brand-stroke" d="M11.5 3.5v19"></path>
+            <path class="brand-stroke" d="M16 3.5v19"></path>
+            <path class="brand-stroke" d="M20.5 3.5v19"></path>
+            <path class="brand-rib" d="M.8 7.5h21.4M.8 12.8h21.4M.8 18.1h21.4"></path>
+          </svg>
+          <span data-field="brandName">ABC</span>
+          <span class="brand-divider" aria-hidden="true"></span>
+          <span data-field="brandSuffix">TMRW</span>
+        </div>
+        <div class="links">
+          <span data-field="inboxLabel">Inbox</span>
+          <span class="bar" aria-hidden="true"></span>
+          <span data-field="logoutLabel">Log out</span>
+        </div>
+      </nav>
+
+      <section class="balance" data-layout-id="accountBlock">
+        <div class="account-row">
+          <span data-field="accountName">One Account</span>
+          <span class="edit" data-field="editLabel">Edit</span>
+        </div>
+        <div class="amount" data-field="balance">8,984.11 SGD</div>
+        <div class="caption" data-field="balanceCaption">Available balance</div>
+      </section>
+
+      <section class="quick-card" data-layout-id="quickCard">
+        <div class="quick-action">
+          <svg class="paynow-logo" viewBox="0 0 64 43" aria-hidden="true">
+            <text x="9" y="17">PAY</text>
+            <text x="9" y="36">NOW</text>
+            <path class="paynow-spark" d="M45 9h7l-3.4 5.1H55l-11 17 3.4-11H41z"></path>
+          </svg>
+          <span data-field="quickPayNow">PayNow</span>
+        </div>
+        <div class="quick-action">
+          <svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+            <path class="line" d="M20 5h20v34H20z"></path>
+            <path class="line" d="M36 12h13m0 0-6-6m6 6-6 6"></path>
+            <path class="line" d="M22 31H9m0 0 6-6m-6 6 6 6"></path>
+            <path class="line" d="M27 8h6M28 36h4"></path>
+          </svg>
+          <span data-field="quickTransfer">Pay &amp; transfer</span>
+        </div>
+        <div class="quick-action">
+          <svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+            <path class="line" d="M12 16V7h10M36 7h10v9M46 28v9H36M22 37H12v-9"></path>
+            <path class="line" d="M22 17h14v10H22z"></path>
+            <path class="line" d="M29 12v3M29 29v3M17 22h3M38 22h3"></path>
+          </svg>
+          <span data-field="quickScan">Scan to pay</span>
+        </div>
+      </section>
+
+      <section class="tools" data-layout-id="toolRow">
+        <div class="tool">
+          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+            <path class="white" d="M18 4h23c5 0 9 4 9 9v33H18z"></path>
+            <rect class="cut" x="26" y="13" width="17" height="5" rx="2"></rect>
+            <rect class="cut" x="26" y="25" width="14" height="5" rx="2"></rect>
+            <rect class="white" x="8" y="12" width="17" height="6" rx="2"></rect>
+            <rect class="white" x="8" y="24" width="17" height="6" rx="2"></rect>
+            <rect class="white" x="8" y="36" width="17" height="6" rx="2"></rect>
+            <rect class="cut" x="16" y="16" width="5" height="22"></rect>
+          </svg>
+          <span data-field="toolStatements">eStatements</span>
+        </div>
+        <div class="tool">
+          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+            <path class="white" d="M15 4h22c5 0 9 4 9 9v33H15z"></path>
+            <path class="cut" d="M29 8v12c0 4 3 7 7 7h14l-7-8 7-8H36c-4 0-7-3-7-7z"></path>
+            <rect class="cut" x="22" y="15" width="11" height="5" rx="2"></rect>
+            <rect class="cut" x="22" y="31" width="16" height="5" rx="2"></rect>
+          </svg>
+          <span data-field="toolLimits">Transaction<br>limits</span>
+        </div>
+        <div class="tool">
+          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+            <path class="stroke-white" d="M8 15h20v16H8zM31 15h19v16H31z"></path>
+            <path class="stroke-white" d="M23 34c7-1 13 2 18 8"></path>
+            <path class="stroke-white" d="M41 42l8-8M41 42l-8-8"></path>
+            <circle class="white" cx="45" cy="22" r="3.2"></circle>
+          </svg>
+          <span data-field="toolApply">Apply</span>
+        </div>
+        <div class="tool">
+          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+            <circle class="stroke-white" cx="16" cy="13" r="8"></circle>
+            <path class="stroke-white" d="M13 13h6M16 9v8"></path>
+            <circle class="stroke-white" cx="41" cy="34" r="8"></circle>
+            <path class="stroke-white" d="M38 34h6M41 30v8"></path>
+            <path class="stroke-white" d="M36 7c8 2 13 8 13 16M49 7v16H34M8 40c9-5 23-5 33 0"></path>
+          </svg>
+          <span class="badge" data-field="fxBadge">No FX fees</span>
+          <span data-field="toolFx">FX+</span>
+        </div>
+      </section>
+
+      <article class="insight-card" data-layout-id="promoCard">
+        <div class="insight-copy">
+          <div class="date" data-field="promoDate">29 May 2026</div>
+          <div class="headline" data-field="promoHeadline">It's payday!</div>
+          <div class="body-text" data-field="promoBody">Plan ahead for your next<br>trip - save first, then<br>convert any leftovers<br>with ABC FX+ to secure<br>great rates and stretch<br>your holiday budget<br>even further.</div>
+        </div>
+        <div class="money-art" data-layout-id="promoArt" aria-hidden="true">
+          <svg viewBox="0 0 180 180">
+            <defs>
+              <linearGradient id="note" x1="0" x2="1"><stop offset="0" stop-color="#53dd9d"></stop><stop offset="1" stop-color="#18a773"></stop></linearGradient>
+            </defs>
+            <g transform="translate(18 80)">
+              <path d="M0 34 70 0l70 34-70 34z" fill="#0e5f86"></path>
+              <path d="M10 27 70-2l60 29-60 29z" fill="#1bc5aa"></path>
+              <path d="M22 20 70 0l48 20-48 23z" fill="#fee37d"></path>
+              <rect x="42" y="12" width="56" height="33" rx="4" fill="url(#note)" transform="rotate(22 70 28)"></rect>
+              <circle cx="70" cy="29" r="8" fill="#f5e178" opacity=".7"></circle>
+            </g>
+            <g fill="url(#note)" stroke="#0da86d" stroke-width="2">
+              <rect x="25" y="23" width="54" height="24" rx="3" transform="rotate(17 52 35)"></rect>
+              <rect x="76" y="15" width="48" height="22" rx="3" transform="rotate(26 100 26)"></rect>
+              <rect x="96" y="58" width="58" height="25" rx="3" transform="rotate(-30 125 70)"></rect>
+              <rect x="52" y="57" width="55" height="24" rx="3" transform="rotate(-10 79 69)"></rect>
+            </g>
+            <g transform="translate(122 108)">
+              <path d="M8 0h33l11 12v49H8z" fill="#dff2fb"></path>
+              <path d="M41 0v12h11" fill="none" stroke="#8ad2e9" stroke-width="3"></path>
+              <rect x="0" y="15" width="27" height="37" rx="4" fill="#f4f8fb" stroke="#95d3e5" stroke-width="3"></rect>
+              <path d="M5 25h17M5 34h12" stroke="#ff596a" stroke-width="3"></path>
+            </g>
+          </svg>
+        </div>
+      </article>
+
+      <div class="view-link" data-layout-id="insightsLink" data-field="viewInsights">View all insights</div>
+      <div class="teasers" data-layout-id="previewCards" aria-hidden="true"><div class="teaser"></div><div class="teaser"></div></div>
+    </section>
+
+    <footer class="bottom-nav" data-layout-id="bottomNav">
+      <div class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M5 17.2 19.5 5.8 34 17.2v16.4c0 1.1-.9 2-2 2h-8.5V24h-8v11.6H7c-1.1 0-2-.9-2-2z"></path></svg>
+        <span data-field="navHome">Home</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><circle class="nav-line" cx="19.5" cy="19.5" r="15.5"></circle><path class="nav-line" d="M23 12.5c-5.6-3-10 3.7-3 6.7 7.8 3.2 3.2 10.7-5 7.2M19.5 8.3v22.4"></path></svg>
+        <span data-field="navAccounts">Accounts</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 31.5h27M10.5 28V9M10.5 28l8-9 6 5 9.5-14M28 10h6v6"></path></svg>
+        <span data-field="navWealth">Wealth</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 16h25v18H7zM5 16h29v-6H5zM19.5 10v24M19 10c-1-8-12-7-9 0M20 10c1-8 12-7 9 0"></path></svg>
+        <span data-field="navRewards">Rewards+</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><rect class="nav-line" x="5" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="5" y="23" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="23" width="11" height="11" rx="2"></rect></svg>
+        <span data-field="navServices">Services</span>
+      </div>
+    </footer>
+  </main>
+  </div>
+  <button class="generator-launcher" type="button">생성기 열기</button>
+  <script>
+    /*
+      EDIT HERE:
+      Change these values to update the visible screen text.
+      Use an array for text that should stay on separate lines.
+    */
+    const DEFAULT_SCREEN_CONTENT = {
+      time: "9:34",
+      network: "4G",
+      battery: "56",
+      brandName: "ABC",
+      brandSuffix: "TMRW",
+      inboxLabel: "Inbox",
+      logoutLabel: "Log out",
+      accountName: "One Account",
+      editLabel: "Edit",
+      balance: "8,984.11 SGD",
+      balanceCaption: "Available balance",
+      quickPayNow: "PayNow",
+      quickTransfer: "Pay & transfer",
+      quickScan: "Scan to pay",
+      toolStatements: "eStatements",
+      toolLimits: ["Transaction", "limits"],
+      toolApply: "Apply",
+      fxBadge: "No FX fees",
+      toolFx: "FX+",
+      promoDate: "29 May 2026",
+      promoHeadline: "It's payday!",
+      promoBody: [
+        "Plan ahead for your next",
+        "trip - save first, then",
+        "convert any leftovers",
+        "with ABC FX+ to secure",
+        "great rates and stretch",
+        "your holiday budget",
+        "even further."
+      ],
+      viewInsights: "View all insights",
+      navHome: "Home",
+      navAccounts: "Accounts",
+      navWealth: "Wealth",
+      navRewards: "Rewards+",
+      navServices: "Services"
+    };
+
+    /*
+      LOGO / ICON SETTINGS:
+      Change these values to swap safe custom logo/icon styles.
+      Available names are listed in ICON_TEMPLATES below.
+    */
+    const DEFAULT_VISUAL_SETTINGS = {
+      brandMarkColor: "#ff2a38",
+      quickIconColor: "#60646e",
+      toolCutColor: "#21bcca",
+      activeNavColor: "#0069ee",
+      brandMark: "gridMark",
+      quickPayIcon: "payText",
+      quickTransferIcon: "phoneTransfer",
+      quickScanIcon: "scanFrame",
+      toolStatementsIcon: "statements",
+      toolLimitsIcon: "limitsDoc",
+      toolApplyIcon: "applyCard",
+      toolFxIcon: "fxCoins",
+      navHomeIcon: "homeFilled",
+      navAccountsIcon: "coinCircle",
+      navWealthIcon: "growthChart",
+      navRewardsIcon: "giftBox",
+      navServicesIcon: "serviceGrid"
+    };
+
+    /*
+      POSITION SETTINGS:
+      Change x/y numbers to nudge specific UI blocks.
+      In edit mode you can also drag these blocks directly on the screen.
+    */
+    const DEFAULT_LAYOUT_SETTINGS = {
+      demoBadge: { x: 0, y: 0 },
+      statusBar: { x: 0, y: 0 },
+      brandHeader: { x: 0, y: 0 },
+      accountBlock: { x: 0, y: 0 },
+      quickCard: { x: 0, y: 0 },
+      toolRow: { x: 0, y: 0 },
+      promoCard: { x: 0, y: 0 },
+      promoArt: { x: 0, y: 0 },
+      insightsLink: { x: 0, y: 0 },
+      previewCards: { x: 0, y: 0 },
+      bottomNav: { x: 0, y: 0 }
+    };
+
+    const FONT_OPTIONS = {
+      sf: `"DemoSFText", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`,
+      system: `-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`,
+      helvetica: `"Helvetica Neue", Helvetica, Arial, sans-serif`,
+      arial: `Arial, Helvetica, sans-serif`,
+      notoKR: `"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`,
+      serif: `Georgia, "Times New Roman", serif`,
+      mono: `"SF Mono", Menlo, Consolas, monospace`
+    };
+
+    const DISPLAY_FONT_OPTIONS = {
+      sfDisplay: `"DemoSFDisplay", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`,
+      system: `-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`,
+      helvetica: `"Helvetica Neue", Helvetica, Arial, sans-serif`,
+      arial: `Arial, Helvetica, sans-serif`,
+      notoKR: `"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`,
+      serif: `Georgia, "Times New Roman", serif`,
+      mono: `"SF Mono", Menlo, Consolas, monospace`
+    };
+
+    const DEFAULT_FONT_SETTINGS = {
+      uiFont: "sf",
+      displayFont: "sfDisplay"
+    };
+
+    const ICON_SLOT_BOXES = {
+      brandMark: { width: 25, height: 25 },
+      quickPayIcon: { width: 64, height: 43 },
+      quickTransferIcon: { width: 58, height: 44 },
+      quickScanIcon: { width: 58, height: 44 },
+      toolStatementsIcon: { width: 58, height: 50 },
+      toolLimitsIcon: { width: 58, height: 50 },
+      toolApplyIcon: { width: 58, height: 50 },
+      toolFxIcon: { width: 58, height: 50 },
+      navHomeIcon: { width: 39, height: 39 },
+      navAccountsIcon: { width: 39, height: 39 },
+      navWealthIcon: { width: 39, height: 39 },
+      navRewardsIcon: { width: 39, height: 39 },
+      navServicesIcon: { width: 39, height: 39 }
+    };
+
+    const COMPARE_SETTINGS = {
+      opacity: .45,
+      x: 0,
+      y: 0,
+      scale: 1,
+      blend: "normal"
+    };
+
+    const ICON_TEMPLATES = {
+      brandMark: {
+        gridMark: `<svg class="brand-mark" viewBox="0 0 24 26" aria-hidden="true">
+          <path class="brand-stroke" d="M2.5 3.5v19"></path>
+          <path class="brand-stroke" d="M7 3.5v19"></path>
+          <path class="brand-stroke" d="M11.5 3.5v19"></path>
+          <path class="brand-stroke" d="M16 3.5v19"></path>
+          <path class="brand-stroke" d="M20.5 3.5v19"></path>
+          <path class="brand-rib" d="M.8 7.5h21.4M.8 12.8h21.4M.8 18.1h21.4"></path>
+        </svg>`,
+        pillarMark: `<svg class="brand-mark" viewBox="0 0 24 26" aria-hidden="true">
+          <path class="brand-stroke" d="M4 4v18M9.3 4v18M14.6 4v18M19.9 4v18"></path>
+          <path class="brand-rib" d="M2 9h20M2 17h20"></path>
+        </svg>`,
+        sparkMark: `<svg class="brand-mark" viewBox="0 0 24 26" aria-hidden="true">
+          <path class="brand-stroke" d="M12 3v20M3 12h18M6 6l12 12M18 6 6 18"></path>
+        </svg>`
+      },
+      quickPayIcon: {
+        payText: `<svg class="paynow-logo" viewBox="0 0 64 43" aria-hidden="true">
+          <text x="9" y="17">PAY</text>
+          <text x="9" y="36">NOW</text>
+          <path class="paynow-spark" d="M45 9h7l-3.4 5.1H55l-11 17 3.4-11H41z"></path>
+        </svg>`,
+        payBadge: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M12 10h34v24H12zM18 18h18M18 26h11M38 27l7-7M45 20v7h-7"></path>
+        </svg>`,
+        walletPay: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M10 14h35a5 5 0 0 1 5 5v14H10zM13 9h30v9M40 24h10M18 24h9"></path>
+        </svg>`
+      },
+      quickTransferIcon: {
+        phoneTransfer: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M20 5h20v34H20z"></path>
+          <path class="line" d="M36 12h13m0 0-6-6m6 6-6 6"></path>
+          <path class="line" d="M22 31H9m0 0 6-6m-6 6 6 6"></path>
+          <path class="line" d="M27 8h6M28 36h4"></path>
+        </svg>`,
+        twoWay: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M11 15h33m0 0-7-7m7 7-7 7M47 30H14m0 0 7-7m-7 7 7 7"></path>
+        </svg>`,
+        cardTransfer: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M8 12h28v20H8zM8 18h28M38 14h12m0 0-5-5m5 5-5 5M39 30H26m0 0 5-5m-5 5 5 5"></path>
+        </svg>`
+      },
+      quickScanIcon: {
+        scanFrame: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M12 16V7h10M36 7h10v9M46 28v9H36M22 37H12v-9"></path>
+          <path class="line" d="M22 17h14v10H22z"></path>
+          <path class="line" d="M29 12v3M29 29v3M17 22h3M38 22h3"></path>
+        </svg>`,
+        qrScan: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M10 10h11v11H10zM37 10h11v11H37zM10 27h11v11H10zM31 28h5M31 36h15M43 28h5"></path>
+        </svg>`,
+        focusBox: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
+          <path class="line" d="M9 17V8h9M40 8h9v9M49 27v9h-9M18 36H9v-9M20 20h18v4H20z"></path>
+        </svg>`
+      },
+      toolStatementsIcon: {
+        statements: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="white" d="M18 4h23c5 0 9 4 9 9v33H18z"></path>
+          <rect class="cut" x="26" y="13" width="17" height="5" rx="2"></rect>
+          <rect class="cut" x="26" y="25" width="14" height="5" rx="2"></rect>
+          <rect class="white" x="8" y="12" width="17" height="6" rx="2"></rect>
+          <rect class="white" x="8" y="24" width="17" height="6" rx="2"></rect>
+          <rect class="white" x="8" y="36" width="17" height="6" rx="2"></rect>
+          <rect class="cut" x="16" y="16" width="5" height="22"></rect>
+        </svg>`,
+        listDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="white" d="M15 5h28v40H15z"></path>
+          <rect class="cut" x="22" y="14" width="16" height="5" rx="2"></rect>
+          <rect class="cut" x="22" y="25" width="18" height="5" rx="2"></rect>
+          <rect class="cut" x="22" y="36" width="12" height="5" rx="2"></rect>
+        </svg>`
+      },
+      toolLimitsIcon: {
+        limitsDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="white" d="M15 4h22c5 0 9 4 9 9v33H15z"></path>
+          <path class="cut" d="M29 8v12c0 4 3 7 7 7h14l-7-8 7-8H36c-4 0-7-3-7-7z"></path>
+          <rect class="cut" x="22" y="15" width="11" height="5" rx="2"></rect>
+          <rect class="cut" x="22" y="31" width="16" height="5" rx="2"></rect>
+        </svg>`,
+        handDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="white" d="M13 5h21c5 0 9 4 9 9v23H13z"></path>
+          <path class="cut" d="M27 16h23l-8 8 8 8H30c-5 0-9-4-9-9 0-4 2-7 6-7z"></path>
+        </svg>`
+      },
+      toolApplyIcon: {
+        applyCard: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="stroke-white" d="M8 15h20v16H8zM31 15h19v16H31z"></path>
+          <path class="stroke-white" d="M23 34c7-1 13 2 18 8"></path>
+          <path class="stroke-white" d="M41 42l8-8M41 42l-8-8"></path>
+          <circle class="white" cx="45" cy="22" r="3.2"></circle>
+        </svg>`,
+        tapCard: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="stroke-white" d="M8 12h31v20H8zM8 19h31M31 30l15 10M46 40l4-9M46 40l-9 2"></path>
+        </svg>`
+      },
+      toolFxIcon: {
+        fxCoins: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <circle class="stroke-white" cx="16" cy="13" r="8"></circle>
+          <path class="stroke-white" d="M13 13h6M16 9v8"></path>
+          <circle class="stroke-white" cx="41" cy="34" r="8"></circle>
+          <path class="stroke-white" d="M38 34h6M41 30v8"></path>
+          <path class="stroke-white" d="M36 7c8 2 13 8 13 16M49 7v16H34M8 40c9-5 23-5 33 0"></path>
+        </svg>`,
+        fxArrows: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
+          <path class="stroke-white" d="M13 15h29m0 0-7-7m7 7-7 7M45 35H16m0 0 7-7m-7 7 7 7"></path>
+          <circle class="stroke-white" cx="16" cy="15" r="6"></circle>
+          <circle class="stroke-white" cx="42" cy="35" r="6"></circle>
+        </svg>`
+      },
+      navHomeIcon: {
+        homeFilled: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M5 17.2 19.5 5.8 34 17.2v16.4c0 1.1-.9 2-2 2h-8.5V24h-8v11.6H7c-1.1 0-2-.9-2-2z"></path></svg>`,
+        homeLine: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M5 17.2 19.5 5.8 34 17.2v16.4H23.5V24h-8v9.6H5z"></path></svg>`
+      },
+      navAccountsIcon: {
+        coinCircle: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><circle class="nav-line" cx="19.5" cy="19.5" r="15.5"></circle><path class="nav-line" d="M23 12.5c-5.6-3-10 3.7-3 6.7 7.8 3.2 3.2 10.7-5 7.2M19.5 8.3v22.4"></path></svg>`,
+        wallet: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M6 12h27v20H6zM10 8h20v8M27 22h6"></path></svg>`
+      },
+      navWealthIcon: {
+        growthChart: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 31.5h27M10.5 28V9M10.5 28l8-9 6 5 9.5-14M28 10h6v6"></path></svg>`,
+        bars: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 32h27M11 29V18M20 29V10M29 29V14"></path></svg>`
+      },
+      navRewardsIcon: {
+        giftBox: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 16h25v18H7zM5 16h29v-6H5zM19.5 10v24M19 10c-1-8-12-7-9 0M20 10c1-8 12-7 9 0"></path></svg>`,
+        star: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="m19.5 5 4.3 9 9.8 1.4-7.1 6.9 1.7 9.8-8.7-4.6-8.7 4.6 1.7-9.8-7.1-6.9 9.8-1.4z"></path></svg>`
+      },
+      navServicesIcon: {
+        serviceGrid: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><rect class="nav-line" x="5" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="5" y="23" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="23" width="11" height="11" rx="2"></rect></svg>`,
+        dots: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M9 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>`
+      }
+    };
+
+    const CONTENT_STORAGE_KEY = "bankingDemoContent";
+    const VISUAL_STORAGE_KEY = "bankingDemoVisuals";
+    const LAYOUT_STORAGE_KEY = "bankingDemoLayout";
+    const CUSTOM_ICON_STORAGE_KEY = "bankingDemoCustomIcons";
+    const FONT_STORAGE_KEY = "bankingDemoFonts";
+    const SCREEN_CONTENT = {
+      ...DEFAULT_SCREEN_CONTENT,
+      ...readSavedContent()
+    };
+    const VISUAL_SETTINGS = {
+      ...DEFAULT_VISUAL_SETTINGS,
+      ...readSavedVisuals()
+    };
+    const LAYOUT_SETTINGS = {
+      ...DEFAULT_LAYOUT_SETTINGS,
+      ...readSavedLayout()
+    };
+    const CUSTOM_ICON_SETTINGS = readSavedCustomIcons();
+    const FONT_SETTINGS = {
+      ...DEFAULT_FONT_SETTINGS,
+      ...readSavedFonts()
+    };
+
+    const ICON_SLOT_SELECTORS = {
+      brandMark: ".brand :is(.brand-mark, .custom-icon-image)",
+      quickPayIcon: ".quick-card .quick-action:nth-child(1) :is(svg, .custom-icon-image)",
+      quickTransferIcon: ".quick-card .quick-action:nth-child(2) :is(svg, .custom-icon-image)",
+      quickScanIcon: ".quick-card .quick-action:nth-child(3) :is(svg, .custom-icon-image)",
+      toolStatementsIcon: ".tools .tool:nth-child(1) :is(svg, .custom-icon-image)",
+      toolLimitsIcon: ".tools .tool:nth-child(2) :is(svg, .custom-icon-image)",
+      toolApplyIcon: ".tools .tool:nth-child(3) :is(svg, .custom-icon-image)",
+      toolFxIcon: ".tools .tool:nth-child(4) :is(svg, .custom-icon-image)",
+      navHomeIcon: ".bottom-nav .nav-item:nth-child(1) :is(svg, .custom-icon-image)",
+      navAccountsIcon: ".bottom-nav .nav-item:nth-child(2) :is(svg, .custom-icon-image)",
+      navWealthIcon: ".bottom-nav .nav-item:nth-child(3) :is(svg, .custom-icon-image)",
+      navRewardsIcon: ".bottom-nav .nav-item:nth-child(4) :is(svg, .custom-icon-image)",
+      navServicesIcon: ".bottom-nav .nav-item:nth-child(5) :is(svg, .custom-icon-image)"
+    };
+
+    function readSavedContent() {
+      try {
+        return JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function readSavedVisuals() {
+      try {
+        return JSON.parse(localStorage.getItem(VISUAL_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function readSavedLayout() {
+      try {
+        return JSON.parse(localStorage.getItem(LAYOUT_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function readSavedCustomIcons() {
+      try {
+        return JSON.parse(localStorage.getItem(CUSTOM_ICON_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function readSavedFonts() {
+      try {
+        return JSON.parse(localStorage.getItem(FONT_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderValue(value) {
+      if (Array.isArray(value)) {
+        return value.map(escapeHTML).join("<br>");
+      }
+      return escapeHTML(value).replaceAll("\n", "<br>");
+    }
+
+    function applyContent(content) {
+      Object.entries(content).forEach(([field, value]) => {
+        document.querySelectorAll(`[data-field="${field}"]`).forEach((element) => {
+          element.innerHTML = renderValue(value);
+        });
+      });
+    }
+
+    function saveContent(content) {
+      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(content));
+    }
+
+    function saveVisuals(visuals) {
+      localStorage.setItem(VISUAL_STORAGE_KEY, JSON.stringify(visuals));
+    }
+
+    function saveLayout(layout) {
+      localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+    }
+
+    function saveCustomIcons(customIcons) {
+      localStorage.setItem(CUSTOM_ICON_STORAGE_KEY, JSON.stringify(customIcons));
+    }
+
+    function saveFonts(fonts) {
+      localStorage.setItem(FONT_STORAGE_KEY, JSON.stringify(fonts));
+    }
+
+    function iconSlotSize(slot, naturalWidth, naturalHeight, scale = 1) {
+      const box = ICON_SLOT_BOXES[slot] || { width: 48, height: 48 };
+      const ratio = Math.min(box.width / naturalWidth, box.height / naturalHeight);
+      return {
+        width: Math.max(1, Math.round(naturalWidth * ratio * scale)),
+        height: Math.max(1, Math.round(naturalHeight * ratio * scale))
+      };
+    }
+
+    function customIconHTML(slot, icon) {
+      const size = iconSlotSize(slot, icon.naturalWidth || 1, icon.naturalHeight || 1, icon.scale || 1);
+      return `<img class="custom-icon-image" data-icon-slot="${escapeHTML(slot)}" src="${escapeHTML(icon.src)}" alt="" style="width:${size.width}px;height:${size.height}px;">`;
+    }
+
+    function applyCustomIcons(customIcons) {
+      Object.entries(customIcons).forEach(([slot, icon]) => {
+        const selector = ICON_SLOT_SELECTORS[slot];
+        const element = selector ? document.querySelector(selector) : null;
+        if (element && icon?.src) {
+          element.outerHTML = customIconHTML(slot, icon);
+        }
+      });
+    }
+
+    function applyFonts(fonts) {
+      document.documentElement.style.setProperty("--ui-font", FONT_OPTIONS[fonts.uiFont] || FONT_OPTIONS.sf);
+      document.documentElement.style.setProperty("--display-font", DISPLAY_FONT_OPTIONS[fonts.displayFont] || DISPLAY_FONT_OPTIONS.sfDisplay);
+    }
+
+    function replaceIcon(slot, templateName) {
+      const selector = ICON_SLOT_SELECTORS[slot];
+      const template = ICON_TEMPLATES[slot]?.[templateName];
+      const element = selector ? document.querySelector(selector) : null;
+      if (element && template) {
+        element.outerHTML = template;
+      }
+    }
+
+    function applyVisuals(visuals) {
+      document.documentElement.style.setProperty("--brand-mark-color", visuals.brandMarkColor);
+      document.documentElement.style.setProperty("--quick-icon-color", visuals.quickIconColor);
+      document.documentElement.style.setProperty("--tool-cut-color", visuals.toolCutColor);
+      document.documentElement.style.setProperty("--active-nav-color", visuals.activeNavColor);
+
+      Object.keys(ICON_SLOT_SELECTORS).forEach((slot) => {
+        replaceIcon(slot, visuals[slot]);
+      });
+      applyCustomIcons(CUSTOM_ICON_SETTINGS);
+    }
+
+    function setLayoutTransform(element, point) {
+      element.style.transform = `translate3d(${point.x}px, ${point.y}px, 0)`;
+    }
+
+    function applyLayout(layout) {
+      document.querySelectorAll("[data-layout-id]").forEach((element) => {
+        const id = element.dataset.layoutId;
+        const point = layout[id] || { x: 0, y: 0 };
+        setLayoutTransform(element, point);
+      });
+    }
+
+    function currentScale() {
+      return Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--phone-scale")) || 1;
+    }
+
+    function showLayoutTag(element) {
+      let tag = document.querySelector(".layout-tag");
+      if (!tag) {
+        tag = document.createElement("div");
+        tag.className = "layout-tag";
+        document.body.append(tag);
+      }
+      const rect = element.getBoundingClientRect();
+      tag.textContent = element.dataset.layoutId;
+      tag.style.display = "block";
+      tag.style.left = `${Math.max(8, rect.left)}px`;
+      tag.style.top = `${Math.max(8, rect.top - 28)}px`;
+    }
+
+    function hideLayoutTag() {
+      const tag = document.querySelector(".layout-tag");
+      if (tag) tag.style.display = "none";
+    }
+
+    function iconSlotFromElement(iconElement) {
+      if (iconElement?.dataset?.iconSlot) return iconElement.dataset.iconSlot;
+      return Object.entries(ICON_SLOT_SELECTORS).find(([, selector]) => iconElement.matches(selector))?.[0];
+    }
+
+    function removeInlinePopover() {
+      document.querySelector(".inline-popover")?.remove();
+    }
+
+    function placePopover(popover, target) {
+      document.body.append(popover);
+      const rect = target.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+      const left = Math.min(
+        window.innerWidth - popoverRect.width - 12,
+        Math.max(12, rect.left)
+      );
+      const top = rect.bottom + popoverRect.height + 12 > window.innerHeight
+        ? Math.max(12, rect.top - popoverRect.height - 10)
+        : rect.bottom + 10;
+
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+    }
+
+    function openTextPopover(element) {
+      const field = element.dataset.field;
+      if (!field) return;
+
+      removeInlinePopover();
+
+      const popover = document.createElement("div");
+      popover.className = "inline-popover";
+
+      const label = document.createElement("label");
+      label.textContent = `수정: ${field}`;
+
+      const input = document.createElement("textarea");
+      input.value = valueForInput(SCREEN_CONTENT[field] ?? element.innerText);
+
+      const actions = document.createElement("div");
+      actions.className = "inline-popover-actions";
+
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.className = "secondary";
+      cancel.textContent = "취소";
+      cancel.addEventListener("click", removeInlinePopover);
+
+      const save = document.createElement("button");
+      save.type = "button";
+      save.textContent = "저장";
+      save.addEventListener("click", () => {
+        SCREEN_CONTENT[field] = inputValueForField(field, input.value);
+        applyContent(SCREEN_CONTENT);
+        saveContent(SCREEN_CONTENT);
+        removeInlinePopover();
+      });
+
+      actions.append(cancel, save);
+      label.append(input);
+      popover.append(label, actions);
+      placePopover(popover, element);
+      input.focus();
+      input.select();
+    }
+
+    function fileToDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function openIconPopover(slot, element) {
+      if (!slot || !ICON_TEMPLATES[slot]) return;
+
+      removeInlinePopover();
+
+      const popover = document.createElement("div");
+      popover.className = "inline-popover";
+
+      const label = document.createElement("label");
+      label.textContent = `아이콘 수정: ${slot}`;
+
+      const select = document.createElement("select");
+      Object.keys(ICON_TEMPLATES[slot]).forEach((name) => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.append(option);
+      });
+      select.value = VISUAL_SETTINGS[slot];
+
+      const uploadLabel = document.createElement("label");
+      uploadLabel.textContent = "이미지 업로드";
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      uploadLabel.append(fileInput);
+
+      const sizeLabel = document.createElement("label");
+      sizeLabel.textContent = "이미지 크기";
+      const sizeInput = document.createElement("input");
+      sizeInput.type = "range";
+      sizeInput.min = "0.4";
+      sizeInput.max = "2";
+      sizeInput.step = "0.01";
+      sizeInput.value = CUSTOM_ICON_SETTINGS[slot]?.scale || "1";
+      sizeLabel.append(sizeInput);
+
+      const preview = document.createElement("div");
+      preview.className = "inline-icon-preview";
+      preview.innerHTML = CUSTOM_ICON_SETTINGS[slot]?.src
+        ? customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot])
+        : "<span>이미지를 업로드하면 여기 표시됩니다</span>";
+
+      const warning = document.createElement("div");
+      warning.className = "editor-help";
+      warning.textContent = "직접 만든 이미지나 과제용 안전한 이미지만 사용하세요. 실제 금융사 공식 로고/아이콘을 사칭 용도로 사용하는 것은 피해야 합니다.";
+
+      const actions = document.createElement("div");
+      actions.className = "inline-popover-actions";
+
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.className = "secondary";
+      cancel.textContent = "닫기";
+      cancel.addEventListener("click", removeInlinePopover);
+
+      const save = document.createElement("button");
+      save.type = "button";
+      save.textContent = "적용";
+      save.addEventListener("click", () => {
+        delete CUSTOM_ICON_SETTINGS[slot];
+        VISUAL_SETTINGS[slot] = select.value;
+        applyVisuals(VISUAL_SETTINGS);
+        saveVisuals(VISUAL_SETTINGS);
+        saveCustomIcons(CUSTOM_ICON_SETTINGS);
+        removeInlinePopover();
+      });
+
+      const clearImage = document.createElement("button");
+      clearImage.type = "button";
+      clearImage.className = "secondary";
+      clearImage.textContent = "이미지 제거";
+      clearImage.addEventListener("click", () => {
+        delete CUSTOM_ICON_SETTINGS[slot];
+        applyVisuals(VISUAL_SETTINGS);
+        saveCustomIcons(CUSTOM_ICON_SETTINGS);
+        removeInlinePopover();
+      });
+
+      select.addEventListener("input", () => {
+        delete CUSTOM_ICON_SETTINGS[slot];
+        VISUAL_SETTINGS[slot] = select.value;
+        applyVisuals(VISUAL_SETTINGS);
+        saveVisuals(VISUAL_SETTINGS);
+        saveCustomIcons(CUSTOM_ICON_SETTINGS);
+        removeInlinePopover();
+      });
+
+      fileInput.addEventListener("input", async () => {
+        const file = fileInput.files?.[0];
+        if (!file) return;
+
+        const src = await fileToDataURL(file);
+        const image = await imageFromURL(src);
+        CUSTOM_ICON_SETTINGS[slot] = {
+          src,
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight,
+          scale: Number(sizeInput.value)
+        };
+        applyVisuals(VISUAL_SETTINGS);
+        saveCustomIcons(CUSTOM_ICON_SETTINGS);
+        preview.innerHTML = customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot]);
+      });
+
+      sizeInput.addEventListener("input", () => {
+        if (!CUSTOM_ICON_SETTINGS[slot]) return;
+        CUSTOM_ICON_SETTINGS[slot].scale = Number(sizeInput.value);
+        applyVisuals(VISUAL_SETTINGS);
+        saveCustomIcons(CUSTOM_ICON_SETTINGS);
+        preview.innerHTML = customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot]);
+      });
+
+      actions.append(cancel, save, clearImage);
+      label.append(select);
+      popover.append(label, uploadLabel, sizeLabel, preview, warning, actions);
+      placePopover(popover, element);
+      select.focus();
+    }
+
+    function ensureReferenceOverlay() {
+      let overlay = document.querySelector(".reference-overlay");
+      if (!overlay) {
+        overlay = document.createElement("img");
+        overlay.className = "reference-overlay";
+        overlay.alt = "Uploaded comparison reference";
+        document.querySelector(".phone").append(overlay);
+      }
+      return overlay;
+    }
+
+    function updateReferenceOverlay() {
+      const root = document.documentElement;
+      root.style.setProperty("--reference-opacity", COMPARE_SETTINGS.opacity);
+      root.style.setProperty("--reference-x", `${COMPARE_SETTINGS.x}px`);
+      root.style.setProperty("--reference-y", `${COMPARE_SETTINGS.y}px`);
+      root.style.setProperty("--reference-scale", COMPARE_SETTINGS.scale);
+      root.style.setProperty("--reference-blend", COMPARE_SETTINGS.blend);
+    }
+
+    function imageFromURL(url) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = url;
+      });
+    }
+
+    function cssTextForSnapshot() {
+      return Array.from(document.styleSheets)
+        .map((sheet) => {
+          try {
+            return Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
+          } catch (error) {
+            return "";
+          }
+        })
+        .join("\n");
+    }
+
+    async function renderPhoneToCanvas() {
+      const phone = document.querySelector(".phone").cloneNode(true);
+      phone.querySelectorAll(".reference-overlay").forEach((element) => element.remove());
+      phone.style.transform = "none";
+      phone.style.boxShadow = "none";
+      phone.classList.remove("layout-selected");
+
+      const css = `${cssTextForSnapshot()}
+        .phone { transform: none !important; box-shadow: none !important; }
+        .reference-overlay, .editor-panel, .inline-edit-toolbar, .inline-popover, .compare-panel, .layout-tag {
+          display: none !important;
+        }
+        [data-field], svg { outline: none !important; filter: none !important; }
+      `;
+
+      const markup = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="589" height="1280" viewBox="0 0 589 1280">
+          <foreignObject width="589" height="1280">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <style>${css.replaceAll("</style", "<\\/style")}</style>
+              ${phone.outerHTML}
+            </div>
+          </foreignObject>
+        </svg>
+      `;
+
+      const url = URL.createObjectURL(new Blob([markup], { type: "image/svg+xml" }));
+      try {
+        const image = await imageFromURL(url);
+        const canvas = document.createElement("canvas");
+        canvas.width = 589;
+        canvas.height = 1280;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        context.drawImage(image, 0, 0);
+        return canvas;
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    function drawImageCover(context, image, width, height) {
+      const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+      const drawWidth = image.naturalWidth * scale;
+      const drawHeight = image.naturalHeight * scale;
+      const x = (width - drawWidth) / 2;
+      const y = (height - drawHeight) / 2;
+      context.drawImage(image, x, y, drawWidth, drawHeight);
+    }
+
+    async function renderReferenceToCanvas(referenceURL) {
+      const referenceImage = await imageFromURL(referenceURL);
+      const referenceCanvas = document.createElement("canvas");
+      referenceCanvas.width = 589;
+      referenceCanvas.height = 1280;
+      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
+      drawImageCover(referenceContext, referenceImage, 589, 1280);
+      return { canvas: referenceCanvas, image: referenceImage };
+    }
+
+    async function renderReferenceFileToCanvas(file) {
+      const referenceDataURL = await fileToDataURL(file);
+      const referenceImage = await imageFromURL(referenceDataURL);
+      const referenceCanvas = document.createElement("canvas");
+      referenceCanvas.width = 589;
+      referenceCanvas.height = 1280;
+      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
+      drawImageCover(referenceContext, referenceImage, 589, 1280);
+      return { canvas: referenceCanvas, image: referenceImage, src: referenceDataURL };
+    }
+
+    function copyCanvasToCanvas(source, target) {
+      target.width = 589;
+      target.height = 1280;
+      const context = target.getContext("2d", { willReadFrequently: true });
+      context.clearRect(0, 0, 589, 1280);
+      context.drawImage(source, 0, 0);
+    }
+
+    function createDifferenceCanvas(referenceCanvas, currentCanvas, threshold) {
+      const diffCanvas = document.createElement("canvas");
+      diffCanvas.width = 589;
+      diffCanvas.height = 1280;
+      const diffContext = diffCanvas.getContext("2d", { willReadFrequently: true });
+
+      diffContext.fillStyle = "#ffffff";
+      diffContext.fillRect(0, 0, 589, 1280);
+      diffContext.globalAlpha = .28;
+      diffContext.drawImage(currentCanvas, 0, 0);
+      diffContext.globalAlpha = 1;
+
+      const referenceData = referenceCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
+      const currentData = currentCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
+      const overlay = diffContext.createImageData(589, 1280);
+
+      let changed = 0;
+      let totalDistance = 0;
+
+      for (let index = 0; index < currentData.length; index += 4) {
+        const distance = (
+          Math.abs(referenceData[index] - currentData[index]) +
+          Math.abs(referenceData[index + 1] - currentData[index + 1]) +
+          Math.abs(referenceData[index + 2] - currentData[index + 2])
+        ) / 3;
+
+        totalDistance += distance;
+
+        if (distance > threshold) {
+          changed += 1;
+          overlay.data[index] = 255;
+          overlay.data[index + 1] = 34;
+          overlay.data[index + 2] = 34;
+          overlay.data[index + 3] = Math.min(235, Math.max(80, distance * 1.7));
+        }
+      }
+
+      diffContext.putImageData(overlay, 0, 0);
+
+      const pixels = 589 * 1280;
+      const changedPercent = changed / pixels * 100;
+      const similarity = Math.max(0, Math.min(100, 100 - (totalDistance / pixels / 255 * 100)));
+
+      return {
+        canvas: diffCanvas,
+        changedPercent,
+        similarity
+      };
+    }
+
+    async function calculateRoughSimilarity(referenceURL) {
+      const [pageCanvas, referenceImage] = await Promise.all([
+        renderPhoneToCanvas(),
+        imageFromURL(referenceURL)
+      ]);
+
+      const referenceCanvas = document.createElement("canvas");
+      referenceCanvas.width = 589;
+      referenceCanvas.height = 1280;
+      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
+      drawImageCover(referenceContext, referenceImage, 589, 1280);
+
+      const pageData = pageCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
+      const referenceData = referenceContext.getImageData(0, 0, 589, 1280).data;
+
+      let total = 0;
+      let samples = 0;
+      const stride = 24;
+      for (let index = 0; index < pageData.length; index += stride * 4) {
+        const diff =
+          Math.abs(pageData[index] - referenceData[index]) +
+          Math.abs(pageData[index + 1] - referenceData[index + 1]) +
+          Math.abs(pageData[index + 2] - referenceData[index + 2]);
+        total += diff / (255 * 3);
+        samples += 1;
+      }
+
+      return Math.max(0, Math.min(100, (1 - total / samples) * 100));
+    }
+
+    function aspectMatchPercent(width, height) {
+      const referenceRatio = width / height;
+      const phoneRatio = 589 / 1280;
+      return Math.max(0, Math.min(100, (1 - Math.abs(referenceRatio - phoneRatio) / phoneRatio) * 100));
+    }
+
+    function showComparePanel() {
+      if (document.querySelector(".compare-panel")) return;
+
+      let referenceURL = "";
+      let lastReferenceCanvas = null;
+      let lastCurrentCanvas = null;
+      let lastReferenceImage = null;
+
+      const panel = document.createElement("aside");
+      panel.className = "compare-panel";
+      panel.innerHTML = `
+        <h2>이미지 비교</h2>
+        <p class="compare-note">기준 이미지를 올리면 왼쪽은 업로드 이미지, 가운데는 현재 화면, 오른쪽은 다른 부분을 빨간색으로 표시한 차이 화면입니다. 이미지는 이 브라우저 안에서만 사용됩니다.</p>
+      `;
+
+      const fileLabel = document.createElement("label");
+      fileLabel.textContent = "기준 이미지 업로드";
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileLabel.append(fileInput);
+
+      const dropzone = document.createElement("div");
+      dropzone.className = "compare-dropzone";
+      dropzone.textContent = "또는 이미지를 여기로 드래그해서 놓기";
+
+      const thresholdLabel = document.createElement("label");
+      thresholdLabel.textContent = "차이 감도";
+      const thresholdWrap = document.createElement("div");
+      thresholdWrap.className = "compare-threshold";
+      const thresholdInput = document.createElement("input");
+      thresholdInput.type = "range";
+      thresholdInput.min = "0";
+      thresholdInput.max = "120";
+      thresholdInput.step = "1";
+      thresholdInput.value = "28";
+      const thresholdOutput = document.createElement("output");
+      thresholdOutput.value = thresholdInput.value;
+      thresholdOutput.textContent = thresholdInput.value;
+      thresholdWrap.append(thresholdInput, thresholdOutput);
+      thresholdLabel.append(thresholdWrap);
+
+      const stats = document.createElement("div");
+      stats.className = "compare-stats";
+      stats.innerHTML = "<span>이미지를 업로드하면 비교 정보가 표시됩니다.</span>";
+
+      const board = document.createElement("div");
+      board.className = "compare-board";
+      board.innerHTML = `
+        <section class="compare-frame">
+          <div class="compare-frame-title"><span>Reference</span><span>uploaded</span></div>
+          <div class="compare-empty">기준 이미지를 업로드하세요</div>
+          <canvas data-compare-canvas="reference" hidden></canvas>
+        </section>
+        <section class="compare-frame">
+          <div class="compare-frame-title"><span>Current</span><span>HTML render</span></div>
+          <div class="compare-empty">업로드 후 현재 화면을 렌더링합니다</div>
+          <canvas data-compare-canvas="current" hidden></canvas>
+        </section>
+        <section class="compare-frame">
+          <div class="compare-frame-title"><span>Difference</span><span>red = changed</span></div>
+          <div class="compare-empty">다른 부분을 빨간색으로 표시합니다</div>
+          <canvas data-compare-canvas="difference" hidden></canvas>
+        </section>
+      `;
+
+      const referenceCanvasView = board.querySelector('[data-compare-canvas="reference"]');
+      const currentCanvasView = board.querySelector('[data-compare-canvas="current"]');
+      const differenceCanvasView = board.querySelector('[data-compare-canvas="difference"]');
+
+      function showCanvas(canvas) {
+        canvas.hidden = false;
+        canvas.previousElementSibling.hidden = true;
+      }
+
+      function refreshDifference() {
+        if (!lastReferenceCanvas || !lastCurrentCanvas) return;
+
+        const diff = createDifferenceCanvas(lastReferenceCanvas, lastCurrentCanvas, Number(thresholdInput.value));
+        copyCanvasToCanvas(diff.canvas, differenceCanvasView);
+        showCanvas(differenceCanvasView);
+
+        stats.innerHTML = `
+          <span>기준 이미지: ${lastReferenceImage.naturalWidth} x ${lastReferenceImage.naturalHeight}</span>
+          <span>비교 캔버스: 589 x 1280</span>
+          <span>비율 일치도: <strong>${aspectMatchPercent(lastReferenceImage.naturalWidth, lastReferenceImage.naturalHeight).toFixed(1)}%</strong></span>
+          <span>빨간색 차이 영역: <strong>${diff.changedPercent.toFixed(2)}%</strong></span>
+          <span>대략 픽셀 유사도: <strong>${diff.similarity.toFixed(1)}%</strong></span>
+        `;
+      }
+
+      async function renderCurrentAndDifference() {
+        if (!lastReferenceCanvas) return;
+        try {
+          lastCurrentCanvas = await renderPhoneToCanvas();
+          copyCanvasToCanvas(lastCurrentCanvas, currentCanvasView);
+          showCanvas(currentCanvasView);
+          refreshDifference();
+        } catch (error) {
+          lastCurrentCanvas = null;
+          currentCanvasView.hidden = true;
+          currentCanvasView.previousElementSibling.hidden = false;
+          differenceCanvasView.hidden = true;
+          differenceCanvasView.previousElementSibling.hidden = false;
+          stats.insertAdjacentHTML("beforeend", "<span>현재 화면 렌더링은 실패했지만 기준 이미지는 정상으로 인식했습니다. 파일 형식/크기는 왼쪽에서 확인할 수 있습니다.</span>");
+        }
+      }
+
+      async function handleReferenceFile(file) {
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          stats.innerHTML = "<span>이미지 파일만 업로드할 수 있습니다.</span>";
+          return;
+        }
+
+        referenceURL = "";
+        stats.innerHTML = "<span>기준 이미지를 읽는 중입니다...</span>";
+
+        try {
+          const referenceResult = await renderReferenceFileToCanvas(file);
+          referenceURL = referenceResult.src;
+          lastReferenceCanvas = referenceResult.canvas;
+          lastReferenceImage = referenceResult.image;
+          lastCurrentCanvas = null;
+
+          copyCanvasToCanvas(lastReferenceCanvas, referenceCanvasView);
+          showCanvas(referenceCanvasView);
+
+          currentCanvasView.hidden = true;
+          currentCanvasView.previousElementSibling.hidden = false;
+          differenceCanvasView.hidden = true;
+          differenceCanvasView.previousElementSibling.hidden = false;
+
+          stats.innerHTML = `
+            <span>기준 이미지 인식 완료: ${lastReferenceImage.naturalWidth} x ${lastReferenceImage.naturalHeight}</span>
+            <span>파일: ${escapeHTML(file.name)} (${Math.round(file.size / 1024)} KB)</span>
+            <span>비교 캔버스: 589 x 1280</span>
+            <span>비율 일치도: <strong>${aspectMatchPercent(lastReferenceImage.naturalWidth, lastReferenceImage.naturalHeight).toFixed(1)}%</strong></span>
+            <span>현재 화면 렌더링 중...</span>
+          `;
+
+          await renderCurrentAndDifference();
+        } catch (error) {
+          stats.innerHTML = "<span>이미지를 읽을 수 없습니다. PNG/JPG/WebP 파일로 다시 시도해 주세요.</span>";
+        }
+      }
+
+      thresholdInput.addEventListener("input", () => {
+        thresholdOutput.value = thresholdInput.value;
+        thresholdOutput.textContent = thresholdInput.value;
+        refreshDifference();
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "compare-actions";
+
+      const scoreButton = document.createElement("button");
+      scoreButton.type = "button";
+      scoreButton.textContent = "다시 비교";
+      scoreButton.addEventListener("click", async () => {
+        if (!referenceURL) {
+          stats.innerHTML = "<span>먼저 기준 이미지를 업로드하세요.</span>";
+          return;
+        }
+        await renderCurrentAndDifference();
+      });
+
+      const reset = document.createElement("button");
+      reset.type = "button";
+      reset.className = "secondary";
+      reset.textContent = "비우기";
+      reset.addEventListener("click", () => {
+        referenceURL = "";
+        lastReferenceCanvas = null;
+        lastCurrentCanvas = null;
+        lastReferenceImage = null;
+        fileInput.value = "";
+        board.querySelectorAll("canvas").forEach((canvas) => {
+          canvas.hidden = true;
+          canvas.previousElementSibling.hidden = false;
+        });
+        stats.innerHTML = "<span>이미지를 업로드하면 비교 정보가 표시됩니다.</span>";
+      });
+
+      const close = document.createElement("button");
+      close.type = "button";
+      close.className = "secondary";
+      close.textContent = "닫기";
+      close.addEventListener("click", () => {
+        panel.remove();
+      });
+
+      fileInput.addEventListener("input", async () => {
+        const file = fileInput.files?.[0];
+        await handleReferenceFile(file);
+      });
+
+      actions.append(scoreButton, reset, close);
+      dropzone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropzone.classList.add("drag-over");
+      });
+      dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("drag-over");
+      });
+      dropzone.addEventListener("drop", async (event) => {
+        event.preventDefault();
+        dropzone.classList.remove("drag-over");
+        await handleReferenceFile(event.dataTransfer.files?.[0]);
+      });
+
+      panel.append(fileLabel, dropzone, thresholdLabel, stats, board, actions);
+      document.body.append(panel);
+    }
+
+    function compareTabURL() {
+      const url = new URL(location.href);
+      url.searchParams.delete("edit");
+      url.searchParams.set("compare", "1");
+      return url.href;
+    }
+
+    function showInlineToolbar() {
+      if (document.querySelector(".inline-edit-toolbar")) return;
+
+      const toolbar = document.createElement("div");
+      toolbar.className = "inline-edit-toolbar";
+      toolbar.innerHTML = "<span>수정 모드: 텍스트/아이콘을 클릭하세요</span>";
+
+      const compare = document.createElement("a");
+      compare.href = compareTabURL();
+      compare.target = "_blank";
+      compare.rel = "noopener";
+      compare.textContent = "비교하기";
+
+      const close = document.createElement("button");
+      close.type = "button";
+      close.textContent = "끝내기";
+      close.addEventListener("click", () => {
+        document.body.classList.remove("inline-edit");
+        toolbar.remove();
+        removeInlinePopover();
+      });
+
+      toolbar.append(compare, close);
+      document.body.append(toolbar);
+    }
+
+    function enableInlineEditor() {
+      if (window.__inlineEditorEnabled) {
+        document.body.classList.add("inline-edit");
+        showInlineToolbar();
+        return;
+      }
+
+      window.__inlineEditorEnabled = true;
+      document.body.classList.add("inline-edit");
+      showInlineToolbar();
+
+      document.addEventListener("click", (event) => {
+        const editButton = event.target.closest(".edit");
+        if (editButton && !document.body.classList.contains("inline-edit")) {
+          event.preventDefault();
+          enableInlineEditor();
+          return;
+        }
+
+        if (!document.body.classList.contains("inline-edit")) return;
+        if (event.target.closest(".editor-panel, .inline-popover, .inline-edit-toolbar")) return;
+
+        const textElement = event.target.closest("[data-field]");
+        if (textElement) {
+          event.preventDefault();
+          event.stopPropagation();
+          openTextPopover(textElement);
+          return;
+        }
+
+        const iconElement = event.target.closest("svg, img.custom-icon-image");
+        const slot = iconElement ? iconSlotFromElement(iconElement) : null;
+        if (slot) {
+          event.preventDefault();
+          event.stopPropagation();
+          openIconPopover(slot, iconElement);
+        }
+      });
+    }
+
+    document.addEventListener("click", (event) => {
+      if (document.body.classList.contains("inline-edit")) return;
+      if (event.target.closest(".edit")) {
+        event.preventDefault();
+        enableInlineEditor();
+      }
+    });
+
+    function openGenerator() {
+      showEditor();
+      enableInlineEditor();
+    }
+
+    function enableLayoutEditor() {
+      if (window.__layoutEditorEnabled) return;
+      window.__layoutEditorEnabled = true;
+      document.body.classList.add("layout-edit");
+
+      let activeElement = null;
+      let startClientX = 0;
+      let startClientY = 0;
+      let startPoint = { x: 0, y: 0 };
+
+      document.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || event.target.closest(".editor-panel, .inline-popover, .inline-edit-toolbar")) return;
+
+        const element = event.target.closest("[data-layout-id]");
+        if (!element) return;
+
+        event.preventDefault();
+        activeElement?.classList.remove("layout-selected");
+        activeElement = element;
+        activeElement.classList.add("layout-selected");
+        activeElement.setPointerCapture?.(event.pointerId);
+
+        const id = activeElement.dataset.layoutId;
+        startClientX = event.clientX;
+        startClientY = event.clientY;
+        startPoint = LAYOUT_SETTINGS[id] || { x: 0, y: 0 };
+        showLayoutTag(activeElement);
+      });
+
+      document.addEventListener("pointermove", (event) => {
+        if (!activeElement) return;
+
+        const scale = currentScale();
+        const id = activeElement.dataset.layoutId;
+        const point = {
+          x: Math.round(startPoint.x + (event.clientX - startClientX) / scale),
+          y: Math.round(startPoint.y + (event.clientY - startClientY) / scale)
+        };
+
+        LAYOUT_SETTINGS[id] = point;
+        setLayoutTransform(activeElement, point);
+        showLayoutTag(activeElement);
+      });
+
+      document.addEventListener("pointerup", () => {
+        if (!activeElement) return;
+        saveLayout(LAYOUT_SETTINGS);
+        activeElement.classList.remove("layout-selected");
+        activeElement = null;
+        hideLayoutTag();
+      });
+    }
+
+    function valueForInput(value) {
+      return Array.isArray(value) ? value.join("\n") : String(value);
+    }
+
+    function inputValueForField(field, rawValue) {
+      return Array.isArray(DEFAULT_SCREEN_CONTENT[field]) ? rawValue.split("\n") : rawValue;
+    }
+
+    function showEditor() {
+      if (document.querySelector(".editor-panel")) return;
+
+      const editor = document.createElement("aside");
+      editor.className = "editor-panel";
+      editor.innerHTML = "<h2>뱅킹 UI 생성기</h2>";
+
+      const intro = document.createElement("div");
+      intro.className = "generator-intro";
+      intro.innerHTML = `
+        <span><strong>텍스트/숫자</strong>는 아래 입력칸에서 바꾸거나 화면에서 직접 클릭해 수정합니다.</span>
+        <span><strong>아이콘/로고</strong>는 드롭다운으로 교체합니다.</span>
+        <span><strong>위치</strong>는 화면의 UI 범위를 직접 드래그해 조정합니다.</span>
+      `;
+      editor.append(intro);
+
+      const tools = document.createElement("div");
+      tools.className = "generator-tools";
+
+      const clickEdit = document.createElement("button");
+      clickEdit.type = "button";
+      clickEdit.textContent = "직접 클릭 수정";
+      clickEdit.addEventListener("click", enableInlineEditor);
+
+      const dragEdit = document.createElement("button");
+      dragEdit.type = "button";
+      dragEdit.textContent = "드래그 위치 조정";
+      dragEdit.addEventListener("click", enableLayoutEditor);
+
+      const compareLink = document.createElement("a");
+      compareLink.href = compareTabURL();
+      compareLink.target = "_blank";
+      compareLink.rel = "noopener";
+      compareLink.textContent = "비교하기";
+
+      const resetAll = document.createElement("button");
+      resetAll.type = "button";
+      resetAll.className = "secondary";
+      resetAll.textContent = "전체 초기화";
+      resetAll.addEventListener("click", () => {
+        localStorage.removeItem(CONTENT_STORAGE_KEY);
+        localStorage.removeItem(VISUAL_STORAGE_KEY);
+        localStorage.removeItem(LAYOUT_STORAGE_KEY);
+        localStorage.removeItem(CUSTOM_ICON_STORAGE_KEY);
+        localStorage.removeItem(FONT_STORAGE_KEY);
+        location.reload();
+      });
+
+      tools.append(clickEdit, dragEdit, compareLink, resetAll);
+      editor.append(tools);
+
+      const help = document.createElement("div");
+      help.className = "editor-help";
+      help.textContent = "생성기는 브라우저 안에서 동작합니다. 바꾼 값은 이 브라우저에 저장되고, Reset/전체 초기화로 되돌릴 수 있습니다.";
+      editor.append(help);
+
+      const contentTitle = document.createElement("h2");
+      contentTitle.textContent = "텍스트 / 숫자";
+      contentTitle.style.marginTop = "14px";
+      editor.append(contentTitle);
+
+      Object.entries(SCREEN_CONTENT).forEach(([field, value]) => {
+        const label = document.createElement("label");
+        label.textContent = field;
+
+        const input = Array.isArray(DEFAULT_SCREEN_CONTENT[field])
+          ? document.createElement("textarea")
+          : document.createElement("input");
+
+        input.value = valueForInput(value);
+        input.addEventListener("input", () => {
+          SCREEN_CONTENT[field] = inputValueForField(field, input.value);
+          applyContent(SCREEN_CONTENT);
+          saveContent(SCREEN_CONTENT);
+        });
+
+        label.append(input);
+        editor.append(label);
+      });
+
+      const fontTitle = document.createElement("h2");
+      fontTitle.textContent = "폰트 설정";
+      fontTitle.style.marginTop = "16px";
+      editor.append(fontTitle);
+
+      const fontFields = [
+        ["uiFont", "일반 텍스트 폰트", FONT_OPTIONS],
+        ["displayFont", "숫자 / 제목 폰트", DISPLAY_FONT_OPTIONS]
+      ];
+
+      fontFields.forEach(([field, labelText, options]) => {
+        const label = document.createElement("label");
+        label.textContent = labelText;
+        const select = document.createElement("select");
+
+        Object.keys(options).forEach((optionName) => {
+          const option = document.createElement("option");
+          option.value = optionName;
+          option.textContent = optionName;
+          select.append(option);
+        });
+
+        select.value = FONT_SETTINGS[field];
+        select.addEventListener("input", () => {
+          FONT_SETTINGS[field] = select.value;
+          applyFonts(FONT_SETTINGS);
+          saveFonts(FONT_SETTINGS);
+        });
+
+        label.append(select);
+        editor.append(label);
+      });
+
+      const visualTitle = document.createElement("h2");
+      visualTitle.textContent = "로고/아이콘 설정";
+      visualTitle.style.marginTop = "16px";
+      editor.append(visualTitle);
+
+      Object.entries(VISUAL_SETTINGS).forEach(([field, value]) => {
+        const label = document.createElement("label");
+        label.textContent = field;
+
+        let input;
+        if (field.endsWith("Color")) {
+          input = document.createElement("input");
+          input.type = "color";
+          input.value = value;
+        } else {
+          input = document.createElement("select");
+          Object.keys(ICON_TEMPLATES[field] || {}).forEach((optionName) => {
+            const option = document.createElement("option");
+            option.value = optionName;
+            option.textContent = optionName;
+            input.append(option);
+          });
+          input.value = value;
+        }
+
+        input.addEventListener("input", () => {
+          if (!field.endsWith("Color")) {
+            delete CUSTOM_ICON_SETTINGS[field];
+            saveCustomIcons(CUSTOM_ICON_SETTINGS);
+          }
+          VISUAL_SETTINGS[field] = input.value;
+          applyVisuals(VISUAL_SETTINGS);
+          saveVisuals(VISUAL_SETTINGS);
+        });
+
+        label.append(input);
+        editor.append(label);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "editor-actions";
+
+      const reset = document.createElement("button");
+      reset.type = "button";
+      reset.className = "secondary";
+      reset.textContent = "Reset";
+      reset.addEventListener("click", () => {
+        localStorage.removeItem(CONTENT_STORAGE_KEY);
+        localStorage.removeItem(VISUAL_STORAGE_KEY);
+        localStorage.removeItem(LAYOUT_STORAGE_KEY);
+        localStorage.removeItem(CUSTOM_ICON_STORAGE_KEY);
+        localStorage.removeItem(FONT_STORAGE_KEY);
+        location.reload();
+      });
+
+      const close = document.createElement("button");
+      close.type = "button";
+      close.textContent = "Close";
+      close.addEventListener("click", () => editor.remove());
+
+      actions.append(reset, close);
+      editor.append(actions);
+      document.body.append(editor);
+    }
+
+    function fitPhone() {
+      var scale = Math.min(1, window.innerWidth / 589);
+      document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
+    }
+
+    applyContent(SCREEN_CONTENT);
+    applyFonts(FONT_SETTINGS);
+    applyVisuals(VISUAL_SETTINGS);
+    applyLayout(LAYOUT_SETTINGS);
+
+    const pageParams = new URLSearchParams(location.search);
+
+    if (pageParams.get("edit") === "1") {
+      showEditor();
+      enableLayoutEditor();
+      enableInlineEditor();
+    }
+
+    if (pageParams.get("compare") === "1") {
+      document.body.classList.add("compare-mode");
+      showComparePanel();
+    }
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key.toLowerCase() === "e" && !["INPUT", "TEXTAREA"].includes(event.target.tagName)) {
+        showEditor();
+        enableLayoutEditor();
+        enableInlineEditor();
+      }
+    });
+
+    window.addEventListener("resize", fitPhone);
+    document.querySelector(".generator-launcher")?.addEventListener("click", openGenerator);
+    fitPhone();
+  </script>
+</body>
+</html>
