@@ -6061,30 +6061,16 @@
       var layoutViewportHeight = document.documentElement.clientHeight || 0;
       var windowViewportWidth = window.innerWidth || 0;
       var windowViewportHeight = window.innerHeight || 0;
-      var outerViewportWidth = window.outerWidth || 0;
-      var outerViewportHeight = window.outerHeight || 0;
       var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
       var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       if (appOnlyMode) {
-        var isViewerFrame = pageParams.get("viewer") === "1";
-        if (isViewerFrame) {
-          viewportWidth = Math.round(visualViewportWidth || layoutViewportWidth || windowViewportWidth);
-          viewportHeight = Math.round(visualViewportHeight || layoutViewportHeight || windowViewportHeight);
-        } else {
-          var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
-          var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
-          viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
-          // Some iPhone browser shells report a shorter outer/visual viewport
-          // even though the captured screen is taller. Never select that shorter
-          // value: it clips the source image and exposes the body below it.
-          viewportHeight = Math.round(Math.max(
-            Math.max.apply(Math, heightCandidates),
-            Math.ceil(viewportWidth * 1280 / 588)
-          ));
-        }
+        // Use the exact same viewport path as iphone17-viewer.html for both
+        // direct iPhone visits and the framed Home/Intro previews.
+        viewportWidth = Math.round(visualViewportWidth || layoutViewportWidth || windowViewportWidth);
+        viewportHeight = Math.round(visualViewportHeight || layoutViewportHeight || windowViewportHeight);
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
