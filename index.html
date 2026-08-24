@@ -533,15 +533,15 @@
       display: block;
     }
     .view-link {
-      margin-top: 22px;
+      margin-top: 18px;
       text-align: center;
       color: #0057d6;
-      font-size: 25px;
+      font-size: 23px;
       font-weight: 500;
-      line-height: 1.1;
+      line-height: 1;
     }
     .teasers {
-      display: grid;
+      display: none;
       grid-template-columns: 1fr 1fr;
       gap: 13px;
       height: 70px;
@@ -561,17 +561,26 @@
       right: 0;
       bottom: 0;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 1fr;
       align-items: start;
-      height: 122px;
-      padding-top: 9px;
+      justify-items: center;
+      height: 118px;
+      padding-top: 16px;
       background: rgba(255,255,255,.92);
       color: #45464e;
-      box-shadow: 0 -4px 16px rgba(0,0,0,.1);
+      box-shadow: 0 -4px 14px rgba(0,0,0,.08);
       backdrop-filter: blur(12px);
     }
+    .bottom-nav-strip {
+      width: 535px;
+      max-width: calc(100% - 36px);
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
     .nav-item {
-      display: grid;
+      display: none;
       justify-items: center;
       gap: 6px;
       font-size: 15px;
@@ -2570,6 +2579,7 @@
     </section>
 
     <footer class="bottom-nav" data-layout-id="bottomNav">
+      <img class="bottom-nav-strip" src="assets/bottom-nav-strip-fixed.png" alt="Home Accounts Wealth Rewards Services">
       <div class="nav-item fixed-nav active" data-layout-id="navHomeBox">
         <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">
         <span data-field="navHome">Home</span>
@@ -2942,11 +2952,11 @@
       toolLimitsIcon: ".tools .tool:nth-child(2) :is(svg, .custom-icon-image)",
       toolApplyIcon: ".tools .tool:nth-child(3) :is(svg, .custom-icon-image)",
       toolFxIcon: ".tools .tool:nth-child(4) :is(svg, .custom-icon-image)",
-      navHomeIcon: ".bottom-nav .nav-item:nth-child(1) :is(svg, .custom-icon-image)",
-      navAccountsIcon: ".bottom-nav .nav-item:nth-child(2) :is(svg, .custom-icon-image)",
-      navWealthIcon: ".bottom-nav .nav-item:nth-child(3) :is(svg, .custom-icon-image)",
-      navRewardsIcon: ".bottom-nav .nav-item:nth-child(4) :is(svg, .custom-icon-image)",
-      navServicesIcon: ".bottom-nav .nav-item:nth-child(5) :is(svg, .custom-icon-image)"
+      navHomeIcon: ".bottom-nav .nav-item:nth-of-type(1) :is(svg, .custom-icon-image)",
+      navAccountsIcon: ".bottom-nav .nav-item:nth-of-type(2) :is(svg, .custom-icon-image)",
+      navWealthIcon: ".bottom-nav .nav-item:nth-of-type(3) :is(svg, .custom-icon-image)",
+      navRewardsIcon: ".bottom-nav .nav-item:nth-of-type(4) :is(svg, .custom-icon-image)",
+      navServicesIcon: ".bottom-nav .nav-item:nth-of-type(5) :is(svg, .custom-icon-image)"
     };
 
     const ICON_BASE_SIZES = {
