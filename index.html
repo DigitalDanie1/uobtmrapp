@@ -79,8 +79,9 @@
     }
     .stage {
       width: calc(589px * var(--phone-scale, 1));
-      height: calc(1280px * var(--phone-scale, 1));
+      height: var(--stage-height, calc(1280px * var(--phone-scale, 1)));
       overflow: hidden;
+      background: #fdfcfc;
     }
     body.generator-docked .stage {
       position: fixed;
@@ -1730,7 +1731,7 @@
       height: 100svh;
       height: 100dvh;
       min-height: 100dvh;
-      background: #0002ae;
+      background: #fdfcfc;
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
@@ -6058,6 +6059,11 @@
         document.documentElement.style.removeProperty("--generator-right-width");
       }
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
+      if (appOnlyMode) {
+        document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
+      } else {
+        document.documentElement.style.removeProperty("--stage-height");
+      }
     }
 
     applyContent(SCREEN_CONTENT);
