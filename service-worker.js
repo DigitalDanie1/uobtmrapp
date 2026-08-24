@@ -1,4 +1,4 @@
-const CACHE_NAME = "banking-assignment-demo-v17";
+const CACHE_NAME = "banking-assignment-demo-v18";
 
 const APP_SHELL = [
   "./",
@@ -11,6 +11,7 @@ const APP_SHELL = [
   "./assets/closest-icon-192.png",
   "./assets/closest-icon-512.png",
   "./assets/closest-intro.png",
+  "./assets/auth-loading-fixed-20260824.png",
   "./assets/brand-uob-tmrw-extracted.png",
   "./assets/quick-paynow-icon-sharp-crisp.png",
   "./assets/quick-transfer-icon-sharp-crisp.png",

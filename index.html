@@ -1855,6 +1855,23 @@
     body.auth-loading-visible .auth-loading {
       display: grid;
     }
+    .auth-loading-frame {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100svh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #666;
+    }
+    .auth-loading-shot {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
     .auth-loading-inner {
       display: grid;
       justify-items: center;
@@ -2679,10 +2696,8 @@
     <span class="intro-demo-label">DEMO</span>
   </section>
   <section class="auth-loading" aria-live="polite" aria-label="데모 인증 로딩" data-auth-loading>
-    <div class="auth-loading-inner">
-      <div class="auth-loading-logo" aria-hidden="true"><span class="auth-loading-mark"></span><span>UOB</span><span class="auth-loading-divider"></span><span>TMR<span class="auth-loading-accent">W</span></span></div>
-      <div class="auth-spinner-wrap" aria-hidden="true"><span class="auth-spinner"></span><span class="auth-lock"></span></div>
-      <div class="auth-loading-text">Demo authenticating</div>
+    <div class="auth-loading-frame">
+      <img class="auth-loading-shot" src="assets/auth-loading-fixed-20260824.png" alt="데모 인증 로딩 화면">
     </div>
     <span class="intro-demo-label">DEMO</span>
   </section>
