@@ -2,13 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0100a8">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Closest%20Banking%20Demo%22%2C%22short_name%22%3A%22Banking%20Demo%22%2C%22description%22%3A%22View-only%20mobile%20UI%20demo%20for%20assignment%20review.%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23050b1f%22%2C%22theme_color%22%3A%22%230100a8%22%7D">
+  <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/closest-icon-180.png">
   <title>Closest Original Banking Demo</title>
   <style>
@@ -45,6 +45,8 @@
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      -webkit-text-size-adjust: 100%;
+      overscroll-behavior: none;
     }
     body {
       display: flex;
@@ -115,13 +117,18 @@
       transform-origin: top left;
       background:
         linear-gradient(180deg,
-          #0100a8 0%,
-          #0207bf 13%,
-          #0631e5 31%,
-          #0c83ee 47%,
-          #25bdd3 64%,
-          #f8fbfc 82%,
-          #fff 100%);
+          #0002ae 0%,
+          #0114c1 8%,
+          #0023d3 16%,
+          #0134e7 24%,
+          #0d5ce7 32%,
+          #1a79e3 40%,
+          #239cdf 48%,
+          #2abed9 56%,
+          #97dfe8 64%,
+          #fbfbfb 72%,
+          #fefefe 88%,
+          #f2e7e2 100%);
       box-shadow: 0 18px 52px rgba(12, 21, 56, .24);
     }
     .content { padding: 34px 35px 136px; }
@@ -169,7 +176,7 @@
     .network { font-size: 21px; font-weight: 800; }
     .battery {
       display: grid;
-      place-items: center;
+      place-items: start center;
       width: 34px;
       height: 20px;
       border-radius: 6px;
@@ -478,9 +485,9 @@
       white-space: nowrap;
     }
     .insight-card {
-      display: grid;
-      grid-template-columns: 1fr 185px;
-      height: 360px;
+      position: relative;
+      display: block;
+      height: 420px;
       margin-top: 41px;
       overflow: hidden;
       border-radius: 5px;
@@ -488,15 +495,29 @@
       color: #555a66;
       box-shadow: 0 2px 8px rgba(0,0,0,.11);
     }
-    .insight-copy { padding: 24px 0 27px 23px; }
+    .insight-copy {
+      position: relative;
+      z-index: 2;
+      padding: 24px 0 27px 23px;
+    }
     .date {
+      position: relative;
       display: inline-block;
       padding-bottom: 8px;
-      border-bottom: 4px solid #0b55d8;
+      border-bottom: 0;
       color: #5b6070;
       font-size: 18px;
       font-weight: 400;
       line-height: 1;
+    }
+    .date::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: var(--date-underline-width, 75px);
+      height: var(--date-underline-height, 4px);
+      background: var(--date-underline-color, #0b55d8);
     }
     .headline {
       margin-top: 12px;
@@ -515,7 +536,12 @@
       line-height: 1.29;
       font-weight: 400;
     }
-    .money-art { position: relative; min-height: 330px; }
+    .money-art {
+      position: absolute;
+      inset: 0;
+      min-height: 0;
+      pointer-events: none;
+    }
     .money-art svg {
       position: absolute;
       top: 44px;
@@ -531,6 +557,54 @@
       height: 147px;
       object-fit: contain;
       display: block;
+    }
+    .merchant-fixed-art {
+      position: absolute;
+      top: 30px;
+      right: 2px;
+      width: 181px;
+      height: 216px;
+      object-fit: contain;
+      display: block;
+    }
+    .merchant-metrics {
+      position: absolute;
+      left: 23px;
+      right: 22px;
+      bottom: 28px;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 88px;
+      overflow: hidden;
+    }
+    .merchant-metric {
+      display: grid;
+      align-content: center;
+      padding-left: 17px;
+      background: #f4f4f4;
+      color: #1c1f2a;
+    }
+    .merchant-metric strong {
+      color: #0a5ff2;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 700;
+    }
+    .merchant-metric span {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 600;
+    }
+    .merchant-metric.blue {
+      border-bottom-right-radius: 28px;
+      background: #1758f0;
+      color: #fff;
+    }
+    .merchant-metric.blue strong,
+    .merchant-metric.blue span {
+      color: #fff;
     }
     .view-link {
       margin-top: 18px;
@@ -564,20 +638,132 @@
       grid-template-columns: 1fr;
       align-items: start;
       justify-items: center;
-      height: 118px;
-      padding-top: 16px;
-      background: rgba(255,255,255,.92);
+      height: 124px;
+      padding-top: 0;
+      background: #fdfcfc;
       color: #45464e;
-      box-shadow: 0 -4px 14px rgba(0,0,0,.08);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 -2px 10px rgba(0,0,0,.06);
+      backdrop-filter: blur(10px);
     }
     .bottom-nav-strip {
-      width: 535px;
-      max-width: calc(100% - 36px);
-      height: auto;
+      width: 589px;
+      max-width: 100%;
+      height: 124px;
+      object-fit: fill;
       display: block;
       user-select: none;
       -webkit-user-drag: none;
+    }
+    .tab-screens {
+      position: absolute;
+      inset: 0;
+      z-index: 24;
+      display: none;
+      overflow: hidden;
+      background: #fff;
+    }
+    .phone.tab-capture-active .tab-screens {
+      display: block;
+    }
+    .tab-capture {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .12s ease;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .tab-capture.active {
+      opacity: 1;
+    }
+    .tab-demo-label {
+      position: absolute;
+      right: 34px;
+      bottom: 126px;
+      z-index: 35;
+      padding: 3px 7px;
+      border: 1px solid rgba(70, 70, 70, .18);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .82);
+      color: rgba(35, 39, 48, .55);
+      text-align: center;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .9px;
+    }
+    .accounts-tab-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 34;
+      display: none;
+      pointer-events: none;
+      font-family: var(--display-font);
+    }
+    .phone[data-active-tab="accounts"] .accounts-tab-overlay {
+      display: block;
+    }
+    .accounts-value-cover {
+      position: absolute;
+      top: 526px;
+      height: 36px;
+      background: #fff;
+    }
+    .accounts-withdrawable-cover {
+      left: 55px;
+      width: 205px;
+    }
+    .accounts-available-cover {
+      left: 374px;
+      width: 168px;
+    }
+    .accounts-tab-value {
+      position: absolute;
+      top: 527px;
+      color: #252735;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .accounts-tab-value.withdrawable {
+      left: 58px;
+    }
+    .accounts-tab-value.available {
+      right: 58px;
+      text-align: right;
+    }
+    .tab-hit-zone {
+      position: absolute;
+      bottom: 0;
+      z-index: 36;
+      width: 20%;
+      height: 124px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .tab-hit-zone:active {
+      background: rgba(0, 102, 255, .04);
+    }
+    .tab-hit-zone[data-tab-target="home"] { left: 0; }
+    .tab-hit-zone[data-tab-target="accounts"] { left: 20%; }
+    .tab-hit-zone[data-tab-target="wealth"] { left: 40%; }
+    .tab-hit-zone[data-tab-target="rewards"] { left: 60%; }
+    .tab-hit-zone[data-tab-target="services"] { left: 80%; }
+    body.generator-docked .tab-screens,
+    body.compare-docked .tab-screens,
+    body.generator-docked .tab-hit-zone,
+    body.compare-docked .tab-hit-zone {
+      display: none !important;
     }
     .nav-item {
       display: none;
@@ -1534,17 +1720,32 @@
     body.pwa-standalone .phone {
       box-shadow: none;
     }
-    body.closest-original-view {
+    body.closest-original-view:not(.generator-docked):not(.compare-docked) {
       display: grid;
       place-items: center;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100svh;
+      height: 100dvh;
       min-height: 100dvh;
-      background: #050b1f;
+      background: #0002ae;
+      overflow: hidden;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
     body.closest-original-view .studio-bar {
       display: none !important;
     }
-    body.closest-original-view .stage {
+    body.closest-original-view:not(.generator-docked):not(.compare-docked) .stage {
       margin: 0;
+      flex: none;
+      max-width: none;
+      max-height: none;
+      overflow: hidden;
     }
     .app-intro {
       position: fixed;
@@ -2565,12 +2766,22 @@
 
       <article class="insight-card" data-layout-id="promoCard">
         <div class="insight-copy" data-layout-id="promoTextBox">
-          <div class="date" data-field="promoDate">29 May 2026</div>
-          <div class="headline" data-field="promoHeadline">It's payday!</div>
-          <div class="body-text" data-field="promoBody">Plan ahead for your next<br>trip - save first, then<br>convert any leftovers<br>with ABC FX+ to secure<br>great rates and stretch<br>your holiday budget<br>even further.</div>
+          <div class="date" data-field="promoDate">04 Aug 2026</div>
+          <div class="headline" data-field="promoHeadline">Review new<br>merchants you<br>spent at</div>
+          <div class="body-text" data-field="promoBody">Looks like you spent at<br>some new merchants in<br>July. Tap to see more.</div>
         </div>
         <div class="money-art" data-layout-id="promoArt" aria-hidden="true">
-          <img class="promo-fixed-art" src="assets/promo-money-trip-fixed.png" alt="">
+          <img class="merchant-fixed-art" src="assets/merchant-insight-art-20260824.png" alt="">
+        </div>
+        <div class="merchant-metrics" data-layout-id="merchantMetrics">
+          <div class="merchant-metric">
+            <strong data-field="merchantCount">3</strong>
+            <span data-field="merchantLabel">Merchants</span>
+          </div>
+          <div class="merchant-metric blue">
+            <strong data-field="merchantAmount">60.20 SGD</strong>
+            <span data-field="merchantAmountLabel">Total Amount</span>
+          </div>
         </div>
       </article>
 
@@ -2579,7 +2790,7 @@
     </section>
 
     <footer class="bottom-nav" data-layout-id="bottomNav">
-      <img class="bottom-nav-strip" src="assets/bottom-nav-strip-fixed.png" alt="Home Accounts Wealth Rewards Services">
+      <img class="bottom-nav-strip" src="assets/bottom-nav-reference-20260824.png" alt="Home Accounts Wealth Rewards Services">
       <div class="nav-item fixed-nav active" data-layout-id="navHomeBox">
         <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">
         <span data-field="navHome">Home</span>
@@ -2601,6 +2812,24 @@
         <span data-field="navServices">Services</span>
       </div>
     </footer>
+    <section class="tab-screens" data-tab-screens aria-hidden="true">
+      <img class="tab-capture" data-tab-screen="accounts" src="assets/tab-accounts-20260824.jpg" alt="">
+      <img class="tab-capture" data-tab-screen="wealth" src="assets/tab-wealth-20260824.jpg" alt="">
+      <img class="tab-capture" data-tab-screen="rewards" src="assets/tab-rewards-20260824.jpg" alt="">
+      <img class="tab-capture" data-tab-screen="services" src="assets/tab-services-20260824.jpg" alt="">
+      <div class="accounts-tab-overlay" aria-hidden="true">
+        <span class="accounts-value-cover accounts-withdrawable-cover"></span>
+        <span class="accounts-value-cover accounts-available-cover"></span>
+        <span class="accounts-tab-value withdrawable" data-field="accountsWithdrawable">2,349.48 SGD</span>
+        <span class="accounts-tab-value available" data-field="accountsAvailable">2,349.48 SGD</span>
+      </div>
+      <span class="tab-demo-label">DEMO UI</span>
+    </section>
+    <button class="tab-hit-zone" type="button" data-tab-target="home" aria-label="Home"></button>
+    <button class="tab-hit-zone" type="button" data-tab-target="accounts" aria-label="Accounts"></button>
+    <button class="tab-hit-zone" type="button" data-tab-target="wealth" aria-label="Wealth"></button>
+    <button class="tab-hit-zone" type="button" data-tab-target="rewards" aria-label="Rewards+"></button>
+    <button class="tab-hit-zone" type="button" data-tab-target="services" aria-label="Services"></button>
   </main>
   </div>
   <nav class="studio-bar" aria-label="생성 도구">
@@ -2634,17 +2863,19 @@
       toolApply: "Apply",
       fxBadge: "No FX fees",
       toolFx: "FX+",
-      promoDate: "29 May 2026",
-      promoHeadline: "It's payday!",
+      promoDate: "04 Aug 2026",
+      promoHeadline: ["Review new", "merchants you", "spent at"],
       promoBody: [
-        "Plan ahead for your next",
-        "trip - save first, then",
-        "convert any leftovers",
-        "with ABC FX+ to secure",
-        "great rates and stretch",
-        "your holiday budget",
-        "even further."
+        "Looks like you spent at",
+        "some new merchants in",
+        "July. Tap to see more."
       ],
+      merchantCount: "3",
+      merchantLabel: "Merchants",
+      merchantAmount: "60.20 SGD",
+      merchantAmountLabel: "Total Amount",
+      accountsWithdrawable: "2,349.48 SGD",
+      accountsAvailable: "2,349.48 SGD",
       viewInsights: "View all insights",
       navHome: "Home",
       navAccounts: "Accounts",
@@ -2906,6 +3137,12 @@
     const FONT_STORAGE_KEY = "bankingDemoFonts";
     const TEXT_STYLE_STORAGE_KEY = "bankingDemoTextStyles";
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
+    const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
+    const DEFAULT_DATE_STYLE = {
+      underlineWidth: 75,
+      underlineHeight: 4,
+      underlineColor: "#0b55d8"
+    };
     const SCREEN_CONTENT = {
       ...DEFAULT_SCREEN_CONTENT,
       ...readSavedContent()
@@ -2925,6 +3162,10 @@
       ...readSavedFonts()
     };
     const TEXT_STYLE_SETTINGS = readSavedTextStyles();
+    const DATE_STYLE_SETTINGS = {
+      ...DEFAULT_DATE_STYLE,
+      ...readSavedDateStyle()
+    };
     let REFERENCE_STATE = readSavedReference();
     const FIXED_ICON_SETTINGS = {
       quickPayIcon: "payText",
@@ -2976,7 +3217,15 @@
 
     function readSavedContent() {
       try {
-        return JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY)) || {};
+        const saved = JSON.parse(localStorage.getItem(CONTENT_STORAGE_KEY)) || {};
+        const oldPayday = saved.promoHeadline === "It's payday!" ||
+          (Array.isArray(saved.promoBody) && saved.promoBody.join(" ").includes("Plan ahead for your next"));
+        if (oldPayday) {
+          delete saved.promoDate;
+          delete saved.promoHeadline;
+          delete saved.promoBody;
+        }
+        return saved;
       } catch (error) {
         return {};
       }
@@ -3035,6 +3284,14 @@
         return JSON.parse(localStorage.getItem(REFERENCE_STORAGE_KEY)) || null;
       } catch (error) {
         return null;
+      }
+    }
+
+    function readSavedDateStyle() {
+      try {
+        return JSON.parse(localStorage.getItem(DATE_STYLE_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
       }
     }
 
@@ -3109,6 +3366,11 @@
 
     function saveTextStyles(styles) {
       writeStorage(TEXT_STYLE_STORAGE_KEY, styles);
+      scheduleReferenceAnalysis();
+    }
+
+    function saveDateStyle(style) {
+      writeStorage(DATE_STYLE_STORAGE_KEY, style);
       scheduleReferenceAnalysis();
     }
 
@@ -3242,6 +3504,15 @@
           applyTextStyleToElement(element, style);
         });
       });
+    }
+
+    function applyDateStyle(style) {
+      const width = Math.max(1, Number(style.underlineWidth) || DEFAULT_DATE_STYLE.underlineWidth);
+      const height = Math.max(1, Number(style.underlineHeight) || DEFAULT_DATE_STYLE.underlineHeight);
+      const color = style.underlineColor || DEFAULT_DATE_STYLE.underlineColor;
+      document.documentElement.style.setProperty("--date-underline-width", width + "px");
+      document.documentElement.style.setProperty("--date-underline-height", height + "px");
+      document.documentElement.style.setProperty("--date-underline-color", color);
     }
 
     function replaceIcon(slot, templateName) {
@@ -5523,6 +5794,7 @@
         localStorage.removeItem(FONT_STORAGE_KEY);
         localStorage.removeItem(TEXT_STYLE_STORAGE_KEY);
         localStorage.removeItem(REFERENCE_STORAGE_KEY);
+        localStorage.removeItem(DATE_STYLE_STORAGE_KEY);
         location.reload();
       });
 
@@ -5533,6 +5805,78 @@
       help.className = "editor-help";
       help.textContent = "수정할 때마다 왼쪽 원본 분석의 유사도가 자동으로 다시 계산됩니다. 목표는 100%입니다.";
       editor.append(help);
+
+      const updateContentField = (field, rawValue) => {
+        SCREEN_CONTENT[field] = inputValueForField(field, rawValue);
+        applyContent(SCREEN_CONTENT);
+        saveContent(SCREEN_CONTENT);
+        editor.querySelectorAll(`[data-content-field="${field}"]`).forEach((input) => {
+          if (input.value !== rawValue) input.value = rawValue;
+        });
+      };
+
+      const quickNumberTitle = document.createElement("h2");
+      quickNumberTitle.textContent = "요청한 3개만 빠른 수정";
+      quickNumberTitle.style.marginTop = "14px";
+      editor.append(quickNumberTitle);
+
+      [
+        ["balance", "홈 잔액"],
+        ["promoDate", "카드 날짜"],
+        ["accountsWithdrawable", "Accounts Withdrawable amount"],
+        ["accountsAvailable", "Accounts Available balance"]
+      ].forEach(([field, labelText]) => {
+        const label = document.createElement("label");
+        label.textContent = labelText;
+        const input = document.createElement("input");
+        input.dataset.contentField = field;
+        input.value = valueForInput(SCREEN_CONTENT[field]);
+        input.addEventListener("input", () => updateContentField(field, input.value));
+        label.append(input);
+        editor.append(label);
+      });
+
+      const dateTitle = document.createElement("h2");
+      dateTitle.textContent = "날짜 / 밑줄";
+      dateTitle.style.marginTop = "14px";
+      editor.append(dateTitle);
+
+      const dateLabel = document.createElement("label");
+      dateLabel.textContent = "카드 날짜";
+      const dateInput = document.createElement("input");
+      dateInput.dataset.contentField = "promoDate";
+      dateInput.value = valueForInput(SCREEN_CONTENT.promoDate);
+      dateInput.addEventListener("input", () => updateContentField("promoDate", dateInput.value));
+      dateLabel.append(dateInput);
+      editor.append(dateLabel);
+
+      const underlineWidthLabel = document.createElement("label");
+      underlineWidthLabel.textContent = "밑줄 길이(px)";
+      const underlineWidthInput = document.createElement("input");
+      underlineWidthInput.type = "number";
+      underlineWidthInput.min = "1";
+      underlineWidthInput.step = "1";
+      underlineWidthInput.value = DATE_STYLE_SETTINGS.underlineWidth;
+      underlineWidthInput.addEventListener("input", () => {
+        DATE_STYLE_SETTINGS.underlineWidth = Number(underlineWidthInput.value) || DEFAULT_DATE_STYLE.underlineWidth;
+        applyDateStyle(DATE_STYLE_SETTINGS);
+        saveDateStyle(DATE_STYLE_SETTINGS);
+      });
+      underlineWidthLabel.append(underlineWidthInput);
+      editor.append(underlineWidthLabel);
+
+      const underlineColorLabel = document.createElement("label");
+      underlineColorLabel.textContent = "밑줄 색상";
+      const underlineColorInput = document.createElement("input");
+      underlineColorInput.type = "color";
+      underlineColorInput.value = DATE_STYLE_SETTINGS.underlineColor;
+      underlineColorInput.addEventListener("input", () => {
+        DATE_STYLE_SETTINGS.underlineColor = underlineColorInput.value;
+        applyDateStyle(DATE_STYLE_SETTINGS);
+        saveDateStyle(DATE_STYLE_SETTINGS);
+      });
+      underlineColorLabel.append(underlineColorInput);
+      editor.append(underlineColorLabel);
 
       const contentTitle = document.createElement("h2");
       contentTitle.textContent = "텍스트 / 숫자";
@@ -5547,12 +5891,9 @@
           ? document.createElement("textarea")
           : document.createElement("input");
 
+        input.dataset.contentField = field;
         input.value = valueForInput(value);
-        input.addEventListener("input", () => {
-          SCREEN_CONTENT[field] = inputValueForField(field, input.value);
-          applyContent(SCREEN_CONTENT);
-          saveContent(SCREEN_CONTENT);
-        });
+        input.addEventListener("input", () => updateContentField(field, input.value));
 
         label.append(input);
         editor.append(label);
@@ -5647,6 +5988,7 @@
         localStorage.removeItem(FONT_STORAGE_KEY);
         localStorage.removeItem(TEXT_STYLE_STORAGE_KEY);
         localStorage.removeItem(REFERENCE_STORAGE_KEY);
+        localStorage.removeItem(DATE_STYLE_STORAGE_KEY);
         location.reload();
       });
 
@@ -5661,36 +6003,38 @@
     }
 
     function fitPhone() {
+      var viewportWidth = window.visualViewport?.width || window.innerWidth;
+      var viewportHeight = window.visualViewport?.height || window.innerHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       var scale = appOnlyMode
-        ? Math.min(window.innerWidth / 589, window.innerHeight / 1280)
-        : Math.min(1, window.innerWidth / 589);
+        ? viewportWidth / 589
+        : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
         if (workspace) {
-          if (window.innerWidth <= 700) {
-            var sideBySideWidth = Math.max(160, (window.innerWidth - 34) / 2 - 16);
+          if (viewportWidth <= 700) {
+            var sideBySideWidth = Math.max(160, (viewportWidth - 34) / 2 - 16);
             scale = Math.min(.46, Math.max(.28, sideBySideWidth / 589));
           } else {
-            scale = Math.min(.68, Math.max(.42, (window.innerHeight - 124) / 1280));
+            scale = Math.min(.68, Math.max(.42, (viewportHeight - 124) / 1280));
           }
           document.documentElement.style.removeProperty("--generator-stage-left");
           document.documentElement.style.removeProperty("--generator-left-width");
           document.documentElement.style.removeProperty("--generator-right-width");
         } else {
-          var compactGenerator = window.innerWidth <= 1180;
+          var compactGenerator = viewportWidth <= 1180;
           if (compactGenerator) {
-            scale = Math.min(1, Math.max(.28, (window.innerWidth - 42) / 2 / 589));
+            scale = Math.min(1, Math.max(.28, (viewportWidth - 42) / 2 / 589));
             document.documentElement.style.removeProperty("--generator-stage-left");
             document.documentElement.style.removeProperty("--generator-left-width");
             document.documentElement.style.removeProperty("--generator-right-width");
           } else {
-          var leftWidth = Math.min(360, Math.max(320, window.innerWidth * .24));
-          var rightWidth = Math.min(380, Math.max(330, window.innerWidth * .25));
+          var leftWidth = Math.min(360, Math.max(320, viewportWidth * .24));
+          var rightWidth = Math.min(380, Math.max(330, viewportWidth * .25));
           var middleLeft = 14 + leftWidth + 18;
-          var middleRight = window.innerWidth - 14 - rightWidth - 18;
+          var middleRight = viewportWidth - 14 - rightWidth - 18;
           var middleWidth = Math.max(260, middleRight - middleLeft);
           scale = Math.min(1, Math.max(.32, middleWidth / 589));
           var stageLeft = Math.round(middleLeft + (middleWidth - 589 * scale) / 2);
@@ -5700,11 +6044,11 @@
           }
         }
       } else if (document.body.classList.contains("compare-docked")) {
-        var compactCompare = window.innerWidth <= 900;
+        var compactCompare = viewportWidth <= 900;
         var panelWidth = compactCompare
-          ? Math.min(420, Math.max(300, window.innerWidth * .62))
-          : Math.min(920, Math.max(680, window.innerWidth * .58));
-        var availableWidth = window.innerWidth - panelWidth - 46;
+          ? Math.min(420, Math.max(300, viewportWidth * .62))
+          : Math.min(920, Math.max(680, viewportWidth * .58));
+        var availableWidth = viewportWidth - panelWidth - 46;
         scale = Math.min(1, Math.max(compactCompare ? .24 : .45, availableWidth / 589));
         document.documentElement.style.setProperty("--compare-panel-width", Math.round(panelWidth) + "px");
       } else {
@@ -5720,6 +6064,7 @@
     applyFonts(FONT_SETTINGS);
     applyVisuals(VISUAL_SETTINGS);
     applyTextStyles(TEXT_STYLE_SETTINGS);
+    applyDateStyle(DATE_STYLE_SETTINGS);
     applyLayout(LAYOUT_SETTINGS);
 
     const pageParams = new URLSearchParams(location.search);
@@ -5727,6 +6072,21 @@
       pageParams.get("app") === "1" ||
       window.navigator.standalone === true ||
       window.matchMedia?.("(display-mode: standalone)")?.matches;
+    const isLockedView = () =>
+      pageParams.get("edit") !== "1" &&
+      pageParams.get("compare") !== "1" &&
+      document.body.classList.contains("closest-original-view") &&
+      !document.body.classList.contains("generator-docked") &&
+      !document.body.classList.contains("compare-docked");
+    const preventLockedGesture = (event) => {
+      if (isLockedView()) event.preventDefault();
+    };
+    ["gesturestart", "gesturechange", "gestureend", "contextmenu"].forEach((eventName) => {
+      document.addEventListener(eventName, preventLockedGesture, { passive: false });
+    });
+    document.addEventListener("touchmove", (event) => {
+      if (isLockedView() && event.touches.length > 1) event.preventDefault();
+    }, { passive: false });
 
     if (isStandaloneApp()) {
       document.body.classList.add("pwa-standalone");
@@ -5748,6 +6108,7 @@
 
     window.addEventListener("keydown", (event) => {
       if (
+        pageParams.get("edit") === "1" &&
         event.key.toLowerCase() === "e" &&
         !event.metaKey && !event.ctrlKey && !event.altKey &&
         !["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName) &&
@@ -5763,6 +6124,8 @@
     });
 
     window.addEventListener("resize", fitPhone);
+    window.visualViewport?.addEventListener("resize", fitPhone);
+    window.visualViewport?.addEventListener("scroll", fitPhone);
     document.querySelector('[data-studio-action="generate"]')?.addEventListener("click", openGenerator);
     document.querySelector('[data-studio-action="compare"]')?.addEventListener("click", showComparePanel);
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
@@ -5850,6 +6213,37 @@
       const toolMessages = ["eStatement 데모", "한도 설정 데모", "신청 메뉴 데모", "FX+ 데모"];
       document.querySelectorAll(".tools .tool").forEach((item, index) => {
         wirePress(item, toolMessages[index] || "서비스 데모");
+      });
+
+      const tabScreens = document.querySelector("[data-tab-screens]");
+      const setAppTab = (tabName) => {
+        phone.querySelectorAll(".tab-capture").forEach((screen) => {
+          screen.classList.toggle("active", screen.dataset.tabScreen === tabName);
+        });
+        const isHome = tabName === "home";
+        phone.classList.toggle("tab-capture-active", !isHome);
+        if (isHome) {
+          delete phone.dataset.activeTab;
+        } else {
+          phone.dataset.activeTab = tabName;
+        }
+        tabScreens?.setAttribute("aria-hidden", isHome ? "true" : "false");
+        if (navigator.vibrate) navigator.vibrate(6);
+      };
+
+      phone.querySelectorAll("[data-tab-target]").forEach((button) => {
+        const tabName = button.dataset.tabTarget;
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setAppTab(tabName);
+        });
+        button.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setAppTab(tabName);
+          }
+        });
       });
 
       document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
