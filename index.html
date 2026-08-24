@@ -6037,10 +6037,13 @@
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
-      var appZoom = 1.055;
-      var appDownOffset = 86;
+      if (appOnlyMode) {
+        viewportWidth = window.innerWidth || viewportWidth;
+        viewportHeight = window.innerHeight || viewportHeight;
+      }
+      var appZoom = 1.004;
       var scale = appOnlyMode
-        ? (viewportWidth / 589) * appZoom
+        ? Math.max(viewportWidth / 589, viewportHeight / 1280) * appZoom
         : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6091,11 +6094,10 @@
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       if (appOnlyMode) {
         var scaledPhoneHeight = 1280 * scale;
-        var overflow = Math.max(0, scaledPhoneHeight - viewportHeight);
-        var phoneShift = Math.max(0, overflow - appDownOffset);
+        var phoneShift = Math.min(0, viewportHeight - scaledPhoneHeight);
         document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
         document.documentElement.style.setProperty("--app-view-height", Math.ceil(viewportHeight) + "px");
-        document.documentElement.style.setProperty("--app-phone-shift", "-" + Math.ceil(phoneShift) + "px");
+        document.documentElement.style.setProperty("--app-phone-shift", Math.floor(phoneShift) + "px");
       } else {
         document.documentElement.style.removeProperty("--stage-height");
         document.documentElement.style.removeProperty("--app-view-height");
