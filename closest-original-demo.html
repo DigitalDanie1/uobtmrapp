@@ -161,6 +161,25 @@
       font-variant-numeric: tabular-nums;
       line-height: 1;
     }
+    body.preview-device.closest-original-view:not(.generator-docked):not(.compare-docked) .status {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 38px;
+      z-index: 70;
+      display: flex;
+      color: #05050a;
+      pointer-events: none;
+    }
+    body.preview-device.closest-original-view:not(.generator-docked):not(.compare-docked) .status .arrow,
+    body.preview-device.closest-original-view:not(.generator-docked):not(.compare-docked) .signal i {
+      background: #05050a;
+    }
+    body.preview-device.closest-original-view:not(.generator-docked):not(.compare-docked) .battery {
+      background: #7df05b;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .35);
+    }
     .status div { display: flex; align-items: center; gap: 8px; }
     .arrow {
       width: 20px;
@@ -6113,6 +6132,11 @@
     applyLayout(LAYOUT_SETTINGS);
 
     const pageParams = new URLSearchParams(location.search);
+    const isIOSDevice = () =>
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    document.body.classList.toggle("ios-device", isIOSDevice());
+    document.body.classList.toggle("preview-device", !isIOSDevice());
     const isStandaloneApp = () =>
       pageParams.get("app") === "1" ||
       window.navigator.standalone === true ||
