@@ -634,7 +634,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: var(--app-bottom-lift, 0px);
       display: grid;
       grid-template-columns: 1fr;
       align-items: start;
@@ -740,7 +740,7 @@
     }
     .tab-hit-zone {
       position: absolute;
-      bottom: 0;
+      bottom: var(--app-bottom-lift, 0px);
       z-index: 36;
       width: 20%;
       height: 124px;
@@ -1770,6 +1770,18 @@
       height: min(100dvh, calc(100vw * 1280 / 588));
       aspect-ratio: 588 / 1280;
       overflow: hidden;
+    }
+    .app-intro-frame::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 1;
+      height: 76px;
+      background:
+        linear-gradient(180deg, rgba(36, 153, 232, .98) 0%, rgba(35, 156, 237, .96) 62%, rgba(35, 156, 237, 0) 100%);
+      pointer-events: none;
     }
     .app-intro img {
       width: 100%;
@@ -6008,7 +6020,7 @@
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       var scale = appOnlyMode
-        ? Math.min(viewportWidth / 589, viewportHeight / 1280)
+        ? viewportWidth / 589
         : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6058,9 +6070,14 @@
       }
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       if (appOnlyMode) {
-        document.documentElement.style.setProperty("--stage-height", Math.ceil(1280 * scale) + "px");
+        var scaledPhoneHeight = 1280 * scale;
+        var overflow = Math.max(0, scaledPhoneHeight - viewportHeight);
+        var lift = Math.ceil(overflow / scale);
+        document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
+        document.documentElement.style.setProperty("--app-bottom-lift", lift + "px");
       } else {
         document.documentElement.style.removeProperty("--stage-height");
+        document.documentElement.style.removeProperty("--app-bottom-lift");
       }
     }
 
