@@ -7,9 +7,9 @@
   <title>iPhone 17 Viewer</title>
   <style>
     :root {
-      --device-width: 423px;
-      --device-height: 969px;
-      --viewer-scale: min(calc((100vw - 34px) / 423), calc((100dvh - 104px) / 969), 1);
+      --device-width: 1206px;
+      --device-height: 2622px;
+      --viewer-scale: .36;
       color-scheme: dark;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     }
@@ -81,8 +81,8 @@
       width: var(--device-width);
       height: var(--device-height);
       overflow: hidden;
-      border: 10px solid #050508;
-      border-radius: 58px;
+      border: 28px solid #050508;
+      border-radius: 165px;
       background: #000;
       box-shadow:
         0 30px 70px rgba(0, 0, 0, .52),
@@ -95,10 +95,10 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 13px;
+      top: 37px;
       z-index: 3;
-      width: 132px;
-      height: 38px;
+      width: 376px;
+      height: 108px;
       border-radius: 999px;
       background: #050508;
       transform: translateX(-50%);
@@ -111,15 +111,11 @@
       width: 100%;
       height: 100%;
       border: 0;
-      border-radius: 48px;
+      border-radius: 137px;
       background: #fff;
     }
 
     @media (max-height: 760px) {
-      :root {
-        --viewer-scale: min(calc((100vw - 28px) / 423), calc((100dvh - 76px) / 969), 1);
-      }
-
       body {
         gap: 8px;
         padding: 10px;
@@ -140,7 +136,7 @@
   <nav class="viewer-bar" aria-label="iPhone 17 viewer controls">
     <button class="active" type="button" data-screen="home">Home</button>
     <button type="button" data-screen="intro">Intro</button>
-    <a href="./index.html?screen=1&app=1&v=33" target="_blank" rel="noreferrer">Open</a>
+    <a href="./index.html?screen=1&app=1&viewer=1&v=36" target="_blank" rel="noreferrer">Open</a>
   </nav>
 
   <main class="device-wrap" aria-label="iPhone 17 viewport">
@@ -148,9 +144,9 @@
       <iframe
         id="phoneFrame"
         title="iPhone 17 app preview"
-        src="./index.html?screen=1&app=1&v=33"
-        width="423"
-        height="969"
+        src="./index.html?screen=1&app=1&viewer=1&v=36"
+        width="1206"
+        height="2622"
       ></iframe>
     </section>
   </main>
@@ -158,9 +154,16 @@
   <script>
     const frame = document.getElementById("phoneFrame");
     const buttons = [...document.querySelectorAll("[data-screen]")];
+    const fitViewer = () => {
+      const width = window.innerWidth || document.documentElement.clientWidth || 1206;
+      const height = window.innerHeight || document.documentElement.clientHeight || 2622;
+      const verticalReserve = height <= 760 ? 76 : 104;
+      const scale = Math.min((width - 34) / 1206, (height - verticalReserve) / 2622, 1);
+      document.documentElement.style.setProperty("--viewer-scale", Math.max(.1, scale).toFixed(5));
+    };
     const urls = {
-      home: "./index.html?screen=1&app=1&v=33",
-      intro: "./index.html?app=1&v=33"
+      home: "./index.html?screen=1&app=1&viewer=1&v=36",
+      intro: "./index.html?app=1&viewer=1&v=36"
     };
 
     buttons.forEach((button) => {
@@ -169,6 +172,10 @@
         frame.src = urls[button.dataset.screen];
       });
     });
+
+    window.addEventListener("resize", fitViewer);
+    window.visualViewport?.addEventListener("resize", fitViewer);
+    fitViewer();
   </script>
 </body>
 </html>

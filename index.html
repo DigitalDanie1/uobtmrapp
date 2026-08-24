@@ -6065,10 +6065,16 @@
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       if (appOnlyMode) {
-        var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
-        var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
-        viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
-        viewportHeight = Math.round(Math.min.apply(Math, heightCandidates));
+        var isViewerFrame = pageParams.get("viewer") === "1";
+        if (isViewerFrame) {
+          viewportWidth = Math.round(visualViewportWidth || layoutViewportWidth || windowViewportWidth);
+          viewportHeight = Math.round(visualViewportHeight || layoutViewportHeight || windowViewportHeight);
+        } else {
+          var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
+          var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
+          viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
+          viewportHeight = Math.round(Math.min.apply(Math, heightCandidates));
+        }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? (viewportHeight / 1280) * 1.002 : scaleX;
