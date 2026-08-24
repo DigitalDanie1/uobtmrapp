@@ -6051,16 +6051,22 @@
     }
 
     function fitPhone() {
-      var viewportWidth = window.visualViewport?.width || window.innerWidth;
-      var viewportHeight = window.visualViewport?.height || window.innerHeight;
+      var visualViewportWidth = window.visualViewport?.width || 0;
+      var visualViewportHeight = window.visualViewport?.height || 0;
+      var layoutViewportWidth = document.documentElement.clientWidth || 0;
+      var layoutViewportHeight = document.documentElement.clientHeight || 0;
+      var windowViewportWidth = window.innerWidth || 0;
+      var windowViewportHeight = window.innerHeight || 0;
+      var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
+      var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       if (appOnlyMode) {
-        viewportWidth = window.innerWidth || viewportWidth;
-        viewportHeight = window.innerHeight || viewportHeight;
+        viewportWidth = Math.round(Math.max(visualViewportWidth, layoutViewportWidth, windowViewportWidth));
+        viewportHeight = Math.round(Math.max(visualViewportHeight, layoutViewportHeight, windowViewportHeight));
       }
-      var appZoom = 1;
+      var appZoom = 1.004;
       var scale = appOnlyMode
         ? Math.max(viewportWidth / 588, viewportHeight / 1280) * appZoom
         : Math.min(1, viewportWidth / 589);
@@ -6113,7 +6119,7 @@
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       if (appOnlyMode) {
         var scaledPhoneHeight = 1280 * scale;
-        var phoneShift = Math.min(0, (viewportHeight - scaledPhoneHeight) / scale);
+        var phoneShift = Math.min(0, viewportHeight - scaledPhoneHeight);
         document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
         document.documentElement.style.setProperty("--app-view-height", Math.ceil(viewportHeight) + "px");
         document.documentElement.style.setProperty("--app-phone-shift", Math.floor(phoneShift) + "px");
