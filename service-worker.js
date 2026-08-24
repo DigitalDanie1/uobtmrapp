@@ -1,4 +1,4 @@
-const CACHE_NAME = "banking-assignment-demo-v4";
+const CACHE_NAME = "banking-assignment-demo-v14";
 
 const APP_SHELL = [
   "./",
@@ -7,9 +7,6 @@ const APP_SHELL = [
   "./closest-original-demo.html",
   "./manifest.json",
   "./closest-manifest.json",
-  "./assets/pwa-icon-180.png",
-  "./assets/pwa-icon-192.png",
-  "./assets/pwa-icon-512.png",
   "./assets/closest-icon-180.png",
   "./assets/closest-icon-192.png",
   "./assets/closest-icon-512.png",
@@ -27,7 +24,15 @@ const APP_SHELL = [
   "./assets/nav-accounts-trimmed-crisp.png",
   "./assets/nav-wealth-trimmed-crisp.png",
   "./assets/nav-rewards-trimmed-crisp.png",
-  "./assets/nav-services-trimmed-crisp.png"
+  "./assets/nav-services-trimmed-crisp.png",
+  "./assets/bottom-nav-strip-fixed.png",
+  "./assets/bottom-nav-strip-transparent.png",
+  "./assets/bottom-nav-reference-20260824.png",
+  "./assets/merchant-insight-art-20260824.png",
+  "./assets/tab-accounts-20260824.jpg",
+  "./assets/tab-wealth-20260824.jpg",
+  "./assets/tab-rewards-20260824.jpg",
+  "./assets/tab-services-20260824.jpg"
 ];
 
 self.addEventListener("install", (event) => {
