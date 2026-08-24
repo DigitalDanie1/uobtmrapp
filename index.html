@@ -1753,7 +1753,7 @@
       inset: 0;
       z-index: 80;
       display: grid;
-      place-items: center;
+      place-items: start center;
       width: 100vw;
       height: 100vh;
       height: 100svh;
@@ -1766,18 +1766,16 @@
     }
     .app-intro-frame {
       position: relative;
-      width: max(100vw, calc(100dvh * 402 / 874));
-      height: max(100dvh, calc(100vw * 874 / 402));
-      min-width: 100vw;
-      min-height: 100dvh;
-      aspect-ratio: 402 / 874;
+      width: min(100vw, calc(100dvh * 588 / 1280));
+      height: min(100dvh, calc(100vw * 1280 / 588));
+      aspect-ratio: 588 / 1280;
       overflow: hidden;
     }
     .app-intro img {
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: fill;
       object-position: center;
       user-select: none;
       -webkit-user-drag: none;
@@ -6010,7 +6008,7 @@
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       var scale = appOnlyMode
-        ? viewportWidth / 589
+        ? Math.min(viewportWidth / 589, viewportHeight / 1280)
         : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6060,7 +6058,7 @@
       }
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       if (appOnlyMode) {
-        document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
+        document.documentElement.style.setProperty("--stage-height", Math.ceil(1280 * scale) + "px");
       } else {
         document.documentElement.style.removeProperty("--stage-height");
       }
