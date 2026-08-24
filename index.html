@@ -1753,7 +1753,7 @@
       inset: 0;
       z-index: 80;
       display: grid;
-      place-items: start center;
+      place-items: center;
       width: 100vw;
       height: 100vh;
       height: 100svh;
@@ -1766,8 +1766,10 @@
     }
     .app-intro-frame {
       position: relative;
-      width: min(100vw, calc(100dvh * 588 / 1280));
-      height: min(100dvh, calc(100vw * 1280 / 588));
+      width: max(100vw, calc(100dvh * 588 / 1280));
+      height: max(100dvh, calc(100vw * 1280 / 588));
+      min-width: 100vw;
+      min-height: 100dvh;
       aspect-ratio: 588 / 1280;
       overflow: hidden;
     }
@@ -6035,8 +6037,8 @@
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
-      var appZoom = 1.022;
-      var appDownOffset = 12;
+      var appZoom = 1.055;
+      var appDownOffset = 86;
       var scale = appOnlyMode
         ? (viewportWidth / 589) * appZoom
         : Math.min(1, viewportWidth / 589);
