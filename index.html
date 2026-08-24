@@ -59,6 +59,7 @@
       height: 100vh;
       height: 100svh;
       height: 100dvh;
+      height: var(--app-view-height, 100dvh);
       min-height: 100dvh;
       background: #fdfcfc;
       overflow: hidden;
@@ -1777,6 +1778,7 @@
       height: 100vh;
       height: 100svh;
       height: 100dvh;
+      height: var(--app-view-height, 100dvh);
       overflow: hidden;
       background: #050b1f;
       cursor: pointer;
@@ -1785,10 +1787,10 @@
     }
     .app-intro-frame {
       position: relative;
-      width: max(100vw, calc(100dvh * 588 / 1280));
-      height: max(100dvh, calc(100vw * 1280 / 588));
+      width: max(100vw, calc(var(--app-view-height, 100dvh) * 588 / 1280));
+      height: max(var(--app-view-height, 100dvh), calc(100vw * 1280 / 588));
       min-width: 100vw;
-      min-height: 100dvh;
+      min-height: var(--app-view-height, 100dvh);
       aspect-ratio: 588 / 1280;
       overflow: hidden;
     }
@@ -1869,6 +1871,7 @@
       height: 100vh;
       height: 100svh;
       height: 100dvh;
+      height: var(--app-view-height, 100dvh);
       background: rgba(92, 92, 90, .96);
       color: #fff;
       font-family: var(--ui-font);
@@ -1882,6 +1885,7 @@
       height: 100vh;
       height: 100svh;
       height: 100dvh;
+      height: var(--app-view-height, 100dvh);
       overflow: hidden;
       background: #666;
     }
