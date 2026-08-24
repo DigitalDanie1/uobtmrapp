@@ -2,29 +2,39 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mobile Banking Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0100a8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Banking Demo">
+  <link rel="manifest" href="./closest-manifest.json">
+  <link rel="apple-touch-icon" href="./assets/pwa-icon-180.png">
+  <title>Closest Original Banking Demo</title>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap");
+
     @font-face {
       font-family: "DemoSFText";
-      src: local("SF Pro Text"), local(".SF NS Text"), local("SFProText-Regular");
+      src: local("SF Pro Text"), local(".SF NS Text"), local("SF UI Text"), local("Helvetica Neue");
       font-style: normal;
       font-weight: 100 900;
     }
 
     @font-face {
       font-family: "DemoSFDisplay";
-      src: local("SF Pro Display"), local(".SF NS Display"), local("SFProDisplay-Regular");
+      src: local("SF Pro Display"), local(".SF NS Display"), local("SF UI Display"), local("Helvetica Neue");
       font-style: normal;
       font-weight: 100 900;
     }
 
     :root {
-      --ui-font: "DemoSFText", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-      --display-font: "DemoSFDisplay", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --ui-font: "Roboto", "Noto Sans", Arimo, Arial, sans-serif;                                                            
+      --display-font: "Roboto", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
     }
 
-    * { box-sizing: border-box; }
+                           * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html, body {
       margin: 0;
       min-height: 100%;
@@ -42,26 +52,71 @@
       align-items: flex-start;
       overflow-x: hidden;
     }
+    body.pwa-standalone {
+      min-height: 100dvh;
+      background: #fff;
+      overflow: hidden;
+      padding: 0;
+    }
+    body.generator-docked {
+      display: block;
+      min-height: 100vh;
+      padding: 14px;
+      overflow: auto;
+    }
+    body.compare-docked {
+      justify-content: center;
+      gap: 16px;
+      padding: 14px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
     .stage {
       width: calc(589px * var(--phone-scale, 1));
       height: calc(1280px * var(--phone-scale, 1));
       overflow: hidden;
+    }
+    body.generator-docked .stage {
+      position: fixed;
+      top: 54px;
+      left: var(--generator-stage-left, 50%);
+      z-index: 42;
+      overflow: visible;
+    }
+    body.generator-docked .stage::before {
+      content: "내가 만든 화면 · 실시간";
+      position: absolute;
+      left: 0;
+      top: -38px;
+      z-index: 2;
+      padding: 8px 11px;
+      border-radius: 9px;
+      background: rgba(14, 24, 42, .9);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
     }
     .phone {
       position: relative;
       width: 589px;
       height: 1280px;
       overflow: hidden;
+      color: #fff;
+      font-family: var(--ui-font);
+      font-synthesis: none;
+      font-feature-settings: "kern" 1;
       transform: scale(var(--phone-scale, 1));
       transform-origin: top left;
       background:
         linear-gradient(180deg,
-          #0400a9 0%,
-          #000bc0 16%,
-          #0029e7 31%,
-          #087df0 45%,
-          #22c1d2 63%,
-          #f8fbfc 83%,
+          #0100a8 0%,
+          #0207bf 13%,
+          #0631e5 31%,
+          #0c83ee 47%,
+          #25bdd3 64%,
+          #f8fbfc 82%,
           #fff 100%);
       box-shadow: 0 18px 52px rgba(12, 21, 56, .24);
     }
@@ -88,8 +143,8 @@
       height: 28px;
       padding: 0 30px;
       font-family: var(--display-font);
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 27px;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
       line-height: 1;
     }
@@ -129,12 +184,41 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 0;
       font-family: var(--display-font);
       font-size: 28px;
-      font-weight: 820;
+      font-weight: 700;
       line-height: 1;
       letter-spacing: 0;
+    }
+    .brand-fixed-image {
+      display: block;
+      width: 205px;
+      height: auto;
+      image-rendering: auto;
+      filter: none;
+    }
+    .brand-wordmark {
+      display: block;
+      width: 201px;
+      height: 30px;
+      overflow: visible;
+      shape-rendering: geometricPrecision;
+      text-rendering: geometricPrecision;
+    }
+    .brand-wordmark .wordmark-text {
+      fill: #fff;
+      font-family: "Roboto", "Noto Sans", Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .brand-wordmark .tmrw-text {
+      fill: #fff;
+      font-family: "Roboto", "Noto Sans", Arial, sans-serif;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: 1px;
     }
     .brand-mark {
       display: block;
@@ -164,7 +248,7 @@
       align-items: center;
       gap: 23px;
       font-size: 18px;
-      font-weight: 400;
+      font-weight: 500;
       line-height: 1;
     }
     .links .bar {
@@ -193,8 +277,8 @@
     .amount {
       margin-top: 14px;
       font-family: var(--display-font);
-      font-size: 32px;
-      font-weight: 780;
+      font-size: 33px;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
       line-height: 1;
       letter-spacing: 0;
@@ -221,9 +305,30 @@
       justify-items: center;
       gap: 10px;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.1;
     }
+    .quick-action.fixed-quick {
+      gap: 8px;
+    }
+    .quick-action.fixed-quick span {
+      display: block;
+      color: #4f5664;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.08;
+      white-space: nowrap;
+    }
+    .quick-action .fixed-quick-icon {
+      width: 82px;
+      height: 64px;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+    }
+    .quick-action [data-icon-slot="quickPayIcon"] { width: 61px; height: 39px; }
+    .quick-action [data-icon-slot="quickTransferIcon"] { width: 45px; height: 52px; }
+    .quick-action [data-icon-slot="quickScanIcon"] { width: 47px; height: 41px; }
     .paynow-logo {
       width: 64px;
       height: 43px;
@@ -232,9 +337,9 @@
     .paynow-logo text {
       fill: var(--quick-icon-color, #60646e);
       font-family: var(--display-font);
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: -1px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0;
     }
     .paynow-logo .paynow-spark {
       fill: var(--quick-icon-color, #60646e);
@@ -250,7 +355,7 @@
     .quick-icon .line {
       fill: none;
       stroke: var(--quick-icon-color, #60646e);
-      stroke-width: 3.8;
+      stroke-width: 3.1;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -273,14 +378,14 @@
       stroke-linejoin: round;
     }
     .nav-icon {
-      width: 39px;
-      height: 39px;
+      width: 37px;
+      height: 37px;
       overflow: visible;
     }
     .nav-icon .nav-line {
       fill: none;
       stroke: currentColor;
-      stroke-width: 3.2;
+      stroke-width: 2.7;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -291,6 +396,10 @@
       display: block;
       object-fit: contain;
       flex: 0 0 auto;
+      image-rendering: auto;
+      filter: contrast(1.18) saturate(1.05);
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
     .brand .custom-icon-image {
       margin-right: 1px;
@@ -299,9 +408,33 @@
       max-width: 76px;
       max-height: 52px;
     }
+    .quick-action .fixed-quick-icon {
+      max-width: none;
+      max-height: none;
+    }
     .tool .custom-icon-image {
       max-width: 68px;
       max-height: 58px;
+    }
+    .tool.fixed-tool {
+      gap: 2px;
+    }
+    .tool .fixed-tool-icon {
+      width: 52px;
+      height: 50px;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+    }
+    .tool [data-icon-slot="toolStatementsIcon"] { width: 40px; height: 51px; }
+    .tool [data-icon-slot="toolLimitsIcon"] { width: 43px; height: 50px; }
+    .tool [data-icon-slot="toolApplyIcon"] { width: 55px; height: 47px; }
+    .tool [data-icon-slot="toolFxIcon"] { width: 92px; height: 58px; }
+    .tool.fixed-tool-fx .badge {
+      display: none;
+    }
+    .tool.fixed-tool-fx [data-field="toolFx"] {
+      display: block;
     }
     .nav-item .custom-icon-image {
       max-width: 44px;
@@ -323,7 +456,7 @@
       text-align: center;
       font-size: 19px;
       line-height: 1.25;
-      font-weight: 400;
+      font-weight: 500;
     }
     .badge {
       position: absolute;
@@ -367,7 +500,7 @@
       color: #252735;
       font-size: 30px;
       line-height: 1.03;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0;
     }
     .body-text {
@@ -385,6 +518,15 @@
       right: 4px;
       width: 174px;
       height: 180px;
+    }
+    .promo-fixed-art {
+      position: absolute;
+      top: 43px;
+      right: 18px;
+      width: 124px;
+      height: 147px;
+      object-fit: contain;
+      display: block;
     }
     .view-link {
       margin-top: 22px;
@@ -436,6 +578,24 @@
       color: var(--active-nav-color, #0069ee);
       font-weight: 700;
     }
+    .nav-item.fixed-nav {
+      gap: 0;
+    }
+    .nav-item.fixed-nav span {
+      display: none;
+    }
+    .nav-item .fixed-nav-icon {
+      width: 58px;
+      height: 52px;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+    }
+    .nav-item [data-icon-slot="navHomeIcon"] { width: 43px; height: 56px; }
+    .nav-item [data-icon-slot="navAccountsIcon"] { width: 55px; height: 48px; }
+    .nav-item [data-icon-slot="navWealthIcon"] { width: 60px; height: 58px; }
+    .nav-item [data-icon-slot="navRewardsIcon"] { width: 66px; height: 52px; }
+    .nav-item [data-icon-slot="navServicesIcon"] { width: 58px; height: 52px; }
     .editor-panel {
       position: fixed;
       top: 14px;
@@ -451,6 +611,11 @@
       box-shadow: 0 18px 50px rgba(0, 0, 0, .22);
       color: #182033;
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    body.generator-docked .editor-panel {
+      width: var(--generator-right-width, min(360px, calc(100vw - 28px)));
+      max-height: calc(100vh - 28px);
+      z-index: 54;
     }
     .editor-panel h2 {
       margin: 0 0 10px;
@@ -509,21 +674,616 @@
       font-size: 12px;
       line-height: 1.35;
     }
-    body.layout-edit [data-layout-id] {
+    .reference-lab {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 52;
+      width: min(360px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .97);
+      color: #182033;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .22);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    body.generator-docked .reference-lab {
+      top: 14px;
+      left: 14px;
+      bottom: auto;
+      width: var(--generator-left-width, min(360px, calc(100vw - 28px)));
+      max-height: calc(100vh - 28px);
+      z-index: 54;
+    }
+    .reference-lab h2 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .reference-lab p {
+      margin: 0;
+      color: #536078;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .reference-lab label {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+      color: #344055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .reference-lab input[type="file"] {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #c8d0dc;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #182033;
+      font: inherit;
+      font-size: 13px;
+    }
+    .reference-lab input[type="file"]::file-selector-button {
+      margin-right: 10px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .reference-preview-card {
+      overflow: hidden;
+      margin-top: 10px;
+      border: 1px solid #d6deea;
+      border-radius: 10px;
+      background: #f7f9fc;
+    }
+    .reference-preview-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 9px;
+      border-bottom: 1px solid #d6deea;
+      color: #334055;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .reference-preview-body {
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      background:
+        linear-gradient(45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(-45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e9eef5 75%),
+        linear-gradient(-45deg, transparent 75%, #e9eef5 75%);
+      background-color: #f7f9fc;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+    .reference-preview-body img {
+      display: block;
+      width: 100%;
+      max-height: 330px;
+      object-fit: contain;
+      background: #fff;
+    }
+    .reference-empty {
+      padding: 26px 18px;
+      color: #68758a;
+      font-size: 12px;
+      text-align: center;
+    }
+    .reference-score-card {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 11px;
+      border-radius: 10px;
+      background: #eef5ff;
+      color: #26354f;
+    }
+    .reference-score-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .reference-score {
+      color: #0a67e8;
+      font-size: 32px;
+      font-weight: 950;
+      line-height: 1;
+    }
+    .reference-score-card progress {
+      width: 100%;
+      height: 10px;
+      overflow: hidden;
+      border: 0;
+      border-radius: 999px;
+      background: #d8e5f8;
+    }
+    .reference-score-card progress::-webkit-progress-bar {
+      background: #d8e5f8;
+    }
+    .reference-score-card progress::-webkit-progress-value {
+      background: #0a67e8;
+      border-radius: 999px;
+    }
+    .reference-recommendations {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .reference-recommendation-card {
+      padding: 10px 11px;
+      border: 1px solid #cfe0ff;
+      border-radius: 9px;
+      background: #f5f9ff;
+      color: #223047;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .reference-recommendation-card.critical {
+      border-color: #ffc3c3;
+      background: #fff5f5;
+    }
+    .reference-recommendation-card.warning {
+      border-color: #ffe0a3;
+      background: #fff9ed;
+    }
+    .reference-recommendation-card.ok {
+      border-color: #c9ead7;
+      background: #f3fbf6;
+    }
+    .reference-recommendation-card strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    .reference-recommendation-card ol,
+    .reference-recommendation-card ul {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+    .reference-recommendation-card li {
+      margin: 4px 0;
+    }
+    .reference-recommendation-fix {
+      display: block;
+      margin-top: 7px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      background: rgba(10, 103, 232, .08);
+      color: #233756;
+      font-weight: 800;
+    }
+    .reference-safe-note {
+      margin-top: 8px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      background: #fff8e5;
+      color: #5c491b;
+      font-weight: 800;
+    }
+    .reference-analysis {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .reference-analysis-card {
+      padding: 9px 10px;
+      border: 1px solid #d8e0eb;
+      border-radius: 9px;
+      background: #fff;
+      color: #223047;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .reference-analysis-card strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    .reference-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .reference-actions button {
+      min-height: 34px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .reference-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .reference-toggle {
+      display: flex !important;
+      grid-template-columns: none !important;
+      align-items: center;
+      gap: 8px !important;
+      margin-top: 10px !important;
+      padding: 9px 10px;
+      border-radius: 9px;
+      background: #f6f8fb;
+      color: #344055;
+    }
+    .reference-toggle input {
+      width: auto;
+      margin: 0;
+    }
+    .generator-workspace {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: flex;
+      flex-direction: column;
+      background: #eef2f7;
+      color: #172033;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    .workspace-header {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 16px;
+      border-bottom: 1px solid #cfd8e6;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 8px 24px rgba(20, 31, 50, .08);
+    }
+    .workspace-title h1 {
+      margin: 0 0 3px;
+      color: #172033;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+    .workspace-title p {
+      margin: 0;
+      color: #5c697f;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .workspace-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .workspace-actions button {
+      min-height: 36px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .workspace-actions button.primary {
+      background: #138a58;
+    }
+    .workspace-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .workspace-main {
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: minmax(280px, 340px) minmax(360px, 430px) minmax(360px, 430px);
+      gap: 16px;
+      align-items: start;
+      min-width: 1120px;
+      padding: 16px;
+      overflow: auto;
+    }
+    .workspace-live-panel {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .16);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+    }
+    .workspace-reference-panel {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .16);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+    }
+    .workspace-live-panel h2 {
+      justify-self: stretch;
+      margin: 0;
+      color: #172033;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .workspace-reference-panel h2 {
+      justify-self: stretch;
+      margin: 0;
+      color: #172033;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .workspace-live-panel p,
+    .workspace-reference-panel p {
+      justify-self: stretch;
+      margin: -4px 0 4px;
+      color: #5c697f;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .workspace-stage-slot {
+      display: grid;
+      justify-items: center;
+      width: 100%;
+      min-height: calc(1280px * var(--phone-scale, .64));
+    }
+    .workspace-reference-frame {
+      display: grid;
+      place-items: center;
+      width: calc(589px * var(--phone-scale, 1));
+      height: calc(1280px * var(--phone-scale, 1));
+      overflow: hidden;
+      border: 1px solid #d6deea;
+      border-radius: 12px;
+      background:
+        linear-gradient(45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(-45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e9eef5 75%),
+        linear-gradient(-45deg, transparent 75%, #e9eef5 75%);
+      background-color: #f7f9fc;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+    .workspace-reference-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+    }
+    .workspace-reference-empty {
+      padding: 18px;
+      color: #68758a;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .workspace-reference-meta {
+      justify-self: stretch;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #33435c;
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+    }
+    .generator-workspace .stage {
+      position: relative !important;
+      inset: auto !important;
+      left: auto !important;
+      top: auto !important;
+      z-index: 1 !important;
+      overflow: visible;
+    }
+    .generator-workspace .stage::before {
+      content: none !important;
+    }
+    .generator-workspace .reference-lab,
+    .generator-workspace .editor-panel {
+      position: relative !important;
+      inset: auto !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 100% !important;
+      max-height: none !important;
+      z-index: 1 !important;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+    }
+    .generator-workspace .reference-lab {
+      margin: 0;
+    }
+    .generator-workspace .reference-preview-card {
+      display: none;
+    }
+    .workspace-main [data-workspace-slot="editor"] {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      min-width: 0;
+    }
+    .generator-workspace .editor-panel {
+      margin: 0;
+    }
+    .generator-workspace .inline-edit-toolbar {
+      display: none;
+    }
+    .generator-docked > .studio-bar {
+      display: none;
+    }
+    @media (max-width: 1180px) {
+      .workspace-header {
+        align-items: flex-start;
+      }
+      .workspace-main {
+        min-width: 1120px;
+      }
+    }
+    @media (max-width: 700px) {
+      .workspace-header {
+        display: grid;
+        gap: 10px;
+      }
+      .workspace-actions {
+        justify-content: stretch;
+      }
+      .workspace-actions button {
+        flex: 1 1 0;
+        padding: 8px 9px;
+      }
+      .workspace-main {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        min-width: 0;
+        gap: 10px;
+        padding: 10px;
+      }
+      .workspace-main [data-workspace-slot="reference"] {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0;
+      }
+      .workspace-live-panel {
+        grid-column: 1;
+        grid-row: 1;
+        min-width: 0;
+        padding: 10px;
+      }
+      .workspace-reference-panel {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+        padding: 10px;
+      }
+      .workspace-main [data-workspace-slot="editor"] {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        min-width: 0;
+      }
+      .reference-lab {
+        padding: 10px;
+      }
+      .reference-preview-body {
+        min-height: 150px;
+      }
+      .reference-score {
+        font-size: 28px;
+      }
+    }
+    @media (max-width: 1120px) {
+      .reference-lab {
+        position: fixed;
+        top: auto;
+        left: 14px;
+        bottom: 72px;
+        width: min(360px, calc(100vw - 28px));
+        max-height: 46vh;
+      }
+    }
+    @media (max-width: 1180px) {
+      body.generator-docked {
+        display: grid;
+        grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr);
+        gap: 10px;
+        align-items: start;
+        justify-content: center;
+        padding-bottom: 82px;
+      }
+      body.generator-docked > .stage,
+      body.generator-docked > .editor-panel,
+      body.generator-docked > .reference-lab {
+        position: relative;
+        inset: auto;
+        left: auto;
+        right: auto;
+        top: auto;
+        width: min(589px, calc(100vw - 28px));
+        max-height: none;
+      }
+      body.generator-docked > .stage {
+        grid-column: 2;
+        grid-row: 1;
+        width: calc(589px * var(--phone-scale, 1));
+        height: calc(1280px * var(--phone-scale, 1));
+      }
+      body.generator-docked > .reference-lab {
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
+        max-height: calc(100vh - 96px);
+      }
+      body.generator-docked > .editor-panel {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+      }
+      body.generator-docked > .stage::before {
+        top: -6px;
+        transform: translateY(-100%);
+      }
+    }
+    body.layout-edit [data-layout-id],
+    body.layout-edit [data-icon-slot] {
       cursor: grab;
       touch-action: none;
+    }
+    body.layout-edit [data-field] {
+      cursor: grab;
+      touch-action: none;
+      position: relative;
+    }
+    span[data-field] {
+      display: inline-block;
     }
     body.layout-edit [data-layout-id]:hover {
       outline: 2px dashed rgba(255, 255, 255, .78);
       outline-offset: 4px;
     }
-    body.layout-edit [data-layout-id].layout-selected {
+    body.layout-edit [data-icon-slot]:hover {
+      outline: 2px dashed rgba(255, 220, 61, .9);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+    body.layout-edit [data-field]:hover {
+      outline: 2px dashed rgba(255, 220, 61, .9);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    body.layout-edit [data-layout-id].layout-selected,
+    body.layout-edit [data-field].layout-selected,
+    body.layout-edit [data-icon-slot].layout-selected {
       outline: 2px solid #ffdc3d;
       outline-offset: 4px;
       cursor: grabbing;
     }
     body.inline-edit [data-field],
-    body.inline-edit svg {
+    body.inline-edit svg,
+    body.inline-edit [data-icon-slot] {
       cursor: pointer;
     }
     body.inline-edit [data-field]:hover {
@@ -531,12 +1291,13 @@
       outline-offset: 3px;
       border-radius: 4px;
     }
-    body.inline-edit svg:hover {
+    body.inline-edit svg:hover,
+    body.inline-edit [data-icon-slot]:hover {
       filter: drop-shadow(0 0 0 #ffdc3d) drop-shadow(0 0 5px rgba(255, 220, 61, .9));
     }
     .layout-tag {
       position: fixed;
-      z-index: 60;
+      z-index: 260;
       display: none;
       padding: 4px 7px;
       border-radius: 6px;
@@ -583,8 +1344,8 @@
     }
     .inline-popover {
       position: fixed;
-      z-index: 80;
-      width: min(310px, calc(100vw - 24px));
+      z-index: 260;
+      width: min(370px, calc(100vw - 24px));
       padding: 12px;
       border: 1px solid rgba(20, 31, 50, .18);
       border-radius: 10px;
@@ -615,6 +1376,51 @@
     .inline-popover textarea {
       min-height: 86px;
       resize: vertical;
+    }
+    .inline-font-tools {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px solid #d9e1ec;
+    }
+    .inline-font-tools h3 {
+      margin: 0;
+      color: #182033;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+    .inline-font-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 45px;
+      gap: 8px;
+      align-items: center;
+      color: #344055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .inline-font-row input[type="range"] {
+      padding: 0;
+    }
+    .inline-font-row output {
+      justify-self: end;
+      color: #607088;
+      font-size: 11px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+    .inline-font-color-row {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px;
+      align-items: center;
+      color: #344055;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .inline-font-color-row input[type="color"] {
+      height: 38px;
+      padding: 4px;
     }
     .inline-icon-preview {
       display: grid;
@@ -683,16 +1489,79 @@
       width: calc(100vw - 28px);
       max-width: 1600px;
     }
+    body.compare-docked .compare-panel {
+      position: fixed;
+      inset: 14px;
+      top: 14px;
+      left: 14px;
+      z-index: 75;
+      width: auto;
+      max-height: none;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    body.compare-docked .stage {
+      display: none;
+    }
+    body.compare-docked .studio-bar {
+      display: none;
+    }
+    body.pwa-standalone .studio-bar {
+      display: none;
+    }
+    body.pwa-standalone .phone {
+      box-shadow: none;
+    }
+    body.closest-original-view {
+      display: grid;
+      place-items: center;
+      min-height: 100dvh;
+      background: #050b1f;
+    }
+    body.closest-original-view .studio-bar {
+      display: none !important;
+    }
+    body.closest-original-view .stage {
+      margin: 0;
+    }
+    body.generator-docked .studio-bar {
+      background: rgba(14, 24, 42, .72);
+    }
     .compare-panel h2 {
       margin: 0 0 8px;
-      font-size: 16px;
+      font-size: 20px;
       line-height: 1.2;
     }
+    .compare-content {
+      display: grid;
+      grid-template-columns: minmax(620px, 1fr) minmax(280px, 360px);
+      gap: 16px;
+      align-items: start;
+      justify-content: center;
+      min-height: 100%;
+      height: auto;
+    }
+    .compare-controls {
+      display: grid;
+      gap: 10px;
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(20, 31, 50, .18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .98);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .18);
+    }
     .compare-note {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       color: #4f5d74;
-      font-size: 12px;
-      line-height: 1.35;
+      font-size: 13px;
+      line-height: 1.45;
     }
     .compare-panel label {
       display: grid;
@@ -713,13 +1582,29 @@
       font: inherit;
       font-size: 13px;
     }
+    .compare-panel input[type="file"] {
+      padding: 9px;
+      background: #f8fbff;
+    }
+    .compare-panel input[type="file"]::file-selector-button {
+      margin-right: 10px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
     .compare-panel input[type="range"] {
       padding: 0;
     }
     .compare-stats {
       display: grid;
       gap: 4px;
-      margin-top: 11px;
+      margin-top: 12px;
       padding: 9px 10px;
       border-radius: 8px;
       background: #eef5ff;
@@ -727,13 +1612,119 @@
       font-size: 12px;
       line-height: 1.35;
     }
+    .compare-view-modes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .compare-view-modes button {
+      min-height: 32px;
+      padding: 7px 6px;
+      border: 1px solid #cbd5e3;
+      border-radius: 8px;
+      background: #f7f9fc;
+      color: #344055;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .compare-view-modes button.active {
+      border-color: #0a67e8;
+      background: #0a67e8;
+      color: #fff;
+    }
+    .compare-view-modes button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+    .compare-advice {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .compare-advice-card {
+      padding: 10px 11px;
+      border: 1px solid #d8e0eb;
+      border-radius: 9px;
+      background: #fff;
+      color: #223047;
+    }
+    .compare-advice-card.critical {
+      border-color: #ffc3c3;
+      background: #fff5f5;
+    }
+    .compare-advice-card.warning {
+      border-color: #ffe0a3;
+      background: #fff9ed;
+    }
+    .compare-advice-card.ok {
+      border-color: #c9ead7;
+      background: #f3fbf6;
+    }
+    .compare-advice-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+    .compare-advice-score {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(34, 48, 71, .1);
+      color: #223047;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .compare-advice-card.critical .compare-advice-score {
+      background: #e23737;
+      color: #fff;
+    }
+    .compare-advice-card.warning .compare-advice-score {
+      background: #f0a51d;
+      color: #2d2106;
+    }
+    .compare-advice-card.ok .compare-advice-score {
+      background: #26a65b;
+      color: #fff;
+    }
+    .compare-advice-body {
+      margin-top: 7px;
+      color: #4c5a70;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .compare-fix-line {
+      display: block;
+      margin-top: 6px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      background: rgba(10, 103, 232, .08);
+      color: #233756;
+      font-weight: 800;
+    }
+    .compare-advice-empty {
+      padding: 10px 11px;
+      border-radius: 9px;
+      background: #eef5ff;
+      color: #40516b;
+      font-size: 12px;
+      line-height: 1.4;
+    }
     .compare-actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: 12px;
     }
     .compare-actions button {
-      flex: 1;
+      flex: 1 1 120px;
       padding: 8px 10px;
       border: 0;
       border-radius: 7px;
@@ -747,17 +1738,37 @@
       background: #e8edf5;
       color: #1f2a3d;
     }
+    .compare-actions button.export {
+      background: #138a58;
+    }
+    .compare-actions button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+    .compare-export-note {
+      margin: 2px 0 0;
+      color: #667287;
+      font-size: 11px;
+      line-height: 1.35;
+    }
     .compare-board {
+      margin-top: 0;
+    }
+    .compare-pair {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
+      align-items: start;
+    }
+    .compare-diff-frame {
       margin-top: 12px;
     }
     .compare-frame {
       overflow: hidden;
       border: 1px solid #d4dbe7;
-      border-radius: 10px;
+      border-radius: 14px;
       background: #f6f8fb;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .16);
     }
     .compare-frame-title {
       display: flex;
@@ -769,21 +1780,60 @@
       font-size: 12px;
       font-weight: 800;
     }
-    .compare-frame canvas {
+    .compare-viewer {
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(-45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e9eef5 75%),
+        linear-gradient(-45deg, transparent 75%, #e9eef5 75%);
+      background-color: #f7f9fc;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+    .compare-frame canvas,
+    .compare-upload-preview,
+    .compare-current-preview,
+    .compare-empty {
       display: block;
       width: 100%;
+      height: auto;
+      max-height: calc(100vh - 88px);
       aspect-ratio: 589 / 1280;
       background: #e5ebf3;
     }
     .compare-empty {
       display: grid;
       place-items: center;
-      width: 100%;
-      aspect-ratio: 589 / 1280;
       color: #68758a;
       font-size: 12px;
       text-align: center;
       padding: 18px;
+      border: 0;
+      cursor: pointer;
+    }
+    .compare-upload-preview {
+      object-fit: contain;
+      background: #fff;
+    }
+    .compare-current-preview {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+    }
+    .compare-current-preview .phone {
+      position: absolute;
+      left: 0;
+      top: 0;
+      box-shadow: none !important;
+      transform-origin: top left !important;
+    }
+    .compare-frame canvas[hidden],
+    .compare-upload-preview[hidden],
+    .compare-current-preview[hidden],
+    .compare-empty[hidden],
+    .compare-diff-frame[hidden] {
+      display: none !important;
     }
     .compare-dropzone {
       margin-top: 10px;
@@ -795,6 +1845,11 @@
       font-size: 12px;
       font-weight: 700;
       text-align: center;
+      cursor: pointer;
+    }
+    .compare-viewer .compare-dropzone {
+      margin-top: 0;
+      width: 100%;
     }
     .compare-dropzone.drag-over {
       border-color: #0a67e8;
@@ -815,28 +1870,256 @@
       font-weight: 800;
     }
     @media (max-width: 900px) {
+      body.compare-docked {
+        justify-content: center;
+      }
+      body.compare-docked .stage,
+      body.compare-docked .editor-panel,
+      body.compare-docked .inline-edit-toolbar {
+        display: none;
+      }
+      body.compare-docked .compare-panel {
+        inset: 14px;
+        overflow: auto;
+      }
+      .compare-content {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+      }
       .compare-board {
-        grid-template-columns: 1fr;
+        order: 1;
+      }
+      .compare-controls {
+        order: 0;
+        max-height: none;
       }
     }
-    .generator-launcher {
+    .studio-bar {
       position: fixed;
-      left: 14px;
+      left: 50%;
       bottom: 14px;
       z-index: 90;
-      padding: 11px 14px;
-      border: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(86px, 1fr));
+      gap: 6px;
+      width: min(430px, calc(100vw - 28px));
+      padding: 7px;
+      border: 1px solid rgba(255, 255, 255, .4);
       border-radius: 999px;
-      background: #0a67e8;
+      background: rgba(14, 24, 42, .88);
       color: #fff;
       box-shadow: 0 14px 38px rgba(0, 0, 0, .28);
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      transform: translateX(-50%);
+      backdrop-filter: blur(16px);
+    }
+    body.compare-docked .studio-bar {
+      display: none;
+    }
+    .studio-bar button {
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #dbe7ff;
       font-size: 14px;
       font-weight: 800;
       cursor: pointer;
+      font-family: inherit;
     }
-    .generator-launcher:hover {
-      background: #0059cf;
+    .studio-bar button:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+    .studio-bar button.primary {
+      background: #138a58;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(19, 138, 88, .34);
+    }
+    .export-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      display: grid;
+      place-items: start center;
+      padding: 18px;
+      overflow: auto;
+      background: rgba(12, 19, 32, .62);
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    .export-dialog {
+      width: min(960px, calc(100vw - 24px));
+      max-height: none;
+      overflow: auto;
+      padding: 18px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 22px 70px rgba(0, 0, 0, .34);
+    }
+    .export-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .export-head h2 {
+      margin: 0 0 5px;
+      color: #172033;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+    .export-head p,
+    .export-status {
+      margin: 0;
+      color: #5b687d;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .export-close {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: #e8edf5;
+      color: #1d2a3d;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .export-body {
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) minmax(300px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .export-preview-shell {
+      overflow: hidden;
+      border: 1px solid #d5dde9;
+      border-radius: 12px;
+      background:
+        linear-gradient(45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(-45deg, #e9eef5 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e9eef5 75%),
+        linear-gradient(-45deg, transparent 75%, #e9eef5 75%);
+      background-color: #f7f9fc;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+    .export-preview-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid #d5dde9;
+      background: #fff;
+      color: #334055;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .export-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 589 / 1280;
+      overflow: hidden;
+      background: #fff;
+    }
+    .export-preview .phone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-shadow: none !important;
+      transform-origin: top left !important;
+    }
+    .export-options {
+      display: grid;
+      gap: 12px;
+    }
+    .export-field {
+      display: grid;
+      gap: 7px;
+      padding: 11px;
+      border: 1px solid #d8e0eb;
+      border-radius: 10px;
+      background: #fff;
+      color: #344055;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .export-field input {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid #c9d3e1;
+      border-radius: 8px;
+      color: #172033;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .export-quality {
+      display: grid;
+      gap: 7px;
+      padding: 11px;
+      border: 1px solid #d8e0eb;
+      border-radius: 10px;
+      background: #f8fbff;
+      color: #344055;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .export-quality input {
+      width: 100%;
+    }
+    .export-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .export-actions button {
+      min-height: 40px;
+      padding: 9px 10px;
+      border: 0;
+      border-radius: 8px;
+      background: #0a67e8;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .export-actions button.export-primary {
+      grid-column: 1 / -1;
+      background: #138a58;
+    }
+    .export-actions button.secondary {
+      background: #e8edf5;
+      color: #1f2a3d;
+    }
+    .export-actions button:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+    .export-format-note {
+      display: grid;
+      gap: 7px;
+      padding: 11px;
+      border-radius: 10px;
+      background: #eef5ff;
+      color: #40516b;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    @media (max-width: 760px) {
+      .export-body {
+        grid-template-columns: 1fr;
+      }
+      .export-preview-shell {
+        max-width: 260px;
+        margin: 0 auto;
+      }
     }
     .generator-intro {
       display: grid;
@@ -877,9 +2160,18 @@
       background: #e8edf5;
       color: #1f2a3d;
     }
+    .generator-tools button.export,
+    .generator-tools a.export {
+      background: #138a58;
+      color: #fff;
+    }
+    .generator-tools button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
   </style>
 </head>
-<body>
+<body class="pwa-standalone closest-original-view">
   <div class="stage">
   <main class="phone" aria-label="과제용 모바일 뱅킹 데모 화면">
     <div class="demo-badge" data-layout-id="demoBadge">DEMO UI</div>
@@ -895,19 +2187,9 @@
 
       <nav class="topbar" data-layout-id="brandHeader">
         <div class="brand">
-          <svg class="brand-mark" viewBox="0 0 24 26" aria-hidden="true">
-            <path class="brand-stroke" d="M2.5 3.5v19"></path>
-            <path class="brand-stroke" d="M7 3.5v19"></path>
-            <path class="brand-stroke" d="M11.5 3.5v19"></path>
-            <path class="brand-stroke" d="M16 3.5v19"></path>
-            <path class="brand-stroke" d="M20.5 3.5v19"></path>
-            <path class="brand-rib" d="M.8 7.5h21.4M.8 12.8h21.4M.8 18.1h21.4"></path>
-          </svg>
-          <span data-field="brandName">ABC</span>
-          <span class="brand-divider" aria-hidden="true"></span>
-          <span data-field="brandSuffix">TMRW</span>
+          <img class="brand-fixed-image" src="assets/brand-uob-tmrw-extracted.png" alt="UOB | TMRW">
         </div>
-        <div class="links">
+        <div class="links" data-layout-id="topLinksBox">
           <span data-field="inboxLabel">Inbox</span>
           <span class="bar" aria-hidden="true"></span>
           <span data-field="logoutLabel">Log out</span>
@@ -915,7 +2197,7 @@
       </nav>
 
       <section class="balance" data-layout-id="accountBlock">
-        <div class="account-row">
+        <div class="account-row" data-layout-id="accountTitleBox">
           <span data-field="accountName">One Account</span>
           <span class="edit" data-field="editLabel">Edit</span>
         </div>
@@ -924,108 +2206,48 @@
       </section>
 
       <section class="quick-card" data-layout-id="quickCard">
-        <div class="quick-action">
-          <svg class="paynow-logo" viewBox="0 0 64 43" aria-hidden="true">
-            <text x="9" y="17">PAY</text>
-            <text x="9" y="36">NOW</text>
-            <path class="paynow-spark" d="M45 9h7l-3.4 5.1H55l-11 17 3.4-11H41z"></path>
-          </svg>
+        <div class="quick-action fixed-quick" data-layout-id="quickPayBox">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/quick-paynow-icon-sharp-crisp.png" alt="">
           <span data-field="quickPayNow">PayNow</span>
         </div>
-        <div class="quick-action">
-          <svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
-            <path class="line" d="M20 5h20v34H20z"></path>
-            <path class="line" d="M36 12h13m0 0-6-6m6 6-6 6"></path>
-            <path class="line" d="M22 31H9m0 0 6-6m-6 6 6 6"></path>
-            <path class="line" d="M27 8h6M28 36h4"></path>
-          </svg>
+        <div class="quick-action fixed-quick" data-layout-id="quickTransferBox">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/quick-transfer-icon-sharp-crisp.png" alt="">
           <span data-field="quickTransfer">Pay &amp; transfer</span>
         </div>
-        <div class="quick-action">
-          <svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
-            <path class="line" d="M12 16V7h10M36 7h10v9M46 28v9H36M22 37H12v-9"></path>
-            <path class="line" d="M22 17h14v10H22z"></path>
-            <path class="line" d="M29 12v3M29 29v3M17 22h3M38 22h3"></path>
-          </svg>
+        <div class="quick-action fixed-quick" data-layout-id="quickScanBox">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/quick-scan-icon-sharp-crisp.png" alt="">
           <span data-field="quickScan">Scan to pay</span>
         </div>
       </section>
 
       <section class="tools" data-layout-id="toolRow">
-        <div class="tool">
-          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-            <path class="white" d="M18 4h23c5 0 9 4 9 9v33H18z"></path>
-            <rect class="cut" x="26" y="13" width="17" height="5" rx="2"></rect>
-            <rect class="cut" x="26" y="25" width="14" height="5" rx="2"></rect>
-            <rect class="white" x="8" y="12" width="17" height="6" rx="2"></rect>
-            <rect class="white" x="8" y="24" width="17" height="6" rx="2"></rect>
-            <rect class="white" x="8" y="36" width="17" height="6" rx="2"></rect>
-            <rect class="cut" x="16" y="16" width="5" height="22"></rect>
-          </svg>
+        <div class="tool fixed-tool" data-layout-id="toolStatementsBox">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/tool-estatements-trimmed-crisp.png" alt="">
           <span data-field="toolStatements">eStatements</span>
         </div>
-        <div class="tool">
-          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-            <path class="white" d="M15 4h22c5 0 9 4 9 9v33H15z"></path>
-            <path class="cut" d="M29 8v12c0 4 3 7 7 7h14l-7-8 7-8H36c-4 0-7-3-7-7z"></path>
-            <rect class="cut" x="22" y="15" width="11" height="5" rx="2"></rect>
-            <rect class="cut" x="22" y="31" width="16" height="5" rx="2"></rect>
-          </svg>
+        <div class="tool fixed-tool" data-layout-id="toolLimitsBox">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/tool-limits-trimmed-crisp.png" alt="">
           <span data-field="toolLimits">Transaction<br>limits</span>
         </div>
-        <div class="tool">
-          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-            <path class="stroke-white" d="M8 15h20v16H8zM31 15h19v16H31z"></path>
-            <path class="stroke-white" d="M23 34c7-1 13 2 18 8"></path>
-            <path class="stroke-white" d="M41 42l8-8M41 42l-8-8"></path>
-            <circle class="white" cx="45" cy="22" r="3.2"></circle>
-          </svg>
+        <div class="tool fixed-tool" data-layout-id="toolApplyBox">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/tool-apply-trimmed-crisp.png" alt="">
           <span data-field="toolApply">Apply</span>
         </div>
-        <div class="tool">
-          <svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-            <circle class="stroke-white" cx="16" cy="13" r="8"></circle>
-            <path class="stroke-white" d="M13 13h6M16 9v8"></path>
-            <circle class="stroke-white" cx="41" cy="34" r="8"></circle>
-            <path class="stroke-white" d="M38 34h6M41 30v8"></path>
-            <path class="stroke-white" d="M36 7c8 2 13 8 13 16M49 7v16H34M8 40c9-5 23-5 33 0"></path>
-          </svg>
+        <div class="tool fixed-tool fixed-tool-fx" data-layout-id="toolFxBox">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/tool-fx-icon-badge-sharp-crisp.png" alt="">
           <span class="badge" data-field="fxBadge">No FX fees</span>
           <span data-field="toolFx">FX+</span>
         </div>
       </section>
 
       <article class="insight-card" data-layout-id="promoCard">
-        <div class="insight-copy">
-          <div class="date" data-field="promoDate">29 May 2026</div>
+        <div class="insight-copy" data-layout-id="promoTextBox">
+          <div class="date" data-field="promoDate">04 Aug 2026</div>
           <div class="headline" data-field="promoHeadline">It's payday!</div>
           <div class="body-text" data-field="promoBody">Plan ahead for your next<br>trip - save first, then<br>convert any leftovers<br>with ABC FX+ to secure<br>great rates and stretch<br>your holiday budget<br>even further.</div>
         </div>
         <div class="money-art" data-layout-id="promoArt" aria-hidden="true">
-          <svg viewBox="0 0 180 180">
-            <defs>
-              <linearGradient id="note" x1="0" x2="1"><stop offset="0" stop-color="#53dd9d"></stop><stop offset="1" stop-color="#18a773"></stop></linearGradient>
-            </defs>
-            <g transform="translate(18 80)">
-              <path d="M0 34 70 0l70 34-70 34z" fill="#0e5f86"></path>
-              <path d="M10 27 70-2l60 29-60 29z" fill="#1bc5aa"></path>
-              <path d="M22 20 70 0l48 20-48 23z" fill="#fee37d"></path>
-              <rect x="42" y="12" width="56" height="33" rx="4" fill="url(#note)" transform="rotate(22 70 28)"></rect>
-              <circle cx="70" cy="29" r="8" fill="#f5e178" opacity=".7"></circle>
-            </g>
-            <g fill="url(#note)" stroke="#0da86d" stroke-width="2">
-              <rect x="25" y="23" width="54" height="24" rx="3" transform="rotate(17 52 35)"></rect>
-              <rect x="76" y="15" width="48" height="22" rx="3" transform="rotate(26 100 26)"></rect>
-              <rect x="96" y="58" width="58" height="25" rx="3" transform="rotate(-30 125 70)"></rect>
-              <rect x="52" y="57" width="55" height="24" rx="3" transform="rotate(-10 79 69)"></rect>
-            </g>
-            <g transform="translate(122 108)">
-              <path d="M8 0h33l11 12v49H8z" fill="#dff2fb"></path>
-              <path d="M41 0v12h11" fill="none" stroke="#8ad2e9" stroke-width="3"></path>
-              <rect x="0" y="15" width="27" height="37" rx="4" fill="#f4f8fb" stroke="#95d3e5" stroke-width="3"></rect>
-              <path d="M5 25h17M5 34h12" stroke="#ff596a" stroke-width="3"></path>
-            </g>
-          </svg>
+          <img class="promo-fixed-art" src="assets/promo-money-trip-fixed.png" alt="">
         </div>
       </article>
 
@@ -1034,30 +2256,35 @@
     </section>
 
     <footer class="bottom-nav" data-layout-id="bottomNav">
-      <div class="nav-item active">
-        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M5 17.2 19.5 5.8 34 17.2v16.4c0 1.1-.9 2-2 2h-8.5V24h-8v11.6H7c-1.1 0-2-.9-2-2z"></path></svg>
+      <div class="nav-item fixed-nav active" data-layout-id="navHomeBox">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">
         <span data-field="navHome">Home</span>
       </div>
-      <div class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><circle class="nav-line" cx="19.5" cy="19.5" r="15.5"></circle><path class="nav-line" d="M23 12.5c-5.6-3-10 3.7-3 6.7 7.8 3.2 3.2 10.7-5 7.2M19.5 8.3v22.4"></path></svg>
+      <div class="nav-item fixed-nav" data-layout-id="navAccountsBox">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/nav-accounts-trimmed-crisp.png" alt="">
         <span data-field="navAccounts">Accounts</span>
       </div>
-      <div class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 31.5h27M10.5 28V9M10.5 28l8-9 6 5 9.5-14M28 10h6v6"></path></svg>
+      <div class="nav-item fixed-nav" data-layout-id="navWealthBox">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/nav-wealth-trimmed-crisp.png" alt="">
         <span data-field="navWealth">Wealth</span>
       </div>
-      <div class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 16h25v18H7zM5 16h29v-6H5zM19.5 10v24M19 10c-1-8-12-7-9 0M20 10c1-8 12-7 9 0"></path></svg>
+      <div class="nav-item fixed-nav" data-layout-id="navRewardsBox">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/nav-rewards-trimmed-crisp.png" alt="">
         <span data-field="navRewards">Rewards+</span>
       </div>
-      <div class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><rect class="nav-line" x="5" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="5" y="23" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="23" width="11" height="11" rx="2"></rect></svg>
+      <div class="nav-item fixed-nav" data-layout-id="navServicesBox">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/nav-services-trimmed-crisp.png" alt="">
         <span data-field="navServices">Services</span>
       </div>
     </footer>
   </main>
   </div>
-  <button class="generator-launcher" type="button">생성기 열기</button>
+  <nav class="studio-bar" aria-label="생성 도구">
+    <button type="button" data-studio-action="generate">생성</button>
+    <button type="button" data-studio-action="compare">비교</button>
+    <button class="primary" type="button" data-studio-action="export">Export</button>
+  </nav>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
     /*
       EDIT HERE:
@@ -1074,7 +2301,7 @@
       logoutLabel: "Log out",
       accountName: "One Account",
       editLabel: "Edit",
-      balance: "8,984.11 SGD",
+      balance: "70,984.11 SGD",
       balanceCaption: "Available balance",
       quickPayNow: "PayNow",
       quickTransfer: "Pay & transfer",
@@ -1137,19 +2364,54 @@
       demoBadge: { x: 0, y: 0 },
       statusBar: { x: 0, y: 0 },
       brandHeader: { x: 0, y: 0 },
+      topLinksBox: { x: 0, y: 0 },
       accountBlock: { x: 0, y: 0 },
+      accountTitleBox: { x: 0, y: 0 },
       quickCard: { x: 0, y: 0 },
+      quickPayBox: { x: 0, y: 0 },
+      quickTransferBox: { x: 0, y: 0 },
+      quickScanBox: { x: 0, y: 0 },
       toolRow: { x: 0, y: 0 },
+      toolStatementsBox: { x: 0, y: 0 },
+      toolLimitsBox: { x: 0, y: 0 },
+      toolApplyBox: { x: 0, y: 0 },
+      toolFxBox: { x: 0, y: 0 },
       promoCard: { x: 0, y: 0 },
+      promoTextBox: { x: 0, y: 0 },
       promoArt: { x: 0, y: 0 },
       insightsLink: { x: 0, y: 0 },
       previewCards: { x: 0, y: 0 },
-      bottomNav: { x: 0, y: 0 }
+      bottomNav: { x: 0, y: 0 },
+      navHomeBox: { x: 0, y: 0 },
+      navAccountsBox: { x: 0, y: 0 },
+      navWealthBox: { x: 0, y: 0 },
+      navRewardsBox: { x: 0, y: 0 },
+      navServicesBox: { x: 0, y: 0 }
     };
 
+    Object.keys(DEFAULT_SCREEN_CONTENT).forEach((field) => {
+      DEFAULT_LAYOUT_SETTINGS["field:" + field] = { x: 0, y: 0 };
+    });
+    [
+      "quickPayIcon",
+      "quickTransferIcon",
+      "quickScanIcon",
+      "toolStatementsIcon",
+      "toolLimitsIcon",
+      "toolApplyIcon",
+      "toolFxIcon",
+      "navHomeIcon",
+      "navAccountsIcon",
+      "navWealthIcon",
+      "navRewardsIcon",
+      "navServicesIcon"
+    ].forEach((slot) => {
+      DEFAULT_LAYOUT_SETTINGS["icon:" + slot] = { x: 0, y: 0 };
+    });
+
     const FONT_OPTIONS = {
-      sf: `"DemoSFText", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`,
-      system: `-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`,
+      sf: `"Roboto", "Noto Sans", Arimo, Arial, sans-serif`,                                                                   
+      system: `"Roboto", "Noto Sans", Arimo, Arial, sans-serif`,                 
       helvetica: `"Helvetica Neue", Helvetica, Arial, sans-serif`,
       arial: `Arial, Helvetica, sans-serif`,
       notoKR: `"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`,
@@ -1158,13 +2420,33 @@
     };
 
     const DISPLAY_FONT_OPTIONS = {
-      sfDisplay: `"DemoSFDisplay", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`,
+      sfDisplay: `"Roboto", "Noto Sans", Arimo, Arial, sans-serif`,                                                                            
       system: `-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`,
       helvetica: `"Helvetica Neue", Helvetica, Arial, sans-serif`,
       arial: `Arial, Helvetica, sans-serif`,
       notoKR: `"Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif`,
       serif: `Georgia, "Times New Roman", serif`,
       mono: `"SF Mono", Menlo, Consolas, monospace`
+    };
+
+    const TEXT_FONT_OPTIONS = {
+      inherit: "",
+      ui: FONT_OPTIONS.sf,
+      display: DISPLAY_FONT_OPTIONS.sfDisplay,
+      helvetica: FONT_OPTIONS.helvetica,
+      arial: FONT_OPTIONS.arial,
+      notoKR: FONT_OPTIONS.notoKR,
+      mono: FONT_OPTIONS.mono
+    };
+
+    const TEXT_FONT_LABELS = {
+      inherit: "기본값 유지",
+      ui: "Roboto",     
+      display: "Roboto Bold",   
+      helvetica: "Helvetica Neue",
+      arial: "Arial",
+      notoKR: "Noto Sans KR",
+      mono: "SF Mono"
     };
 
     const DEFAULT_FONT_SETTINGS = {
@@ -1215,11 +2497,7 @@
         </svg>`
       },
       quickPayIcon: {
-        payText: `<svg class="paynow-logo" viewBox="0 0 64 43" aria-hidden="true">
-          <text x="9" y="17">PAY</text>
-          <text x="9" y="36">NOW</text>
-          <path class="paynow-spark" d="M45 9h7l-3.4 5.1H55l-11 17 3.4-11H41z"></path>
-        </svg>`,
+        payText: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/quick-paynow-icon-sharp-crisp.png" alt="">`,
         payBadge: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M12 10h34v24H12zM18 18h18M18 26h11M38 27l7-7M45 20v7h-7"></path>
         </svg>`,
@@ -1228,12 +2506,7 @@
         </svg>`
       },
       quickTransferIcon: {
-        phoneTransfer: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
-          <path class="line" d="M20 5h20v34H20z"></path>
-          <path class="line" d="M36 12h13m0 0-6-6m6 6-6 6"></path>
-          <path class="line" d="M22 31H9m0 0 6-6m-6 6 6 6"></path>
-          <path class="line" d="M27 8h6M28 36h4"></path>
-        </svg>`,
+        phoneTransfer: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/quick-transfer-icon-sharp-crisp.png" alt="">`,
         twoWay: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M11 15h33m0 0-7-7m7 7-7 7M47 30H14m0 0 7-7m-7 7 7 7"></path>
         </svg>`,
@@ -1242,11 +2515,7 @@
         </svg>`
       },
       quickScanIcon: {
-        scanFrame: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
-          <path class="line" d="M12 16V7h10M36 7h10v9M46 28v9H36M22 37H12v-9"></path>
-          <path class="line" d="M22 17h14v10H22z"></path>
-          <path class="line" d="M29 12v3M29 29v3M17 22h3M38 22h3"></path>
-        </svg>`,
+        scanFrame: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/quick-scan-icon-sharp-crisp.png" alt="">`,
         qrScan: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M10 10h11v11H10zM37 10h11v11H37zM10 27h11v11H10zM31 28h5M31 36h15M43 28h5"></path>
         </svg>`,
@@ -1255,15 +2524,7 @@
         </svg>`
       },
       toolStatementsIcon: {
-        statements: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-          <path class="white" d="M18 4h23c5 0 9 4 9 9v33H18z"></path>
-          <rect class="cut" x="26" y="13" width="17" height="5" rx="2"></rect>
-          <rect class="cut" x="26" y="25" width="14" height="5" rx="2"></rect>
-          <rect class="white" x="8" y="12" width="17" height="6" rx="2"></rect>
-          <rect class="white" x="8" y="24" width="17" height="6" rx="2"></rect>
-          <rect class="white" x="8" y="36" width="17" height="6" rx="2"></rect>
-          <rect class="cut" x="16" y="16" width="5" height="22"></rect>
-        </svg>`,
+        statements: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/tool-estatements-trimmed-crisp.png" alt="">`,
         listDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="white" d="M15 5h28v40H15z"></path>
           <rect class="cut" x="22" y="14" width="16" height="5" rx="2"></rect>
@@ -1272,36 +2533,20 @@
         </svg>`
       },
       toolLimitsIcon: {
-        limitsDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-          <path class="white" d="M15 4h22c5 0 9 4 9 9v33H15z"></path>
-          <path class="cut" d="M29 8v12c0 4 3 7 7 7h14l-7-8 7-8H36c-4 0-7-3-7-7z"></path>
-          <rect class="cut" x="22" y="15" width="11" height="5" rx="2"></rect>
-          <rect class="cut" x="22" y="31" width="16" height="5" rx="2"></rect>
-        </svg>`,
+        limitsDoc: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/tool-limits-trimmed-crisp.png" alt="">`,
         handDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="white" d="M13 5h21c5 0 9 4 9 9v23H13z"></path>
           <path class="cut" d="M27 16h23l-8 8 8 8H30c-5 0-9-4-9-9 0-4 2-7 6-7z"></path>
         </svg>`
       },
       toolApplyIcon: {
-        applyCard: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-          <path class="stroke-white" d="M8 15h20v16H8zM31 15h19v16H31z"></path>
-          <path class="stroke-white" d="M23 34c7-1 13 2 18 8"></path>
-          <path class="stroke-white" d="M41 42l8-8M41 42l-8-8"></path>
-          <circle class="white" cx="45" cy="22" r="3.2"></circle>
-        </svg>`,
+        applyCard: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/tool-apply-trimmed-crisp.png" alt="">`,
         tapCard: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="stroke-white" d="M8 12h31v20H8zM8 19h31M31 30l15 10M46 40l4-9M46 40l-9 2"></path>
         </svg>`
       },
       toolFxIcon: {
-        fxCoins: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
-          <circle class="stroke-white" cx="16" cy="13" r="8"></circle>
-          <path class="stroke-white" d="M13 13h6M16 9v8"></path>
-          <circle class="stroke-white" cx="41" cy="34" r="8"></circle>
-          <path class="stroke-white" d="M38 34h6M41 30v8"></path>
-          <path class="stroke-white" d="M36 7c8 2 13 8 13 16M49 7v16H34M8 40c9-5 23-5 33 0"></path>
-        </svg>`,
+        fxCoins: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/tool-fx-icon-badge-sharp-crisp.png" alt="">`,
         fxArrows: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="stroke-white" d="M13 15h29m0 0-7-7m7 7-7 7M45 35H16m0 0 7-7m-7 7 7 7"></path>
           <circle class="stroke-white" cx="16" cy="15" r="6"></circle>
@@ -1309,23 +2554,23 @@
         </svg>`
       },
       navHomeIcon: {
-        homeFilled: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M5 17.2 19.5 5.8 34 17.2v16.4c0 1.1-.9 2-2 2h-8.5V24h-8v11.6H7c-1.1 0-2-.9-2-2z"></path></svg>`,
+        homeFilled: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">`,
         homeLine: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M5 17.2 19.5 5.8 34 17.2v16.4H23.5V24h-8v9.6H5z"></path></svg>`
       },
       navAccountsIcon: {
-        coinCircle: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><circle class="nav-line" cx="19.5" cy="19.5" r="15.5"></circle><path class="nav-line" d="M23 12.5c-5.6-3-10 3.7-3 6.7 7.8 3.2 3.2 10.7-5 7.2M19.5 8.3v22.4"></path></svg>`,
+        coinCircle: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/nav-accounts-trimmed-crisp.png" alt="">`,
         wallet: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M6 12h27v20H6zM10 8h20v8M27 22h6"></path></svg>`
       },
       navWealthIcon: {
-        growthChart: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 31.5h27M10.5 28V9M10.5 28l8-9 6 5 9.5-14M28 10h6v6"></path></svg>`,
+        growthChart: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/nav-wealth-trimmed-crisp.png" alt="">`,
         bars: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 32h27M11 29V18M20 29V10M29 29V14"></path></svg>`
       },
       navRewardsIcon: {
-        giftBox: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 16h25v18H7zM5 16h29v-6H5zM19.5 10v24M19 10c-1-8-12-7-9 0M20 10c1-8 12-7 9 0"></path></svg>`,
+        giftBox: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/nav-rewards-trimmed-crisp.png" alt="">`,
         star: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="m19.5 5 4.3 9 9.8 1.4-7.1 6.9 1.7 9.8-8.7-4.6-8.7 4.6 1.7-9.8-7.1-6.9 9.8-1.4z"></path></svg>`
       },
       navServicesIcon: {
-        serviceGrid: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><rect class="nav-line" x="5" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="5" width="11" height="11" rx="2"></rect><rect class="nav-line" x="5" y="23" width="11" height="11" rx="2"></rect><rect class="nav-line" x="23" y="23" width="11" height="11" rx="2"></rect></svg>`,
+        serviceGrid: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/nav-services-trimmed-crisp.png" alt="">`,
         dots: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M9 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>`
       }
     };
@@ -1334,7 +2579,10 @@
     const VISUAL_STORAGE_KEY = "bankingDemoVisuals";
     const LAYOUT_STORAGE_KEY = "bankingDemoLayout";
     const CUSTOM_ICON_STORAGE_KEY = "bankingDemoCustomIcons";
+    const ICON_SIZE_STORAGE_KEY = "bankingDemoIconSizes";
     const FONT_STORAGE_KEY = "bankingDemoFonts";
+    const TEXT_STYLE_STORAGE_KEY = "bankingDemoTextStyles";
+    const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const SCREEN_CONTENT = {
       ...DEFAULT_SCREEN_CONTENT,
       ...readSavedContent()
@@ -1348,10 +2596,29 @@
       ...readSavedLayout()
     };
     const CUSTOM_ICON_SETTINGS = readSavedCustomIcons();
+    const ICON_SIZE_SETTINGS = readSavedIconSizes();
     const FONT_SETTINGS = {
       ...DEFAULT_FONT_SETTINGS,
       ...readSavedFonts()
     };
+    const TEXT_STYLE_SETTINGS = readSavedTextStyles();
+    let REFERENCE_STATE = readSavedReference();
+    const FIXED_ICON_SETTINGS = {
+      quickPayIcon: "payText",
+      quickTransferIcon: "phoneTransfer",
+      quickScanIcon: "scanFrame",
+      toolStatementsIcon: "statements",
+      toolLimitsIcon: "limitsDoc",
+      toolApplyIcon: "applyCard",
+      toolFxIcon: "fxCoins",
+      navHomeIcon: "homeFilled",
+      navAccountsIcon: "coinCircle",
+      navWealthIcon: "growthChart",
+      navRewardsIcon: "giftBox",
+      navServicesIcon: "serviceGrid"
+    };
+    Object.assign(VISUAL_SETTINGS, FIXED_ICON_SETTINGS);
+    Object.keys(FIXED_ICON_SETTINGS).forEach((slot) => delete CUSTOM_ICON_SETTINGS[slot]);
 
     const ICON_SLOT_SELECTORS = {
       brandMark: ".brand :is(.brand-mark, .custom-icon-image)",
@@ -1367,6 +2634,21 @@
       navWealthIcon: ".bottom-nav .nav-item:nth-child(3) :is(svg, .custom-icon-image)",
       navRewardsIcon: ".bottom-nav .nav-item:nth-child(4) :is(svg, .custom-icon-image)",
       navServicesIcon: ".bottom-nav .nav-item:nth-child(5) :is(svg, .custom-icon-image)"
+    };
+
+    const ICON_BASE_SIZES = {
+      quickPayIcon: { width: 61, height: 39 },
+      quickTransferIcon: { width: 45, height: 52 },
+      quickScanIcon: { width: 47, height: 41 },
+      toolStatementsIcon: { width: 40, height: 51 },
+      toolLimitsIcon: { width: 43, height: 50 },
+      toolApplyIcon: { width: 55, height: 47 },
+      toolFxIcon: { width: 92, height: 58 },
+      navHomeIcon: { width: 43, height: 56 },
+      navAccountsIcon: { width: 55, height: 48 },
+      navWealthIcon: { width: 60, height: 58 },
+      navRewardsIcon: { width: 66, height: 52 },
+      navServicesIcon: { width: 58, height: 52 }
     };
 
     function readSavedContent() {
@@ -1401,11 +2683,35 @@
       }
     }
 
+    function readSavedIconSizes() {
+      try {
+        return JSON.parse(localStorage.getItem(ICON_SIZE_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
     function readSavedFonts() {
       try {
         return JSON.parse(localStorage.getItem(FONT_STORAGE_KEY)) || {};
       } catch (error) {
         return {};
+      }
+    }
+
+    function readSavedTextStyles() {
+      try {
+        return JSON.parse(localStorage.getItem(TEXT_STYLE_STORAGE_KEY)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function readSavedReference() {
+      try {
+        return JSON.parse(localStorage.getItem(REFERENCE_STORAGE_KEY)) || null;
+      } catch (error) {
+        return null;
       }
     }
 
@@ -1433,24 +2739,63 @@
       });
     }
 
+    let storageWarningShown = false;
+
+    function writeStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        return true;
+      } catch (error) {
+        if (!storageWarningShown) {
+          storageWarningShown = true;
+          window.alert("브라우저 저장 공간이 가득 차서 일부 설정이 저장되지 않았습니다. 사용하지 않는 업로드 이미지를 제거하거나 '전체 초기화'로 공간을 비운 뒤 다시 시도하세요.");
+        }
+        return false;
+      }
+    }
+
     function saveContent(content) {
-      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(content));
+      writeStorage(CONTENT_STORAGE_KEY, content);
+      scheduleReferenceAnalysis();
     }
 
     function saveVisuals(visuals) {
-      localStorage.setItem(VISUAL_STORAGE_KEY, JSON.stringify(visuals));
+      writeStorage(VISUAL_STORAGE_KEY, visuals);
+      scheduleReferenceAnalysis();
     }
 
     function saveLayout(layout) {
-      localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+      writeStorage(LAYOUT_STORAGE_KEY, layout);
+      scheduleReferenceAnalysis();
     }
 
     function saveCustomIcons(customIcons) {
-      localStorage.setItem(CUSTOM_ICON_STORAGE_KEY, JSON.stringify(customIcons));
+      writeStorage(CUSTOM_ICON_STORAGE_KEY, customIcons);
+      scheduleReferenceAnalysis();
+    }
+
+    function saveIconSizes(iconSizes) {
+      writeStorage(ICON_SIZE_STORAGE_KEY, iconSizes);
+      scheduleReferenceAnalysis();
     }
 
     function saveFonts(fonts) {
-      localStorage.setItem(FONT_STORAGE_KEY, JSON.stringify(fonts));
+      writeStorage(FONT_STORAGE_KEY, fonts);
+      scheduleReferenceAnalysis();
+    }
+
+    function saveTextStyles(styles) {
+      writeStorage(TEXT_STYLE_STORAGE_KEY, styles);
+      scheduleReferenceAnalysis();
+    }
+
+    function saveReferenceState(reference) {
+      REFERENCE_STATE = reference;
+      if (reference) {
+        writeStorage(REFERENCE_STORAGE_KEY, reference);
+      } else {
+        localStorage.removeItem(REFERENCE_STORAGE_KEY);
+      }
     }
 
     function iconSlotSize(slot, naturalWidth, naturalHeight, scale = 1) {
@@ -1477,9 +2822,103 @@
       });
     }
 
+    function applyIconSizes() {
+      Object.entries(ICON_SLOT_SELECTORS).forEach(([slot, selector]) => {
+        const element = document.querySelector(selector);
+        if (!element) return;
+        const setting = ICON_SIZE_SETTINGS[slot];
+        if (!setting?.scale) {
+          if (!CUSTOM_ICON_SETTINGS[slot]?.src) {
+            element.style.removeProperty("width");
+            element.style.removeProperty("height");
+          }
+          return;
+        }
+        const base = ICON_BASE_SIZES[slot] || ICON_SLOT_BOXES[slot] || { width: element.naturalWidth || 48, height: element.naturalHeight || 48 };
+        const scale = Math.max(.2, Math.min(3, Number(setting.scale) || 1));
+        element.style.width = Math.round(base.width * scale) + "px";
+        element.style.height = Math.round(base.height * scale) + "px";
+        element.style.maxWidth = "none";
+        element.style.maxHeight = "none";
+      });
+    }
+
     function applyFonts(fonts) {
       document.documentElement.style.setProperty("--ui-font", FONT_OPTIONS[fonts.uiFont] || FONT_OPTIONS.sf);
       document.documentElement.style.setProperty("--display-font", DISPLAY_FONT_OPTIONS[fonts.displayFont] || DISPLAY_FONT_OPTIONS.sfDisplay);
+    }
+
+    function numericStyleValue(value, fallback) {
+      const number = Number.parseFloat(value);
+      return Number.isFinite(number) ? number : fallback;
+    }
+
+    function fontWeightNumber(value) {
+      if (value === "normal") return 400;
+      if (value === "bold") return 700;
+      const number = Number.parseInt(value, 10);
+      return Number.isFinite(number) ? number : 400;
+    }
+
+    function colorToHex(value) {
+      if (!value) return "#ffffff";
+      if (value.startsWith("#")) return value.slice(0, 7);
+      const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+      if (!match) return "#ffffff";
+      return [match[1], match[2], match[3]]
+        .map((channel) => Math.max(0, Math.min(255, Number(channel))).toString(16).padStart(2, "0"))
+        .join("")
+        .replace(/^/, "#");
+    }
+
+    function defaultTextStyleFromElement(field, element) {
+      const computed = getComputedStyle(element);
+      const fontSize = numericStyleValue(computed.fontSize, 16);
+      const computedLineHeight = computed.lineHeight === "normal"
+        ? fontSize * 1.2
+        : numericStyleValue(computed.lineHeight, fontSize * 1.2);
+      const letterSpacing = computed.letterSpacing === "normal"
+        ? 0
+        : Math.max(0, numericStyleValue(computed.letterSpacing, 0));
+
+      return {
+        fontFamilyKey: TEXT_STYLE_SETTINGS[field]?.fontFamilyKey || "inherit",
+        fontSize: Math.round(fontSize * 10) / 10,
+        fontWeight: fontWeightNumber(computed.fontWeight),
+        lineHeight: Math.round(computedLineHeight / fontSize * 100) / 100,
+        letterSpacing: Math.round(letterSpacing * 10) / 10,
+        color: colorToHex(computed.color)
+      };
+    }
+
+    function clearTextStyleElement(element) {
+      element.style.removeProperty("font-family");
+      element.style.removeProperty("font-size");
+      element.style.removeProperty("font-weight");
+      element.style.removeProperty("line-height");
+      element.style.removeProperty("letter-spacing");
+      element.style.removeProperty("color");
+    }
+
+    function applyTextStyleToElement(element, style) {
+      if (!style) return;
+      if (style.fontFamilyKey && style.fontFamilyKey !== "inherit") {
+        element.style.fontFamily = TEXT_FONT_OPTIONS[style.fontFamilyKey] || TEXT_FONT_OPTIONS.ui;
+      }
+      if (Number.isFinite(Number(style.fontSize))) element.style.fontSize = Number(style.fontSize) + "px";
+      if (Number.isFinite(Number(style.fontWeight))) element.style.fontWeight = String(Number(style.fontWeight));
+      if (Number.isFinite(Number(style.lineHeight))) element.style.lineHeight = String(Number(style.lineHeight));
+      if (Number.isFinite(Number(style.letterSpacing))) element.style.letterSpacing = Number(style.letterSpacing) + "px";
+      if (style.color) element.style.color = style.color;
+    }
+
+    function applyTextStyles(styles) {
+      document.querySelectorAll("[data-field]").forEach(clearTextStyleElement);
+      Object.entries(styles).forEach(([field, style]) => {
+        document.querySelectorAll('[data-field="' + field + '"]').forEach((element) => {
+          applyTextStyleToElement(element, style);
+        });
+      });
     }
 
     function replaceIcon(slot, templateName) {
@@ -1501,15 +2940,25 @@
         replaceIcon(slot, visuals[slot]);
       });
       applyCustomIcons(CUSTOM_ICON_SETTINGS);
+      applyIconSizes();
+      applyLayout(LAYOUT_SETTINGS);
     }
 
     function setLayoutTransform(element, point) {
       element.style.transform = `translate3d(${point.x}px, ${point.y}px, 0)`;
     }
 
+    function layoutKeyForElement(element) {
+      if (element?.dataset?.layoutId) return element.dataset.layoutId;
+      if (element?.dataset?.field) return `field:${element.dataset.field}`;
+      if (element?.dataset?.iconSlot) return `icon:${element.dataset.iconSlot}`;
+      return null;
+    }
+
     function applyLayout(layout) {
-      document.querySelectorAll("[data-layout-id]").forEach((element) => {
-        const id = element.dataset.layoutId;
+      document.querySelectorAll("[data-layout-id], [data-field], [data-icon-slot]").forEach((element) => {
+        const id = layoutKeyForElement(element);
+        if (!id) return;
         const point = layout[id] || { x: 0, y: 0 };
         setLayoutTransform(element, point);
       });
@@ -1527,7 +2976,7 @@
         document.body.append(tag);
       }
       const rect = element.getBoundingClientRect();
-      tag.textContent = element.dataset.layoutId;
+      tag.textContent = element.dataset.layoutId || element.dataset.field || element.dataset.iconSlot;
       tag.style.display = "block";
       tag.style.left = `${Math.max(8, rect.left)}px`;
       tag.style.top = `${Math.max(8, rect.top - 28)}px`;
@@ -1573,33 +3022,127 @@
       popover.className = "inline-popover";
 
       const label = document.createElement("label");
-      label.textContent = `수정: ${field}`;
+      label.textContent = "수정: " + field;
 
       const input = document.createElement("textarea");
       input.value = valueForInput(SCREEN_CONTENT[field] ?? element.innerText);
 
+      const styleDraft = {
+        ...defaultTextStyleFromElement(field, element),
+        ...(TEXT_STYLE_SETTINGS[field] || {})
+      };
+
+      const applyPreview = () => {
+        document.querySelectorAll('[data-field="' + field + '"]').forEach((target) => {
+          clearTextStyleElement(target);
+          applyTextStyleToElement(target, styleDraft);
+        });
+        scheduleReferenceAnalysis(250);
+      };
+
+      const fontTools = document.createElement("div");
+      fontTools.className = "inline-font-tools";
+      fontTools.innerHTML = "<h3>폰트 / 글자 스타일</h3>";
+
+      const fontLabel = document.createElement("label");
+      fontLabel.textContent = "폰트 종류";
+      const fontSelect = document.createElement("select");
+      Object.entries(TEXT_FONT_LABELS).forEach(([value, text]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+        fontSelect.append(option);
+      });
+      fontSelect.value = styleDraft.fontFamilyKey || "inherit";
+      fontSelect.addEventListener("input", () => {
+        styleDraft.fontFamilyKey = fontSelect.value;
+        applyPreview();
+      });
+      fontLabel.append(fontSelect);
+      fontTools.append(fontLabel);
+
+      function appendRange(labelText, property, min, max, step, suffix = "") {
+        const row = document.createElement("div");
+        row.className = "inline-font-row";
+        const name = document.createElement("span");
+        name.textContent = labelText;
+        const range = document.createElement("input");
+        range.type = "range";
+        range.min = String(min);
+        range.max = String(max);
+        range.step = String(step);
+        range.value = String(styleDraft[property]);
+        const output = document.createElement("output");
+        const update = () => {
+          const value = Number(range.value);
+          styleDraft[property] = value;
+          output.textContent = value + suffix;
+          applyPreview();
+        };
+        range.addEventListener("input", update);
+        update();
+        row.append(name, range, output);
+        fontTools.append(row);
+      }
+
+      appendRange("크기", "fontSize", 8, 46, .5, "px");
+      appendRange("굵기", "fontWeight", 100, 900, 10);
+      appendRange("줄간격", "lineHeight", .8, 1.8, .01, "x");
+      appendRange("자간", "letterSpacing", 0, 3, .1, "px");
+
+      const colorRow = document.createElement("div");
+      colorRow.className = "inline-font-color-row";
+      const colorName = document.createElement("span");
+      colorName.textContent = "색상";
+      const colorInput = document.createElement("input");
+      colorInput.type = "color";
+      colorInput.value = styleDraft.color || "#ffffff";
+      colorInput.addEventListener("input", () => {
+        styleDraft.color = colorInput.value;
+        applyPreview();
+      });
+      colorRow.append(colorName, colorInput);
+      fontTools.append(colorRow);
+
       const actions = document.createElement("div");
       actions.className = "inline-popover-actions";
+
+      const resetStyle = document.createElement("button");
+      resetStyle.type = "button";
+      resetStyle.className = "secondary";
+      resetStyle.textContent = "폰트 초기화";
+      resetStyle.addEventListener("click", () => {
+        delete TEXT_STYLE_SETTINGS[field];
+        applyTextStyles(TEXT_STYLE_SETTINGS);
+        saveTextStyles(TEXT_STYLE_SETTINGS);
+        removeInlinePopover();
+      });
 
       const cancel = document.createElement("button");
       cancel.type = "button";
       cancel.className = "secondary";
       cancel.textContent = "취소";
-      cancel.addEventListener("click", removeInlinePopover);
+      cancel.addEventListener("click", () => {
+        applyTextStyles(TEXT_STYLE_SETTINGS);
+        removeInlinePopover();
+      });
 
       const save = document.createElement("button");
       save.type = "button";
       save.textContent = "저장";
       save.addEventListener("click", () => {
         SCREEN_CONTENT[field] = inputValueForField(field, input.value);
+        TEXT_STYLE_SETTINGS[field] = { ...styleDraft };
         applyContent(SCREEN_CONTENT);
+        applyTextStyles(TEXT_STYLE_SETTINGS);
         saveContent(SCREEN_CONTENT);
+        saveTextStyles(TEXT_STYLE_SETTINGS);
         removeInlinePopover();
       });
 
-      actions.append(cancel, save);
+      actions.append(resetStyle, cancel, save);
       label.append(input);
-      popover.append(label, actions);
+      popover.append(label, fontTools, actions);
       placePopover(popover, element);
       input.focus();
       input.select();
@@ -1642,20 +3185,23 @@
       uploadLabel.append(fileInput);
 
       const sizeLabel = document.createElement("label");
-      sizeLabel.textContent = "이미지 크기";
+      sizeLabel.textContent = "아이콘 크기";
       const sizeInput = document.createElement("input");
       sizeInput.type = "range";
       sizeInput.min = "0.4";
-      sizeInput.max = "2";
+      sizeInput.max = "2.4";
       sizeInput.step = "0.01";
-      sizeInput.value = CUSTOM_ICON_SETTINGS[slot]?.scale || "1";
-      sizeLabel.append(sizeInput);
+      sizeInput.value = ICON_SIZE_SETTINGS[slot]?.scale || CUSTOM_ICON_SETTINGS[slot]?.scale || "1";
+      const sizeOutput = document.createElement("output");
+      sizeOutput.textContent = Math.round(Number(sizeInput.value) * 100) + "%";
+      sizeLabel.append(sizeInput, sizeOutput);
 
       const preview = document.createElement("div");
       preview.className = "inline-icon-preview";
+      const currentIcon = document.querySelector(ICON_SLOT_SELECTORS[slot]);
       preview.innerHTML = CUSTOM_ICON_SETTINGS[slot]?.src
         ? customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot])
-        : "<span>이미지를 업로드하면 여기 표시됩니다</span>";
+        : (currentIcon ? currentIcon.outerHTML : "<span>아이콘 미리보기</span>");
 
       const warning = document.createElement("div");
       warning.className = "editor-help";
@@ -1693,6 +3239,17 @@
         removeInlinePopover();
       });
 
+      const resetSize = document.createElement("button");
+      resetSize.type = "button";
+      resetSize.className = "secondary";
+      resetSize.textContent = "크기 초기화";
+      resetSize.addEventListener("click", () => {
+        delete ICON_SIZE_SETTINGS[slot];
+        saveIconSizes(ICON_SIZE_SETTINGS);
+        applyVisuals(VISUAL_SETTINGS);
+        removeInlinePopover();
+      });
+
       select.addEventListener("input", () => {
         delete CUSTOM_ICON_SETTINGS[slot];
         VISUAL_SETTINGS[slot] = select.value;
@@ -1702,32 +3259,44 @@
         removeInlinePopover();
       });
 
-      fileInput.addEventListener("input", async () => {
+      async function handleIconFileSelection() {
         const file = fileInput.files?.[0];
         if (!file) return;
 
-        const src = await fileToDataURL(file);
-        const image = await imageFromURL(src);
-        CUSTOM_ICON_SETTINGS[slot] = {
-          src,
-          naturalWidth: image.naturalWidth,
-          naturalHeight: image.naturalHeight,
-          scale: Number(sizeInput.value)
-        };
-        applyVisuals(VISUAL_SETTINGS);
-        saveCustomIcons(CUSTOM_ICON_SETTINGS);
-        preview.innerHTML = customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot]);
-      });
+        try {
+          const src = await fileToDataURL(file);
+          const image = await imageFromURL(src);
+          CUSTOM_ICON_SETTINGS[slot] = {
+            src,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            scale: Number(sizeInput.value)
+          };
+          ICON_SIZE_SETTINGS[slot] = { scale: Number(sizeInput.value) };
+          applyVisuals(VISUAL_SETTINGS);
+          saveCustomIcons(CUSTOM_ICON_SETTINGS);
+          saveIconSizes(ICON_SIZE_SETTINGS);
+          preview.innerHTML = customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot]);
+        } catch (error) {
+          window.alert("이미지를 불러오지 못했습니다. PNG/JPG/WebP 파일로 다시 시도하세요.");
+        }
+      }
+
+      fileInput.addEventListener("input", handleIconFileSelection);
+      fileInput.addEventListener("change", handleIconFileSelection);
 
       sizeInput.addEventListener("input", () => {
-        if (!CUSTOM_ICON_SETTINGS[slot]) return;
-        CUSTOM_ICON_SETTINGS[slot].scale = Number(sizeInput.value);
-        applyVisuals(VISUAL_SETTINGS);
+        ICON_SIZE_SETTINGS[slot] = { scale: Number(sizeInput.value) };
+        if (CUSTOM_ICON_SETTINGS[slot]) CUSTOM_ICON_SETTINGS[slot].scale = Number(sizeInput.value);
+        sizeOutput.textContent = Math.round(Number(sizeInput.value) * 100) + "%";
+        applyIconSizes();
+        saveIconSizes(ICON_SIZE_SETTINGS);
         saveCustomIcons(CUSTOM_ICON_SETTINGS);
-        preview.innerHTML = customIconHTML(slot, CUSTOM_ICON_SETTINGS[slot]);
+        const current = document.querySelector(ICON_SLOT_SELECTORS[slot]);
+        preview.innerHTML = current ? current.outerHTML : preview.innerHTML;
       });
 
-      actions.append(cancel, save, clearImage);
+      actions.append(cancel, save, resetSize, clearImage);
       label.append(select);
       popover.append(label, uploadLabel, sizeLabel, preview, warning, actions);
       placePopover(popover, element);
@@ -1775,16 +3344,21 @@
         .join("\n");
     }
 
-    async function renderPhoneToCanvas() {
+    function createPhoneSnapshotClone() {
       const phone = document.querySelector(".phone").cloneNode(true);
       phone.querySelectorAll(".reference-overlay").forEach((element) => element.remove());
       phone.style.transform = "none";
       phone.style.boxShadow = "none";
       phone.classList.remove("layout-selected");
+      return phone;
+    }
+
+    function phoneSnapshotSVGMarkup() {
+      const phone = createPhoneSnapshotClone();
 
       const css = `${cssTextForSnapshot()}
         .phone { transform: none !important; box-shadow: none !important; }
-        .reference-overlay, .editor-panel, .inline-edit-toolbar, .inline-popover, .compare-panel, .layout-tag {
+        .reference-overlay, .studio-bar, .generator-workspace, .reference-lab, .editor-panel, .inline-edit-toolbar, .inline-popover, .compare-panel, .layout-tag {
           display: none !important;
         }
         [data-field], svg { outline: none !important; filter: none !important; }
@@ -1800,6 +3374,95 @@
           </foreignObject>
         </svg>
       `;
+      return markup;
+    }
+
+    function phoneSnapshotHTMLMarkup() {
+      const phone = createPhoneSnapshotClone();
+      const css = `${cssTextForSnapshot()}
+        html, body {
+          width: 589px !important;
+          height: 1280px !important;
+          margin: 0 !important;
+          overflow: hidden !important;
+          background: #fff !important;
+        }
+        .stage {
+          width: 589px !important;
+          height: 1280px !important;
+          overflow: hidden !important;
+        }
+        .phone { transform: none !important; box-shadow: none !important; }
+        .reference-overlay, .studio-bar, .generator-workspace, .reference-lab, .editor-panel, .inline-edit-toolbar, .inline-popover, .compare-panel, .layout-tag, .export-modal {
+          display: none !important;
+        }
+        [data-field], svg { outline: none !important; filter: none !important; }
+      `;
+
+      return `<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=589, initial-scale=1">
+  <title>Exported App Screenshot</title>
+  <style>${css.replaceAll("</style", "<\\/style")}</style>
+</head>
+<body>
+  <div class="stage">${phone.outerHTML}</div>
+</body>
+</html>`;
+    }
+
+    async function renderPhoneWithHTMLCanvas() {
+      if (!window.html2canvas) throw new Error("html2canvas is not loaded");
+
+      const host = document.createElement("div");
+      host.style.cssText = [
+        "position:fixed",
+        "left:-10000px",
+        "top:0",
+        "width:589px",
+        "height:1280px",
+        "overflow:hidden",
+        "pointer-events:none",
+        "background:#fff",
+        "z-index:-1"
+      ].join(";");
+
+      const phone = createPhoneSnapshotClone();
+      host.append(phone);
+      document.body.append(host);
+
+      try {
+        const rawCanvas = await window.html2canvas(phone, {
+          width: 589,
+          height: 1280,
+          windowWidth: 589,
+          windowHeight: 1280,
+          scale: 1,
+          scrollX: 0,
+          scrollY: 0,
+          backgroundColor: null,
+          useCORS: true,
+          logging: false
+        });
+
+        if (rawCanvas.width === 589 && rawCanvas.height === 1280) {
+          return rawCanvas;
+        }
+
+        const normalized = document.createElement("canvas");
+        normalized.width = 589;
+        normalized.height = 1280;
+        normalized.getContext("2d", { willReadFrequently: true }).drawImage(rawCanvas, 0, 0, 589, 1280);
+        return normalized;
+      } finally {
+        host.remove();
+      }
+    }
+
+    async function renderPhoneWithSVGCanvas() {
+      const markup = phoneSnapshotSVGMarkup();
 
       const url = URL.createObjectURL(new Blob([markup], { type: "image/svg+xml" }));
       try {
@@ -1815,6 +3478,203 @@
       }
     }
 
+    async function renderPhoneToCanvas() {
+      try {
+        return await renderPhoneWithHTMLCanvas();
+      } catch (htmlCanvasError) {
+        return renderPhoneWithSVGCanvas();
+      }
+    }
+
+    function exportTimestamp() {
+      return new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function canvasToBlob(canvas, type = "image/png") {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Canvas export failed"));
+        }, type);
+      });
+    }
+
+    async function downloadCanvasPNG(canvas, filename) {
+      const blob = await canvasToBlob(canvas, "image/png");
+      downloadBlob(blob, filename);
+    }
+
+    async function exportCurrentScreenPNG() {
+      try {
+        const canvas = await renderPhoneToCanvas();
+        await downloadCanvasPNG(canvas, `banking-current-screen-${exportTimestamp()}.png`);
+      } catch (error) {
+        exportCurrentScreenSVG();
+        window.alert("PNG 변환이 막혀서 같은 화면을 SVG 이미지로 저장했습니다.");
+      }
+    }
+
+    function exportCurrentScreenSVG() {
+      downloadBlob(
+        new Blob([phoneSnapshotSVGMarkup()], { type: "image/svg+xml" }),
+        `banking-current-screen-${exportTimestamp()}.svg`
+      );
+    }
+
+    function exportCurrentScreenHTML() {
+      downloadBlob(
+        new Blob([phoneSnapshotHTMLMarkup()], { type: "text/html" }),
+        `banking-current-screen-${exportTimestamp()}.html`
+      );
+    }
+
+    function showExportPanel() {
+      document.querySelector(".export-modal")?.remove();
+
+      const modal = document.createElement("div");
+      modal.className = "export-modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+
+      modal.innerHTML = `
+        <section class="export-dialog">
+          <div class="export-head">
+            <div>
+              <h2>앱 스크린샷 Export</h2>
+              <p>현재 만든 앱 화면만 정확히 잘라 저장합니다. 편집 도구, 비교 패널, 하단 스튜디오 바는 이미지에 들어가지 않습니다.</p>
+            </div>
+            <button class="export-close" type="button" aria-label="닫기">×</button>
+          </div>
+          <div class="export-body">
+            <div class="export-preview-shell">
+              <div class="export-preview-title"><span>앱 스샷 미리보기</span><span>589 x 1280</span></div>
+              <div class="export-preview"></div>
+            </div>
+            <div class="export-options">
+              <label class="export-field">
+                파일명
+                <input type="text" value="banking-app-screenshot" data-export-name>
+              </label>
+              <label class="export-quality">
+                PNG 해상도
+                <input type="range" min="1" max="3" step="1" value="1" data-export-scale>
+                <span data-export-scale-text>1x · 589 x 1280</span>
+              </label>
+              <div class="export-format-note">
+                <span><strong>PNG</strong>는 과제 제출용 스크린샷입니다.</span>
+                <span><strong>SVG/HTML</strong>은 다시 수정하거나 백업할 때 쓰는 보조 파일입니다.</span>
+              </div>
+              <div class="export-actions">
+                <button class="export-primary" type="button" data-export-png>앱 스샷 PNG 다운로드</button>
+                <button type="button" data-export-svg>SVG 다운로드</button>
+                <button class="secondary" type="button" data-export-html>HTML 백업</button>
+                <button class="secondary" type="button" data-export-close>닫기</button>
+              </div>
+              <p class="export-status" data-export-status>준비됨. PNG 다운로드를 누르면 앱 화면만 이미지로 저장됩니다.</p>
+            </div>
+          </div>
+        </section>
+      `;
+
+      const preview = modal.querySelector(".export-preview");
+      const phoneClone = createPhoneSnapshotClone();
+      preview.append(phoneClone);
+
+      const scaleInput = modal.querySelector("[data-export-scale]");
+      const scaleText = modal.querySelector("[data-export-scale-text]");
+      const nameInput = modal.querySelector("[data-export-name]");
+      const status = modal.querySelector("[data-export-status]");
+      const pngButton = modal.querySelector("[data-export-png]");
+
+      const updatePreviewScale = () => {
+        const width = preview.clientWidth || 260;
+        phoneClone.style.transform = `scale(${(width / 589).toFixed(5)})`;
+      };
+
+      const updateScaleText = () => {
+        const multiplier = Number(scaleInput.value);
+        scaleText.textContent = `${multiplier}x · ${589 * multiplier} x ${1280 * multiplier}`;
+      };
+
+      const exportFileName = (extension, width, height) => {
+        const base = (nameInput.value || "banking-app-screenshot")
+          .trim()
+          .replace(/\.[a-z0-9]+$/i, "")
+          .replace(/[^a-z0-9가-힣_-]+/gi, "-")
+          .replace(/^-+|-+$/g, "") || "banking-app-screenshot";
+        const size = width && height ? `-${width}x${height}` : "";
+        return `${base}${size}-${exportTimestamp()}.${extension}`;
+      };
+
+      async function exportScaledPNG() {
+        pngButton.disabled = true;
+        pngButton.textContent = "PNG 만드는 중...";
+        status.textContent = "앱 화면만 캡처하는 중입니다.";
+
+        try {
+          const baseCanvas = await renderPhoneToCanvas();
+          const multiplier = Number(scaleInput.value);
+          const canvas = document.createElement("canvas");
+          canvas.width = 589 * multiplier;
+          canvas.height = 1280 * multiplier;
+          const context = canvas.getContext("2d", { willReadFrequently: true });
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          context.drawImage(baseCanvas, 0, 0, canvas.width, canvas.height);
+          await downloadCanvasPNG(canvas, exportFileName("png", canvas.width, canvas.height));
+          status.textContent = `PNG 다운로드 완료: ${canvas.width} x ${canvas.height}`;
+        } catch (error) {
+          status.textContent = "PNG 저장이 막혀서 SVG를 대신 저장했습니다.";
+          downloadBlob(new Blob([phoneSnapshotSVGMarkup()], { type: "image/svg+xml" }), exportFileName("svg"));
+        } finally {
+          pngButton.disabled = false;
+          pngButton.textContent = "앱 스샷 PNG 다운로드";
+        }
+      }
+
+      function closeExportPanel() {
+        document.removeEventListener("keydown", onExportKeydown);
+        modal.remove();
+      }
+
+      function onExportKeydown(event) {
+        if (event.key === "Escape") closeExportPanel();
+      }
+      document.addEventListener("keydown", onExportKeydown);
+
+      scaleInput.addEventListener("input", updateScaleText);
+      modal.querySelector("[data-export-png]").addEventListener("click", exportScaledPNG);
+      modal.querySelector("[data-export-svg]").addEventListener("click", () => {
+        downloadBlob(new Blob([phoneSnapshotSVGMarkup()], { type: "image/svg+xml" }), exportFileName("svg"));
+        status.textContent = "SVG 다운로드 완료.";
+      });
+      modal.querySelector("[data-export-html]").addEventListener("click", () => {
+        downloadBlob(new Blob([phoneSnapshotHTMLMarkup()], { type: "text/html" }), exportFileName("html"));
+        status.textContent = "HTML 백업 다운로드 완료.";
+      });
+      modal.querySelector(".export-close").addEventListener("click", closeExportPanel);
+      modal.querySelector("[data-export-close]").addEventListener("click", closeExportPanel);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeExportPanel();
+      });
+
+      document.body.append(modal);
+      updateScaleText();
+      updatePreviewScale();
+      requestAnimationFrame(updatePreviewScale);
+    }
+
     function drawImageCover(context, image, width, height) {
       const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
       const drawWidth = image.naturalWidth * scale;
@@ -1824,25 +3684,25 @@
       context.drawImage(image, x, y, drawWidth, drawHeight);
     }
 
+    function drawImageContain(context, image, width, height) {
+      const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+      const drawWidth = image.naturalWidth * scale;
+      const drawHeight = image.naturalHeight * scale;
+      const x = (width - drawWidth) / 2;
+      const y = (height - drawHeight) / 2;
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, width, height);
+      context.drawImage(image, x, y, drawWidth, drawHeight);
+    }
+
     async function renderReferenceToCanvas(referenceURL) {
       const referenceImage = await imageFromURL(referenceURL);
       const referenceCanvas = document.createElement("canvas");
       referenceCanvas.width = 589;
       referenceCanvas.height = 1280;
       const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
-      drawImageCover(referenceContext, referenceImage, 589, 1280);
+      drawImageContain(referenceContext, referenceImage, 589, 1280);
       return { canvas: referenceCanvas, image: referenceImage };
-    }
-
-    async function renderReferenceFileToCanvas(file) {
-      const referenceDataURL = await fileToDataURL(file);
-      const referenceImage = await imageFromURL(referenceDataURL);
-      const referenceCanvas = document.createElement("canvas");
-      referenceCanvas.width = 589;
-      referenceCanvas.height = 1280;
-      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
-      drawImageCover(referenceContext, referenceImage, 589, 1280);
-      return { canvas: referenceCanvas, image: referenceImage, src: referenceDataURL };
     }
 
     function copyCanvasToCanvas(source, target) {
@@ -1859,9 +3719,8 @@
       diffCanvas.height = 1280;
       const diffContext = diffCanvas.getContext("2d", { willReadFrequently: true });
 
-      diffContext.fillStyle = "#ffffff";
-      diffContext.fillRect(0, 0, 589, 1280);
-      diffContext.globalAlpha = .28;
+      diffContext.drawImage(referenceCanvas, 0, 0);
+      diffContext.globalAlpha = .18;
       diffContext.drawImage(currentCanvas, 0, 0);
       diffContext.globalAlpha = 1;
 
@@ -1871,6 +3730,10 @@
 
       let changed = 0;
       let totalDistance = 0;
+      const cellSize = 32;
+      const cols = Math.ceil(589 / cellSize);
+      const rows = Math.ceil(1280 / cellSize);
+      const cellHits = new Uint16Array(cols * rows);
 
       for (let index = 0; index < currentData.length; index += 4) {
         const distance = (
@@ -1887,10 +3750,99 @@
           overlay.data[index + 1] = 34;
           overlay.data[index + 2] = 34;
           overlay.data[index + 3] = Math.min(235, Math.max(80, distance * 1.7));
+
+          const pixel = index / 4;
+          const x = pixel % 589;
+          const y = Math.floor(pixel / 589);
+          const cellIndex = Math.floor(y / cellSize) * cols + Math.floor(x / cellSize);
+          cellHits[cellIndex] += 1;
         }
       }
 
       diffContext.putImageData(overlay, 0, 0);
+
+      const activeCells = new Uint8Array(cols * rows);
+      const minimumHits = Math.max(18, Math.floor(cellSize * cellSize * .06));
+      for (let index = 0; index < cellHits.length; index += 1) {
+        activeCells[index] = cellHits[index] >= minimumHits ? 1 : 0;
+      }
+
+      const visited = new Uint8Array(cols * rows);
+      const regions = [];
+      for (let start = 0; start < activeCells.length; start += 1) {
+        if (!activeCells[start] || visited[start]) continue;
+
+        const stack = [start];
+        visited[start] = 1;
+        let minCol = cols;
+        let maxCol = 0;
+        let minRow = rows;
+        let maxRow = 0;
+        let hits = 0;
+        let cells = 0;
+
+        while (stack.length) {
+          const current = stack.pop();
+          const row = Math.floor(current / cols);
+          const col = current % cols;
+          minCol = Math.min(minCol, col);
+          maxCol = Math.max(maxCol, col);
+          minRow = Math.min(minRow, row);
+          maxRow = Math.max(maxRow, row);
+          hits += cellHits[current];
+          cells += 1;
+
+          const neighbors = [
+            row > 0 ? current - cols : -1,
+            row < rows - 1 ? current + cols : -1,
+            col > 0 ? current - 1 : -1,
+            col < cols - 1 ? current + 1 : -1
+          ];
+
+          neighbors.forEach((next) => {
+            if (next >= 0 && activeCells[next] && !visited[next]) {
+              visited[next] = 1;
+              stack.push(next);
+            }
+          });
+        }
+
+        if (hits >= 90 && cells >= 1) {
+          regions.push({ minCol, maxCol, minRow, maxRow, hits, cells });
+        }
+      }
+
+      const markedRegions = regions
+        .sort((a, b) => b.hits - a.hits)
+        .slice(0, 12);
+
+      diffContext.save();
+      diffContext.strokeStyle = "#ff1f2d";
+      diffContext.lineWidth = 5;
+      diffContext.shadowColor = "rgba(255,255,255,.9)";
+      diffContext.shadowBlur = 4;
+      const markedBoxes = [];
+      markedRegions.forEach((region) => {
+        const left = Math.max(0, region.minCol * cellSize - 12);
+        const top = Math.max(0, region.minRow * cellSize - 12);
+        const right = Math.min(589, (region.maxCol + 1) * cellSize + 12);
+        const bottom = Math.min(1280, (region.maxRow + 1) * cellSize + 12);
+        const centerX = (left + right) / 2;
+        const centerY = (top + bottom) / 2;
+        const radiusX = Math.max(18, (right - left) / 2);
+        const radiusY = Math.max(18, (bottom - top) / 2);
+        diffContext.beginPath();
+        diffContext.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+        diffContext.stroke();
+        markedBoxes.push({
+          x: Math.round(left),
+          y: Math.round(top),
+          width: Math.round(right - left),
+          height: Math.round(bottom - top),
+          hits: region.hits
+        });
+      });
+      diffContext.restore();
 
       const pixels = 589 * 1280;
       const changedPercent = changed / pixels * 100;
@@ -1899,38 +3851,52 @@
       return {
         canvas: diffCanvas,
         changedPercent,
-        similarity
+        similarity,
+        regionCount: markedRegions.length,
+        markedBoxes
       };
     }
 
-    async function calculateRoughSimilarity(referenceURL) {
-      const [pageCanvas, referenceImage] = await Promise.all([
-        renderPhoneToCanvas(),
-        imageFromURL(referenceURL)
-      ]);
+    function createMarkedCurrentCanvas(currentCanvas, markedBoxes = []) {
+      const markedCanvas = document.createElement("canvas");
+      markedCanvas.width = 589;
+      markedCanvas.height = 1280;
+      const context = markedCanvas.getContext("2d", { willReadFrequently: true });
+      context.drawImage(currentCanvas, 0, 0);
 
-      const referenceCanvas = document.createElement("canvas");
-      referenceCanvas.width = 589;
-      referenceCanvas.height = 1280;
-      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
-      drawImageCover(referenceContext, referenceImage, 589, 1280);
+      if (!markedBoxes.length) return markedCanvas;
 
-      const pageData = pageCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
-      const referenceData = referenceContext.getImageData(0, 0, 589, 1280).data;
+      context.save();
+      context.strokeStyle = "#ff1f2d";
+      context.lineWidth = 6;
+      context.shadowColor = "rgba(255, 255, 255, .95)";
+      context.shadowBlur = 5;
+      context.fillStyle = "#ff1f2d";
+      context.font = "900 22px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
 
-      let total = 0;
-      let samples = 0;
-      const stride = 24;
-      for (let index = 0; index < pageData.length; index += stride * 4) {
-        const diff =
-          Math.abs(pageData[index] - referenceData[index]) +
-          Math.abs(pageData[index + 1] - referenceData[index + 1]) +
-          Math.abs(pageData[index + 2] - referenceData[index + 2]);
-        total += diff / (255 * 3);
-        samples += 1;
-      }
+      markedBoxes.slice(0, 12).forEach((box, index) => {
+        const centerX = box.x + box.width / 2;
+        const centerY = box.y + box.height / 2;
+        const radiusX = Math.max(20, box.width / 2);
+        const radiusY = Math.max(20, box.height / 2);
+        context.beginPath();
+        context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+        context.stroke();
 
-      return Math.max(0, Math.min(100, (1 - total / samples) * 100));
+        const labelX = Math.max(18, Math.min(571, box.x + 18));
+        const labelY = Math.max(18, Math.min(1262, box.y + 18));
+        context.beginPath();
+        context.arc(labelX, labelY, 15, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = "#fff";
+        context.fillText(String(index + 1), labelX, labelY + 1);
+        context.fillStyle = "#ff1f2d";
+      });
+      context.restore();
+
+      return markedCanvas;
     }
 
     function aspectMatchPercent(width, height) {
@@ -1939,19 +3905,672 @@
       return Math.max(0, Math.min(100, (1 - Math.abs(referenceRatio - phoneRatio) / phoneRatio) * 100));
     }
 
+    const COMPARISON_REGIONS = [
+      {
+        key: "status",
+        name: "상태바",
+        rect: { x: 0, y: 0, width: 589, height: 95 },
+        hints: ["시간/통신/배터리 아이콘 위치", "상단 여백", "폰트 굵기"]
+      },
+      {
+        key: "brand",
+        name: "브랜드 / 상단 링크",
+        rect: { x: 0, y: 95, width: 589, height: 105 },
+        hints: ["로고/브랜드 텍스트", "Inbox / Log out 위치", "좌우 여백과 baseline"]
+      },
+      {
+        key: "account",
+        name: "계좌 / 잔액 영역",
+        rect: { x: 0, y: 200, width: 589, height: 132 },
+        hints: ["계좌명과 Edit 버튼 위치", "잔액 폰트 크기/굵기", "Available balance 간격"]
+      },
+      {
+        key: "quick",
+        name: "상단 빠른 액션 박스",
+        rect: { x: 0, y: 332, width: 589, height: 154 },
+        hints: ["박스 폭/높이/라운드", "세 아이콘 크기", "라벨 정렬"]
+      },
+      {
+        key: "tools",
+        name: "두 번째 아이콘 행",
+        rect: { x: 0, y: 486, width: 589, height: 185 },
+        hints: ["아이콘 형태와 크기", "FX+ 빨간 배지 위치", "라벨 줄바꿈"]
+      },
+      {
+        key: "promo",
+        name: "프로모션 카드",
+        rect: { x: 0, y: 671, width: 589, height: 382 },
+        hints: ["카드 폭/높이/패딩", "날짜 밑줄", "본문 줄바꿈", "오른쪽 일러스트 위치"]
+      },
+      {
+        key: "insights",
+        name: "View all insights",
+        rect: { x: 0, y: 1053, width: 589, height: 80 },
+        hints: ["링크 위치", "파란색 톤", "위아래 간격"]
+      },
+      {
+        key: "preview",
+        name: "하단 미리보기 카드",
+        rect: { x: 0, y: 1133, width: 589, height: 47 },
+        hints: ["두 카드가 보이는 높이", "좌우 간격", "이미지 색감"]
+      },
+      {
+        key: "nav",
+        name: "하단 내비게이션",
+        rect: { x: 0, y: 1180, width: 589, height: 100 },
+        hints: ["Home/Accounts/Wealth/Rewards+/Services 아이콘", "라벨 간격", "활성 색상"]
+      }
+    ];
+
+    function compareRegion(referenceData, currentData, region, threshold) {
+      const width = 589;
+      const left = Math.max(0, Math.floor(region.rect.x));
+      const top = Math.max(0, Math.floor(region.rect.y));
+      const right = Math.min(589, Math.ceil(region.rect.x + region.rect.width));
+      const bottom = Math.min(1280, Math.ceil(region.rect.y + region.rect.height));
+      let changed = 0;
+      let total = 0;
+      let totalDistance = 0;
+      let maxDistance = 0;
+      let minX = right;
+      let minY = bottom;
+      let maxX = left;
+      let maxY = top;
+
+      for (let y = top; y < bottom; y += 1) {
+        for (let x = left; x < right; x += 1) {
+          const index = (y * width + x) * 4;
+          const distance = (
+            Math.abs(referenceData[index] - currentData[index]) +
+            Math.abs(referenceData[index + 1] - currentData[index + 1]) +
+            Math.abs(referenceData[index + 2] - currentData[index + 2])
+          ) / 3;
+          total += 1;
+          totalDistance += distance;
+          maxDistance = Math.max(maxDistance, distance);
+          if (distance > threshold) {
+            changed += 1;
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+          }
+        }
+      }
+
+      const changedPercent = total ? changed / total * 100 : 0;
+      const averageDistance = total ? totalDistance / total : 0;
+      const score = Math.min(100, changedPercent * .82 + averageDistance / 255 * 100 * .55);
+      const severity = score >= 34 || changedPercent >= 32
+        ? "critical"
+        : score >= 14 || changedPercent >= 12
+          ? "warning"
+          : "ok";
+
+      return {
+        ...region,
+        changedPercent,
+        averageDistance,
+        maxDistance,
+        score,
+        severity,
+        changedBox: changed
+          ? { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 }
+          : null
+      };
+    }
+
+    function buildComparisonAdvice(referenceCanvas, currentCanvas, threshold) {
+      const referenceData = referenceCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
+      const currentData = currentCanvas.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, 589, 1280).data;
+      return COMPARISON_REGIONS
+        .map((region) => compareRegion(referenceData, currentData, region, threshold))
+        .sort((a, b) => b.score - a.score);
+    }
+
+    function severityLabel(severity) {
+      if (severity === "critical") return "수정 필요";
+      if (severity === "warning") return "주의";
+      return "괜찮음";
+    }
+
+    const COMPARISON_FIXES = {
+      status: ["생성 > 드래그 위치 조정에서 상태바 y 위치를 맞추세요", "시간/배터리 텍스트는 직접 클릭 수정으로 바꾸세요"],
+      brand: ["브랜드 영역은 직접 클릭 수정으로 텍스트를 먼저 맞추세요", "로고 이미지는 해당 로고 영역 클릭 후 이미지 업로드로 교체하세요", "드래그 위치 조정으로 좌우 여백과 baseline을 맞추세요"],
+      account: ["잔액/계좌명은 직접 클릭 수정으로 바꾸세요", "폰트 설정에서 굵기와 크기를 맞추세요", "계좌 블록을 드래그해 상단 간격을 맞추세요"],
+      quick: ["빠른 액션 박스는 드래그 위치 조정으로 폭과 위치를 맞추세요", "각 아이콘을 클릭해 이미지 업로드로 교체하세요", "라벨 줄바꿈은 텍스트 입력에서 직접 조정하세요"],
+      tools: ["두 번째 아이콘 행의 각 아이콘을 클릭해 이미지로 교체하세요", "FX+ 배지는 드래그 위치 조정으로 빨간 배지 위치를 맞추세요", "라벨 줄바꿈을 직접 클릭 수정으로 맞추세요"],
+      promo: ["프로모션 카드 위치/크기는 드래그 위치 조정으로 맞추세요", "본문 줄바꿈은 직접 클릭 수정에서 줄을 나눠 조정하세요", "오른쪽 일러스트는 이미지 업로드로 바꾸세요"],
+      insights: ["View all insights 위치를 드래그로 맞추세요", "링크 색상/문구는 직접 클릭 수정으로 조정하세요"],
+      preview: ["하단 미리보기 카드 높이와 노출량을 드래그로 맞추세요", "필요하면 카드 이미지를 교체하세요"],
+      nav: ["하단 내비게이션 아이콘은 각각 이미지 업로드로 교체하세요", "라벨 간격과 활성 색상은 드래그/폰트 설정으로 맞추세요"]
+    };
+
+    function solutionForResult(result) {
+      return COMPARISON_FIXES[result.key] || ["생성 화면으로 돌아가서 텍스트, 이미지, 위치를 해당 영역 기준으로 조정하세요"];
+    }
+
+    function renderComparisonAdvice(results, diff) {
+      const priority = results.filter((result) => result.severity !== "ok").slice(0, 6);
+      const visibleResults = priority.length ? priority : results.slice(0, 3);
+      const intro = priority.length
+        ? `오른쪽 "내가 만든 화면"에 빨간 동그라미로 표시했습니다. 가장 차이가 큰 ${priority.length}개 영역부터 수정하세요. 전체 차이 영역은 ${diff.changedPercent.toFixed(2)}%, 유사도는 ${diff.similarity.toFixed(1)}%입니다.`
+        : `큰 문제는 적습니다. 세부 간격만 확인하세요. 전체 유사도는 ${diff.similarity.toFixed(1)}%입니다.`;
+
+      return `
+        <div class="compare-advice-empty">${intro}</div>
+        ${visibleResults.map((result) => {
+          const reason = result.changedPercent >= 32
+            ? "위치, 크기, 간격 중 하나가 크게 어긋난 상태입니다."
+            : result.averageDistance >= 24
+              ? "색상, 아이콘 형태, 이미지 톤 차이가 큽니다."
+              : "작은 간격이나 폰트 굵기 차이가 남아 있습니다.";
+          const boxText = result.changedBox
+            ? `주요 차이 위치: x ${result.changedBox.x}, y ${result.changedBox.y}, ${result.changedBox.width} x ${result.changedBox.height}`
+            : "큰 차이 박스 없음";
+          const fixText = solutionForResult(result).map(escapeHTML).join(" / ");
+          return `
+            <article class="compare-advice-card ${result.severity}">
+              <div class="compare-advice-head">
+                <span>${escapeHTML(result.name)}</span>
+                <span class="compare-advice-score">${severityLabel(result.severity)} · ${result.changedPercent.toFixed(1)}%</span>
+              </div>
+              <div class="compare-advice-body">
+                ${reason}<br>
+                먼저 확인: ${result.hints.map(escapeHTML).join(" / ")}<br>
+                ${boxText}
+                <span class="compare-fix-line">해결방책: ${fixText}</span>
+              </div>
+            </article>
+          `;
+        }).join("")}
+      `;
+    }
+
+    function defaultSimilarityRecommendationHTML(title = "똑같이 만드는 추천 순서", badge = "작업 순서") {
+      return `
+        <article class="reference-recommendation-card">
+          <strong><span>${title}</span><span>${badge}</span></strong>
+          <ol>
+            <li>원본을 먼저 업로드해서 왼쪽에 고정하세요.</li>
+            <li>캔버스 비율, 상단 여백, 하단 내비게이션처럼 큰 구조부터 맞추세요.</li>
+            <li>텍스트를 직접 클릭해서 숫자, 날짜, 줄바꿈, 굵기를 먼저 맞추세요.</li>
+            <li>아이콘, 로고, 일러스트는 해당 영역 클릭 후 이미지 업로드로 교체하세요.</li>
+            <li>비교를 누르고 빨간 동그라미가 사라질 때까지 위치와 크기를 반복 조정하세요.</li>
+            <li>마지막에 추출 / Export로 PNG를 저장하세요.</li>
+          </ol>
+          <div class="reference-safe-note">과제나 허가된 자료 기준으로만 사용하세요. 실제 금융사 사칭 목적의 상표/로고 복제는 피하세요.</div>
+        </article>
+      `;
+    }
+
+    function recommendationReasonForResult(result) {
+      if (result.changedPercent >= 32) return "위치, 크기, 여백 중 하나가 크게 달라서 전체 인상이 먼저 깨지는 영역입니다.";
+      if (result.averageDistance >= 24) return "색상, 아이콘 형태, 이미지 톤 차이가 크게 잡힌 영역입니다.";
+      return "폰트 굵기, 줄바꿈, 작은 간격 차이가 남아 있는 영역입니다.";
+    }
+
+    function renderSimilarityRecommendations(results = [], diff = null, referenceImage = null, state = "ready") {
+      if (state === "loading") {
+        return `
+          <article class="reference-recommendation-card">
+            <strong><span>원본 분석 중</span><span>잠시만</span></strong>
+            현재 HTML 화면을 캡처해서 원본과 비교하는 중입니다. 완료되면 가장 크게 다른 영역부터 추천 순서가 자동으로 바뀝니다.
+          </article>
+          ${defaultSimilarityRecommendationHTML("분석 전 기본 순서", "기본")}
+        `;
+      }
+
+      if (state === "failed") {
+        return `
+          <article class="reference-recommendation-card warning">
+            <strong><span>자동 분석 실패</span><span>수동 확인</span></strong>
+            원본 이미지는 표시됐지만 픽셀 비교를 끝내지 못했습니다. PNG, JPG, WebP 파일로 다시 올리거나 아래 순서대로 직접 맞춰보세요.
+          </article>
+          ${defaultSimilarityRecommendationHTML("수동으로 맞추는 순서", "대체 방법")}
+        `;
+      }
+
+      if (!diff || !results.length) {
+        return defaultSimilarityRecommendationHTML();
+      }
+
+      const priority = results.filter((result) => result.severity !== "ok").slice(0, 4);
+      const visibleResults = priority.length ? priority : results.slice(0, 3);
+      const firstTarget = visibleResults[0]?.name || "전체 레이아웃";
+      const aspectText = referenceImage
+        ? `원본 ${referenceImage.naturalWidth} x ${referenceImage.naturalHeight}`
+        : "원본 분석 완료";
+
+      return `
+        <article class="reference-recommendation-card ${priority.length ? "warning" : "ok"}">
+          <strong><span>100%로 가는 수정 추천</span><span>${diff.similarity.toFixed(1)}%</span></strong>
+          현재 차이 영역은 ${diff.changedPercent.toFixed(2)}%입니다. 지금은 <b>${escapeHTML(firstTarget)}</b>부터 고치는 게 가장 효과적입니다.<br>
+          ${aspectText}. 비교 기준 캔버스는 589 x 1280으로 맞췄습니다.
+          <span class="reference-recommendation-fix">추천 흐름: 큰 구조 → 텍스트/폰트 → 아이콘/이미지 → 세부 간격 → 다시 비교 → Export</span>
+        </article>
+        ${visibleResults.map((result, index) => {
+          const fixes = solutionForResult(result).map(escapeHTML).join(" / ");
+          return `
+            <article class="reference-recommendation-card ${result.severity}">
+              <strong><span>${index + 1}순위 · ${escapeHTML(result.name)}</span><span>${result.changedPercent.toFixed(1)}%</span></strong>
+              ${recommendationReasonForResult(result)}<br>
+              확인할 것: ${result.hints.map(escapeHTML).join(" / ")}
+              <span class="reference-recommendation-fix">바로 할 일: ${fixes}</span>
+            </article>
+          `;
+        }).join("")}
+      `;
+    }
+
+    let referenceAnalysisTimer = 0;
+    let referenceAnalysisRun = 0;
+
+    function scheduleReferenceAnalysis(delay = 450) {
+      if (!REFERENCE_STATE?.src || !document.querySelector(".reference-lab")) return;
+      window.clearTimeout(referenceAnalysisTimer);
+      referenceAnalysisTimer = window.setTimeout(runReferenceAnalysis, delay);
+    }
+
+    function referenceScoreLabel(score) {
+      if (score >= 98) return "거의 동일";
+      if (score >= 92) return "매우 가까움";
+      if (score >= 84) return "조정 필요";
+      if (score >= 70) return "큰 수정 필요";
+      return "기준과 많이 다름";
+    }
+
+    function renderReferenceLabShell(panel) {
+      panel.innerHTML = `
+        <h2>1. 원본 업로드</h2>
+        <p>먼저 원본을 올리세요. 바로 옆의 실시간 생성 화면과 비교해서 유사도를 100% 기준으로 계산합니다.</p>
+        <label>
+          원본 이미지 업로드
+          <input type="file" accept="image/*" data-reference-file>
+        </label>
+        <div class="reference-preview-card">
+          <div class="reference-preview-head"><span>원본 이미지</span><span data-reference-meta>업로드 대기</span></div>
+          <div class="reference-preview-body" data-reference-preview>
+            <div class="reference-empty">원본 스크린샷을 업로드하세요.</div>
+          </div>
+        </div>
+        <div class="reference-score-card">
+          <div class="reference-score-row"><span>현재 유사도 (목표 100%)</span><strong data-reference-score-label>원본 없음</strong></div>
+          <div class="reference-score" data-reference-score>--%</div>
+          <progress value="0" max="100" data-reference-progress></progress>
+          <p data-reference-summary>원본을 올리면 전체 점수와 영역별 분석이 표시됩니다.</p>
+        </div>
+        <div class="reference-recommendations" data-reference-recommendations>
+          ${renderSimilarityRecommendations()}
+        </div>
+        <label class="reference-toggle">
+          <input type="checkbox" data-reference-overlay-toggle>
+          원본을 화면 위에 반투명으로 겹쳐 보기
+        </label>
+        <div class="reference-analysis" data-reference-analysis>
+          <div class="reference-analysis-card">원본 업로드 후 자동 분석됩니다.</div>
+        </div>
+        <div class="reference-actions">
+          <button type="button" data-reference-refresh>유사도 다시 계산</button>
+          <button class="secondary" type="button" data-reference-compare>비교 화면</button>
+          <button class="secondary" type="button" data-reference-clear>원본 제거</button>
+          <button class="secondary" type="button" data-reference-close>작업실 닫기</button>
+        </div>
+      `;
+    }
+
+    function updateReferenceOverlayVisibility() {
+      const overlay = ensureReferenceOverlay();
+      const toggle = document.querySelector("[data-reference-overlay-toggle]");
+      if (REFERENCE_STATE?.src && toggle?.checked) {
+        overlay.src = REFERENCE_STATE.src;
+        overlay.classList.add("visible");
+      } else {
+        overlay.classList.remove("visible");
+      }
+      updateReferenceOverlay();
+    }
+
+    function updateWorkspaceReferencePreview() {
+      const preview = document.querySelector("[data-workspace-reference-preview]");
+      const meta = document.querySelector("[data-workspace-reference-meta]");
+      if (!preview || !meta) return;
+
+      if (!REFERENCE_STATE?.src) {
+        preview.innerHTML = '<div class="workspace-reference-empty">원본 이미지를 업로드하면<br>여기에 크게 표시됩니다.</div>';
+        meta.textContent = "업로드 대기";
+        return;
+      }
+
+      preview.innerHTML = `<img src="${escapeHTML(REFERENCE_STATE.src)}" alt="업로드한 원본 크게 보기">`;
+      meta.textContent = `${REFERENCE_STATE.naturalWidth || "?"} x ${REFERENCE_STATE.naturalHeight || "?"} · 1:1 비율 비교`;
+    }
+
+    function refreshReferenceLab() {
+      const panel = document.querySelector(".reference-lab");
+      if (!panel) return;
+
+      const preview = panel.querySelector("[data-reference-preview]");
+      const meta = panel.querySelector("[data-reference-meta]");
+      const score = panel.querySelector("[data-reference-score]");
+      const scoreLabel = panel.querySelector("[data-reference-score-label]");
+      const progress = panel.querySelector("[data-reference-progress]");
+      const summary = panel.querySelector("[data-reference-summary]");
+      const analysis = panel.querySelector("[data-reference-analysis]");
+      const recommendations = panel.querySelector("[data-reference-recommendations]");
+
+      if (!REFERENCE_STATE?.src) {
+        preview.innerHTML = '<div class="reference-empty">원본 스크린샷을 업로드하세요.</div>';
+        meta.textContent = "업로드 대기";
+        score.textContent = "--%";
+        scoreLabel.textContent = "원본 없음";
+        progress.value = 0;
+        summary.textContent = "원본을 올리면 전체 점수와 영역별 분석이 표시됩니다.";
+        analysis.innerHTML = '<div class="reference-analysis-card">원본 업로드 후 자동 분석됩니다.</div>';
+        recommendations.innerHTML = renderSimilarityRecommendations();
+        updateWorkspaceReferencePreview();
+        updateReferenceOverlayVisibility();
+        return;
+      }
+
+      preview.innerHTML = `<img src="${escapeHTML(REFERENCE_STATE.src)}" alt="업로드한 원본 이미지">`;
+      meta.textContent = `${REFERENCE_STATE.naturalWidth || "?"} x ${REFERENCE_STATE.naturalHeight || "?"}`;
+      score.textContent = "계산 중";
+      scoreLabel.textContent = "분석 중";
+      summary.textContent = "현재 화면을 렌더링해서 원본과 비교하는 중입니다.";
+      analysis.innerHTML = '<div class="reference-analysis-card">철저하게 분석하는 중입니다. 잠시만 기다리세요.</div>';
+      recommendations.innerHTML = renderSimilarityRecommendations([], null, null, "loading");
+      updateWorkspaceReferencePreview();
+      updateReferenceOverlayVisibility();
+    }
+
+    function renderReferenceAnalysis(results, diff, referenceImage) {
+      const aspectScore = aspectMatchPercent(referenceImage.naturalWidth, referenceImage.naturalHeight);
+      const topResults = results.slice(0, 7);
+      const resultCards = topResults.map((result, index) => {
+        const fixes = solutionForResult(result).map(escapeHTML).join(" / ");
+        return `
+          <article class="reference-analysis-card">
+            <strong><span>${index + 1}. ${escapeHTML(result.name)}</span><span>${result.changedPercent.toFixed(1)}%</span></strong>
+            확인: ${result.hints.map(escapeHTML).join(" / ")}<br>
+            해결방책: ${fixes}
+          </article>
+        `;
+      }).join("");
+
+      return `
+        <article class="reference-analysis-card">
+          <strong><span>원본 구조 분석</span><span>${referenceImage.naturalWidth} x ${referenceImage.naturalHeight}</span></strong>
+          화면비 일치도 ${aspectScore.toFixed(1)}%. 기준 캔버스는 589 x 1280으로 맞춰 비교했습니다.<br>
+          전체 차이 영역 ${diff.changedPercent.toFixed(2)}%, 빨간 동그라미 후보 ${diff.regionCount}개.
+        </article>
+        ${resultCards}
+      `;
+    }
+
+    async function runReferenceAnalysis() {
+      const panel = document.querySelector(".reference-lab");
+      if (!panel || !REFERENCE_STATE?.src) return;
+
+      const runId = ++referenceAnalysisRun;
+      refreshReferenceLab();
+
+      try {
+        const { canvas: referenceCanvas, image: referenceImage } = await renderReferenceToCanvas(REFERENCE_STATE.src);
+        const currentCanvas = await renderPhoneToCanvas();
+        const diff = createDifferenceCanvas(referenceCanvas, currentCanvas, 28);
+        const results = buildComparisonAdvice(referenceCanvas, currentCanvas, 28);
+
+        if (runId !== referenceAnalysisRun) return;
+
+        const score = panel.querySelector("[data-reference-score]");
+        const scoreLabel = panel.querySelector("[data-reference-score-label]");
+        const progress = panel.querySelector("[data-reference-progress]");
+        const summary = panel.querySelector("[data-reference-summary]");
+        const analysis = panel.querySelector("[data-reference-analysis]");
+        const recommendations = panel.querySelector("[data-reference-recommendations]");
+        const similarity = diff.similarity;
+
+        score.textContent = `${similarity.toFixed(1)}%`;
+        scoreLabel.textContent = referenceScoreLabel(similarity);
+        progress.value = similarity;
+        summary.textContent = `목표는 100%입니다. 현재 가장 먼저 고칠 영역은 ${results[0]?.name || "없음"}입니다.`;
+        analysis.innerHTML = renderReferenceAnalysis(results, diff, referenceImage);
+        recommendations.innerHTML = renderSimilarityRecommendations(results, diff, referenceImage);
+      } catch (error) {
+        if (runId !== referenceAnalysisRun) return;
+        panel.querySelector("[data-reference-score]").textContent = "--%";
+        panel.querySelector("[data-reference-score-label]").textContent = "분석 실패";
+        panel.querySelector("[data-reference-summary]").textContent = "이미지는 표시했지만 자동 분석에 실패했습니다. 다른 PNG/JPG/WebP로 다시 시도하세요.";
+        panel.querySelector("[data-reference-analysis]").innerHTML = '<div class="reference-analysis-card">분석 실패. 이미지 파일 형식이나 브라우저 캡처 권한을 확인하세요.</div>';
+        panel.querySelector("[data-reference-recommendations]").innerHTML = renderSimilarityRecommendations([], null, null, "failed");
+      }
+    }
+
+    async function handleReferenceUpload(file) {
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        window.alert("이미지 파일만 업로드할 수 있습니다.");
+        return;
+      }
+
+      try {
+        const src = await fileToDataURL(file);
+        const image = await imageFromURL(src);
+        saveReferenceState({
+          src,
+          name: file.name,
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight,
+          savedAt: new Date().toISOString()
+        });
+        refreshReferenceLab();
+        scheduleReferenceAnalysis(30);
+      } catch (error) {
+        window.alert("원본 이미지를 불러오지 못했습니다. 다른 PNG/JPG/WebP 파일로 다시 시도하세요.");
+      }
+    }
+
+    function showReferenceLab() {
+      let panel = document.querySelector(".reference-lab");
+      if (!panel) {
+        panel = document.createElement("aside");
+        panel.className = "reference-lab";
+        renderReferenceLabShell(panel);
+        document.body.append(panel);
+
+        panel.querySelector("[data-reference-file]").addEventListener("change", (event) => {
+          handleReferenceUpload(event.target.files?.[0]);
+        });
+        panel.querySelector("[data-reference-refresh]").addEventListener("click", () => scheduleReferenceAnalysis(0));
+        panel.querySelector("[data-reference-compare]").addEventListener("click", showComparePanel);
+        panel.querySelector("[data-reference-clear]").addEventListener("click", () => {
+          saveReferenceState(null);
+          refreshReferenceLab();
+        });
+        panel.querySelector("[data-reference-close]").addEventListener("click", closeGeneratorWorkspace);
+        panel.querySelector("[data-reference-overlay-toggle]").addEventListener("input", updateReferenceOverlayVisibility);
+      }
+
+      refreshReferenceLab();
+      scheduleReferenceAnalysis(120);
+    }
+
+    function wrapCanvasText(context, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+      const words = String(text).split(/\s+/);
+      const lines = [];
+      let line = "";
+
+      words.forEach((word) => {
+        const next = line ? `${line} ${word}` : word;
+        if (context.measureText(next).width <= maxWidth || !line) {
+          line = next;
+        } else {
+          lines.push(line);
+          line = word;
+        }
+      });
+
+      if (line) lines.push(line);
+
+      lines.slice(0, maxLines).forEach((lineText, index) => {
+        const suffix = index === maxLines - 1 && lines.length > maxLines ? "..." : "";
+        context.fillText(`${lineText}${suffix}`, x, y + index * lineHeight);
+      });
+
+      return y + Math.min(lines.length, maxLines) * lineHeight;
+    }
+
+    async function exportComparisonReportPNG({ referenceCanvas, currentCanvas, differenceCanvas, diff, results, threshold }) {
+      if (!referenceCanvas) {
+        window.alert("비교 리포트는 원본 이미지를 먼저 업로드해야 저장할 수 있습니다.");
+        return;
+      }
+
+      let currentForReport = currentCanvas;
+      if (!currentForReport) {
+        currentForReport = await renderPhoneToCanvas();
+      }
+
+      let diffForReport = diff;
+      let differenceForReport = differenceCanvas;
+      if (!differenceForReport || !diffForReport) {
+        diffForReport = createDifferenceCanvas(referenceCanvas, currentForReport, threshold);
+        differenceForReport = diffForReport.canvas;
+      }
+
+      const adviceResults = results?.length
+        ? results
+        : buildComparisonAdvice(referenceCanvas, currentForReport, threshold);
+      const priority = adviceResults.filter((result) => result.severity !== "ok").slice(0, 5);
+      const visibleAdvice = priority.length ? priority : adviceResults.slice(0, 3);
+      const scale = .36;
+      const imageWidth = Math.round(589 * scale);
+      const imageHeight = Math.round(1280 * scale);
+      const margin = 28;
+      const gap = 22;
+      const headerHeight = 112;
+      const adviceTopPadding = 52;
+      const canvas = document.createElement("canvas");
+      canvas.width = margin * 2 + imageWidth * 3 + gap * 2;
+      canvas.height = headerHeight + imageHeight + adviceTopPadding + 160;
+      const context = canvas.getContext("2d");
+
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = "#152033";
+      context.font = "800 28px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+      context.fillText("비교 리포트", margin, 42);
+      context.font = "600 15px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+      context.fillStyle = "#546177";
+      context.fillText(
+        `유사도 ${diffForReport.similarity.toFixed(1)}% · 차이 ${diffForReport.changedPercent.toFixed(2)}% · 표시 영역 ${diffForReport.regionCount}개`,
+        margin,
+        70
+      );
+      context.fillText(`생성 시간 ${new Date().toLocaleString("ko-KR")}`, margin, 94);
+
+      const imageY = headerHeight;
+      const columns = [
+        { label: "원본 이미지", canvas: referenceCanvas },
+        { label: "내가 만든 화면", canvas: createMarkedCurrentCanvas(currentForReport, diffForReport.markedBoxes) },
+        { label: "차이 표시", canvas: differenceForReport }
+      ];
+
+      columns.forEach((column, index) => {
+        const x = margin + index * (imageWidth + gap);
+        context.fillStyle = "#1d2a3d";
+        context.font = "800 14px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+        context.fillText(column.label, x, imageY - 12);
+        context.fillStyle = "#eef2f7";
+        context.fillRect(x - 1, imageY - 1, imageWidth + 2, imageHeight + 2);
+        context.drawImage(column.canvas, x, imageY, imageWidth, imageHeight);
+      });
+
+      const adviceY = imageY + imageHeight + 44;
+      context.fillStyle = "#152033";
+      context.font = "800 18px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+      context.fillText("수정 우선순위", margin, adviceY);
+      context.font = "600 13px -apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif";
+      context.fillStyle = "#41506a";
+
+      const adviceText = visibleAdvice
+        .map((result, index) => `${index + 1}. ${result.name}: ${result.changedPercent.toFixed(1)}% 차이 - ${result.hints.join(" / ")}`)
+        .join("   ");
+      wrapCanvasText(context, adviceText || "큰 차이는 적습니다. 세부 간격만 확인하세요.", margin, adviceY + 28, canvas.width - margin * 2, 20, 5);
+
+      await downloadCanvasPNG(canvas, `banking-comparison-report-${exportTimestamp()}.png`);
+    }
+
     function showComparePanel() {
+      document.querySelector(".editor-panel")?.remove();
+      document.querySelector(".inline-edit-toolbar")?.remove();
+      document.querySelector(".reference-lab")?.remove();
+      restoreStageFromWorkspace();
+      updateReferenceOverlayVisibility();
+      removeInlinePopover();
+      document.body.classList.remove("inline-edit", "layout-edit", "generator-docked");
+      document.body.classList.add("compare-docked");
+      fitPhone();
+
       if (document.querySelector(".compare-panel")) return;
 
       let referenceURL = "";
-      let lastReferenceCanvas = null;
-      let lastCurrentCanvas = null;
-      let lastReferenceImage = null;
+      let referenceCanvas = null;
+      let currentCanvas = null;
+      let differenceCanvas = null;
+      let referenceImage = null;
+      let lastDiff = null;
+      let lastResults = [];
 
       const panel = document.createElement("aside");
       panel.className = "compare-panel";
-      panel.innerHTML = `
-        <h2>이미지 비교</h2>
-        <p class="compare-note">기준 이미지를 올리면 왼쪽은 업로드 이미지, 가운데는 현재 화면, 오른쪽은 다른 부분을 빨간색으로 표시한 차이 화면입니다. 이미지는 이 브라우저 안에서만 사용됩니다.</p>
+
+      const board = document.createElement("div");
+      board.className = "compare-board";
+      board.innerHTML = `
+        <div class="compare-pair">
+          <section class="compare-frame">
+            <div class="compare-frame-title"><span>원본 이미지</span><span data-reference-meta>업로드 대기</span></div>
+            <div class="compare-viewer">
+              <button class="compare-empty compare-dropzone" type="button">이미지 클릭해서 업로드<br>또는 여기에 드롭</button>
+              <img class="compare-upload-preview" alt="업로드한 원본 이미지" hidden>
+            </div>
+          </section>
+          <section class="compare-frame">
+            <div class="compare-frame-title"><span>내가 만든 화면</span><span data-current-meta>대기 중</span></div>
+            <div class="compare-viewer">
+              <div class="compare-current-preview" data-current-preview hidden></div>
+              <div class="compare-empty" data-current-empty>원본을 올리면 현재 HTML 화면이 여기에 표시됩니다</div>
+              <canvas data-compare-canvas="current" hidden></canvas>
+            </div>
+          </section>
+        </div>
+        <section class="compare-frame compare-diff-frame" hidden>
+          <div class="compare-frame-title"><span>차이 표시</span><span>빨간색 = 다른 부분</span></div>
+          <div class="compare-viewer">
+            <canvas data-compare-canvas="difference"></canvas>
+          </div>
+        </section>
+      `;
+
+      const referenceMeta = board.querySelector("[data-reference-meta]");
+      const currentMeta = board.querySelector("[data-current-meta]");
+      const uploadEmpty = board.querySelector(".compare-dropzone");
+      const previewImage = board.querySelector(".compare-upload-preview");
+      const currentPreview = board.querySelector("[data-current-preview]");
+      const currentEmpty = board.querySelector("[data-current-empty]");
+      const currentCanvasView = board.querySelector('[data-compare-canvas="current"]');
+      const diffFrame = board.querySelector(".compare-diff-frame");
+      const diffCanvasView = board.querySelector('[data-compare-canvas="difference"]');
+
+      const controls = document.createElement("div");
+      controls.className = "compare-controls";
+      controls.innerHTML = `
+        <div>
+          <h2>이미지 비교</h2>
+          <p class="compare-note">원본을 올리면 오른쪽 "내가 만든 화면" 위에 수정할 부분이 빨간 동그라미로 표시됩니다. 아래 해결방책을 보고 생성 화면에서 바로 고치면 됩니다.</p>
+        </div>
       `;
 
       const fileLabel = document.createElement("label");
@@ -1960,10 +4579,6 @@
       fileInput.type = "file";
       fileInput.accept = "image/*";
       fileLabel.append(fileInput);
-
-      const dropzone = document.createElement("div");
-      dropzone.className = "compare-dropzone";
-      dropzone.textContent = "또는 이미지를 여기로 드래그해서 놓기";
 
       const thresholdLabel = document.createElement("label");
       thresholdLabel.textContent = "차이 감도";
@@ -1976,189 +4591,319 @@
       thresholdInput.step = "1";
       thresholdInput.value = "28";
       const thresholdOutput = document.createElement("output");
-      thresholdOutput.value = thresholdInput.value;
       thresholdOutput.textContent = thresholdInput.value;
       thresholdWrap.append(thresholdInput, thresholdOutput);
       thresholdLabel.append(thresholdWrap);
 
-      const stats = document.createElement("div");
-      stats.className = "compare-stats";
-      stats.innerHTML = "<span>이미지를 업로드하면 비교 정보가 표시됩니다.</span>";
+      const status = document.createElement("div");
+      status.className = "compare-stats";
+      status.innerHTML = "<span>이미지를 업로드하세요.</span>";
 
-      const board = document.createElement("div");
-      board.className = "compare-board";
-      board.innerHTML = `
-        <section class="compare-frame">
-          <div class="compare-frame-title"><span>Reference</span><span>uploaded</span></div>
-          <div class="compare-empty">기준 이미지를 업로드하세요</div>
-          <canvas data-compare-canvas="reference" hidden></canvas>
-        </section>
-        <section class="compare-frame">
-          <div class="compare-frame-title"><span>Current</span><span>HTML render</span></div>
-          <div class="compare-empty">업로드 후 현재 화면을 렌더링합니다</div>
-          <canvas data-compare-canvas="current" hidden></canvas>
-        </section>
-        <section class="compare-frame">
-          <div class="compare-frame-title"><span>Difference</span><span>red = changed</span></div>
-          <div class="compare-empty">다른 부분을 빨간색으로 표시합니다</div>
-          <canvas data-compare-canvas="difference" hidden></canvas>
-        </section>
-      `;
+      const advice = document.createElement("div");
+      advice.className = "compare-advice";
+      advice.innerHTML = '<div class="compare-advice-empty">업로드하면 수정해야 할 부분이 여기에 표시됩니다.</div>';
 
-      const referenceCanvasView = board.querySelector('[data-compare-canvas="reference"]');
-      const currentCanvasView = board.querySelector('[data-compare-canvas="current"]');
-      const differenceCanvasView = board.querySelector('[data-compare-canvas="difference"]');
-
-      function showCanvas(canvas) {
-        canvas.hidden = false;
-        canvas.previousElementSibling.hidden = true;
+      function renderAdvice(diff) {
+        if (!referenceCanvas || !currentCanvas) return;
+        const results = buildComparisonAdvice(referenceCanvas, currentCanvas, Number(thresholdInput.value));
+        lastDiff = diff;
+        lastResults = results;
+        advice.innerHTML = renderComparisonAdvice(results, diff);
       }
 
-      function refreshDifference() {
-        if (!lastReferenceCanvas || !lastCurrentCanvas) return;
+      function showCurrentDomPreview() {
+        currentPreview.innerHTML = "";
+        const phoneClone = document.querySelector(".phone").cloneNode(true);
+        phoneClone.querySelectorAll(".reference-overlay").forEach((element) => element.remove());
+        phoneClone.classList.remove("layout-selected");
+        phoneClone.style.boxShadow = "none";
+        phoneClone.style.transformOrigin = "top left";
+        currentPreview.append(phoneClone);
+        currentPreview.hidden = false;
+        currentEmpty.hidden = true;
+        currentCanvasView.hidden = true;
+        currentMeta.textContent = "HTML 미리보기";
 
-        const diff = createDifferenceCanvas(lastReferenceCanvas, lastCurrentCanvas, Number(thresholdInput.value));
-        copyCanvasToCanvas(diff.canvas, differenceCanvasView);
-        showCanvas(differenceCanvasView);
-
-        stats.innerHTML = `
-          <span>기준 이미지: ${lastReferenceImage.naturalWidth} x ${lastReferenceImage.naturalHeight}</span>
-          <span>비교 캔버스: 589 x 1280</span>
-          <span>비율 일치도: <strong>${aspectMatchPercent(lastReferenceImage.naturalWidth, lastReferenceImage.naturalHeight).toFixed(1)}%</strong></span>
-          <span>빨간색 차이 영역: <strong>${diff.changedPercent.toFixed(2)}%</strong></span>
-          <span>대략 픽셀 유사도: <strong>${diff.similarity.toFixed(1)}%</strong></span>
-        `;
+        const updateScale = () => {
+          const width = currentPreview.clientWidth || currentPreview.parentElement?.clientWidth || 589;
+          phoneClone.style.transform = `scale(${(width / 589).toFixed(5)})`;
+        };
+        updateScale();
+        requestAnimationFrame(updateScale);
       }
 
-      async function renderCurrentAndDifference() {
-        if (!lastReferenceCanvas) return;
+      function resetComparisonViews() {
+        differenceCanvas = null;
+        lastDiff = null;
+        lastResults = [];
+        diffFrame.hidden = true;
+        if (currentCanvas) {
+          copyCanvasToCanvas(currentCanvas, currentCanvasView);
+          currentCanvasView.hidden = false;
+          currentPreview.hidden = true;
+          currentEmpty.hidden = true;
+          currentMeta.textContent = "589 x 1280";
+        } else {
+          showCurrentDomPreview();
+        }
+      }
+
+      async function renderCurrentSide() {
+        showCurrentDomPreview();
+
         try {
-          lastCurrentCanvas = await renderPhoneToCanvas();
-          copyCanvasToCanvas(lastCurrentCanvas, currentCanvasView);
-          showCanvas(currentCanvasView);
-          refreshDifference();
+          currentCanvas = await renderPhoneToCanvas();
+          currentMeta.textContent = "HTML 미리보기";
         } catch (error) {
-          lastCurrentCanvas = null;
+          currentCanvas = null;
+          currentMeta.textContent = "HTML 미리보기";
+        }
+      }
+
+      function showDifference(shouldScroll = false) {
+        if (!differenceCanvas) return;
+        copyCanvasToCanvas(differenceCanvas, diffCanvasView);
+        diffFrame.hidden = false;
+        if (shouldScroll) {
+          diffFrame.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
+
+      function showMarkedCurrent(diff) {
+        if (!currentCanvas) return;
+        const markedCurrent = createMarkedCurrentCanvas(currentCanvas, diff?.markedBoxes || []);
+        copyCanvasToCanvas(markedCurrent, currentCanvasView);
+        currentCanvasView.hidden = false;
+        currentPreview.hidden = true;
+        currentEmpty.hidden = true;
+        currentMeta.textContent = diff?.markedBoxes?.length
+          ? `빨간 동그라미 ${diff.markedBoxes.length}개`
+          : "큰 차이 적음";
+      }
+
+      async function refreshComparison() {
+        if (!referenceCanvas) return;
+        status.innerHTML = "<span>현재 HTML 화면과 비교하는 중...</span>";
+        try {
+          currentCanvas = await renderPhoneToCanvas();
+          const diff = createDifferenceCanvas(referenceCanvas, currentCanvas, Number(thresholdInput.value));
+          differenceCanvas = diff.canvas;
+          showMarkedCurrent(diff);
+          renderAdvice(diff);
+          showDifference(false);
+          status.innerHTML = `
+            <span>비교 완료. 오른쪽 "내가 만든 화면"에 수정할 곳을 빨간 동그라미로 표시했습니다.</span>
+            <span>차이 영역: <strong>${diff.changedPercent.toFixed(2)}%</strong></span>
+            <span>유사도: <strong>${diff.similarity.toFixed(1)}%</strong></span>
+          `;
+        } catch (error) {
+          currentCanvas = null;
+          differenceCanvas = null;
+          lastDiff = null;
+          lastResults = [];
           currentCanvasView.hidden = true;
-          currentCanvasView.previousElementSibling.hidden = false;
-          differenceCanvasView.hidden = true;
-          differenceCanvasView.previousElementSibling.hidden = false;
-          stats.insertAdjacentHTML("beforeend", "<span>현재 화면 렌더링은 실패했지만 기준 이미지는 정상으로 인식했습니다. 파일 형식/크기는 왼쪽에서 확인할 수 있습니다.</span>");
+          showCurrentDomPreview();
+          status.innerHTML = "<span>업로드 이미지는 표시했습니다. 자동 비교만 실패했습니다.</span>";
         }
       }
 
       async function handleReferenceFile(file) {
         if (!file) return;
         if (!file.type.startsWith("image/")) {
-          stats.innerHTML = "<span>이미지 파일만 업로드할 수 있습니다.</span>";
+          status.innerHTML = "<span>이미지 파일만 업로드할 수 있습니다.</span>";
           return;
         }
 
-        referenceURL = "";
-        stats.innerHTML = "<span>기준 이미지를 읽는 중입니다...</span>";
+        if (referenceURL && referenceURL.startsWith("blob:")) URL.revokeObjectURL(referenceURL);
+        referenceURL = await fileToDataURL(file);
+        previewImage.src = referenceURL;
+        previewImage.hidden = false;
+        uploadEmpty.hidden = true;
+        referenceMeta.textContent = "원본 보기";
+        resetComparisonViews();
+        advice.innerHTML = '<div class="compare-advice-empty">비교 계산 중입니다.</div>';
+        status.innerHTML = `<span>이미지 표시 완료: ${escapeHTML(file.name)}. 비교 계산 중...</span>`;
 
         try {
-          const referenceResult = await renderReferenceFileToCanvas(file);
-          referenceURL = referenceResult.src;
-          lastReferenceCanvas = referenceResult.canvas;
-          lastReferenceImage = referenceResult.image;
-          lastCurrentCanvas = null;
-
-          copyCanvasToCanvas(lastReferenceCanvas, referenceCanvasView);
-          showCanvas(referenceCanvasView);
-
-          currentCanvasView.hidden = true;
-          currentCanvasView.previousElementSibling.hidden = false;
-          differenceCanvasView.hidden = true;
-          differenceCanvasView.previousElementSibling.hidden = false;
-
-          stats.innerHTML = `
-            <span>기준 이미지 인식 완료: ${lastReferenceImage.naturalWidth} x ${lastReferenceImage.naturalHeight}</span>
-            <span>파일: ${escapeHTML(file.name)} (${Math.round(file.size / 1024)} KB)</span>
-            <span>비교 캔버스: 589 x 1280</span>
-            <span>비율 일치도: <strong>${aspectMatchPercent(lastReferenceImage.naturalWidth, lastReferenceImage.naturalHeight).toFixed(1)}%</strong></span>
-            <span>현재 화면 렌더링 중...</span>
-          `;
-
-          await renderCurrentAndDifference();
+          const image = await imageFromURL(referenceURL);
+          referenceImage = image;
+          saveReferenceState({
+            src: referenceURL,
+            name: file.name,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            savedAt: new Date().toISOString()
+          });
+          referenceCanvas = document.createElement("canvas");
+          referenceCanvas.width = 589;
+          referenceCanvas.height = 1280;
+          drawImageContain(referenceCanvas.getContext("2d", { willReadFrequently: true }), image, 589, 1280);
+          await refreshComparison();
         } catch (error) {
-          stats.innerHTML = "<span>이미지를 읽을 수 없습니다. PNG/JPG/WebP 파일로 다시 시도해 주세요.</span>";
+          referenceCanvas = null;
+          referenceImage = null;
+          status.innerHTML = "<span>이미지는 표시했지만 비교용 캔버스를 만들지 못했습니다.</span>";
+          advice.innerHTML = '<div class="compare-advice-empty">다른 PNG/JPG/WebP 파일로 다시 시도하세요.</div>';
         }
       }
 
+      async function loadSavedReferenceIntoCompare() {
+        if (!REFERENCE_STATE?.src || referenceCanvas) return;
+        referenceURL = REFERENCE_STATE.src;
+        previewImage.src = referenceURL;
+        previewImage.hidden = false;
+        uploadEmpty.hidden = true;
+        referenceMeta.textContent = "저장된 원본";
+        advice.innerHTML = '<div class="compare-advice-empty">저장된 원본으로 비교 계산 중입니다.</div>';
+        status.innerHTML = "<span>저장된 원본을 불러와 비교 계산 중...</span>";
+
+        try {
+          const image = await imageFromURL(referenceURL);
+          referenceImage = image;
+          referenceCanvas = document.createElement("canvas");
+          referenceCanvas.width = 589;
+          referenceCanvas.height = 1280;
+          drawImageContain(referenceCanvas.getContext("2d", { willReadFrequently: true }), image, 589, 1280);
+          await refreshComparison();
+        } catch (error) {
+          referenceCanvas = null;
+          referenceImage = null;
+          status.innerHTML = "<span>저장된 원본을 비교용으로 불러오지 못했습니다. 다시 업로드하세요.</span>";
+        }
+      }
+
+      fileInput.addEventListener("change", () => handleReferenceFile(fileInput.files?.[0]));
+      uploadEmpty.addEventListener("click", () => fileInput.click());
+      uploadEmpty.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        uploadEmpty.classList.add("drag-over");
+      });
+      uploadEmpty.addEventListener("dragleave", () => uploadEmpty.classList.remove("drag-over"));
+      uploadEmpty.addEventListener("drop", (event) => {
+        event.preventDefault();
+        uploadEmpty.classList.remove("drag-over");
+        handleReferenceFile(event.dataTransfer.files?.[0]);
+      });
+
+      let thresholdTimer = 0;
       thresholdInput.addEventListener("input", () => {
-        thresholdOutput.value = thresholdInput.value;
         thresholdOutput.textContent = thresholdInput.value;
-        refreshDifference();
+        if (!referenceCanvas || !currentCanvas) return;
+        window.clearTimeout(thresholdTimer);
+        thresholdTimer = window.setTimeout(() => {
+          const diff = createDifferenceCanvas(referenceCanvas, currentCanvas, Number(thresholdInput.value));
+          differenceCanvas = diff.canvas;
+          showMarkedCurrent(diff);
+          renderAdvice(diff);
+          status.innerHTML = `
+            <span>감도 업데이트 완료.</span>
+            <span>차이 영역: <strong>${diff.changedPercent.toFixed(2)}%</strong></span>
+            <span>유사도: <strong>${diff.similarity.toFixed(1)}%</strong></span>
+          `;
+          if (!diffFrame.hidden) showDifference(false);
+        }, 120);
       });
 
       const actions = document.createElement("div");
       actions.className = "compare-actions";
 
-      const scoreButton = document.createElement("button");
-      scoreButton.type = "button";
-      scoreButton.textContent = "다시 비교";
-      scoreButton.addEventListener("click", async () => {
-        if (!referenceURL) {
-          stats.innerHTML = "<span>먼저 기준 이미지를 업로드하세요.</span>";
-          return;
+      const rerender = document.createElement("button");
+      rerender.type = "button";
+      rerender.textContent = "다시 비교";
+      rerender.addEventListener("click", refreshComparison);
+
+      const diffButton = document.createElement("button");
+      diffButton.type = "button";
+      diffButton.textContent = "차이 표시";
+      diffButton.addEventListener("click", () => showDifference(true));
+
+      const exportCurrent = document.createElement("button");
+      exportCurrent.type = "button";
+      exportCurrent.className = "export";
+      exportCurrent.textContent = "현재 화면 PNG";
+      exportCurrent.addEventListener("click", async () => {
+        exportCurrent.disabled = true;
+        exportCurrent.textContent = "저장 중...";
+        try {
+          await exportCurrentScreenPNG();
+        } finally {
+          exportCurrent.disabled = false;
+          exportCurrent.textContent = "현재 화면 PNG";
         }
-        await renderCurrentAndDifference();
       });
 
-      const reset = document.createElement("button");
-      reset.type = "button";
-      reset.className = "secondary";
-      reset.textContent = "비우기";
-      reset.addEventListener("click", () => {
-        referenceURL = "";
-        lastReferenceCanvas = null;
-        lastCurrentCanvas = null;
-        lastReferenceImage = null;
-        fileInput.value = "";
-        board.querySelectorAll("canvas").forEach((canvas) => {
-          canvas.hidden = true;
-          canvas.previousElementSibling.hidden = false;
-        });
-        stats.innerHTML = "<span>이미지를 업로드하면 비교 정보가 표시됩니다.</span>";
+      const exportCurrentSVG = document.createElement("button");
+      exportCurrentSVG.type = "button";
+      exportCurrentSVG.className = "secondary";
+      exportCurrentSVG.textContent = "현재 화면 SVG";
+      exportCurrentSVG.addEventListener("click", exportCurrentScreenSVG);
+
+      const exportReport = document.createElement("button");
+      exportReport.type = "button";
+      exportReport.className = "export";
+      exportReport.textContent = "비교 리포트 PNG";
+      exportReport.addEventListener("click", async () => {
+        exportReport.disabled = true;
+        exportReport.textContent = "리포트 저장 중...";
+        try {
+          await exportComparisonReportPNG({
+            referenceCanvas,
+            currentCanvas,
+            differenceCanvas,
+            diff: lastDiff,
+            results: lastResults,
+            threshold: Number(thresholdInput.value)
+          });
+        } catch (error) {
+          window.alert("비교 리포트 PNG 저장에 실패했습니다. 원본을 다시 업로드한 뒤 다시 눌러보세요.");
+        } finally {
+          exportReport.disabled = false;
+          exportReport.textContent = "비교 리포트 PNG";
+        }
+      });
+
+      const editScreen = document.createElement("button");
+      editScreen.type = "button";
+      editScreen.className = "export";
+      editScreen.textContent = "생성 및 Export";
+      editScreen.addEventListener("click", () => {
+        closeComparePanel();
+        openGenerator();
       });
 
       const close = document.createElement("button");
       close.type = "button";
       close.className = "secondary";
       close.textContent = "닫기";
-      close.addEventListener("click", () => {
+      close.addEventListener("click", closeComparePanel);
+
+      function closeComparePanel() {
+        document.removeEventListener("keydown", onCompareKeydown);
+        if (referenceURL && referenceURL.startsWith("blob:")) URL.revokeObjectURL(referenceURL);
         panel.remove();
-      });
+        document.body.classList.remove("compare-docked");
+        fitPhone();
+      }
 
-      fileInput.addEventListener("input", async () => {
-        const file = fileInput.files?.[0];
-        await handleReferenceFile(file);
-      });
+      function onCompareKeydown(event) {
+        if (event.key === "Escape") closeComparePanel();
+      }
+      document.addEventListener("keydown", onCompareKeydown);
 
-      actions.append(scoreButton, reset, close);
-      dropzone.addEventListener("dragover", (event) => {
-        event.preventDefault();
-        dropzone.classList.add("drag-over");
-      });
-      dropzone.addEventListener("dragleave", () => {
-        dropzone.classList.remove("drag-over");
-      });
-      dropzone.addEventListener("drop", async (event) => {
-        event.preventDefault();
-        dropzone.classList.remove("drag-over");
-        await handleReferenceFile(event.dataTransfer.files?.[0]);
-      });
+      actions.append(rerender, diffButton, exportCurrent, exportReport, exportCurrentSVG, editScreen, close);
+      const exportNote = document.createElement("p");
+      exportNote.className = "compare-export-note";
+      exportNote.textContent = "PNG가 브라우저에서 막히면 현재 화면 SVG로 자동 저장됩니다. 비교 리포트 PNG는 원본 업로드 후 저장할 수 있습니다.";
+      controls.append(fileLabel, status, advice, thresholdLabel, actions, exportNote);
 
-      panel.append(fileLabel, dropzone, thresholdLabel, stats, board, actions);
+      const content = document.createElement("div");
+      content.className = "compare-content";
+      content.append(board, controls);
+      panel.append(content);
       document.body.append(panel);
-    }
-
-    function compareTabURL() {
-      const url = new URL(location.href);
-      url.searchParams.delete("edit");
-      url.searchParams.set("compare", "1");
-      return url.href;
+      panel.scrollTo(0, 0);
+      requestAnimationFrame(() => panel.scrollTo(0, 0));
+      renderCurrentSide().then(loadSavedReferenceIntoCompare);
     }
 
     function showInlineToolbar() {
@@ -2168,11 +4913,10 @@
       toolbar.className = "inline-edit-toolbar";
       toolbar.innerHTML = "<span>수정 모드: 텍스트/아이콘을 클릭하세요</span>";
 
-      const compare = document.createElement("a");
-      compare.href = compareTabURL();
-      compare.target = "_blank";
-      compare.rel = "noopener";
+      const compare = document.createElement("button");
+      compare.type = "button";
       compare.textContent = "비교하기";
+      compare.addEventListener("click", showComparePanel);
 
       const close = document.createElement("button");
       close.type = "button";
@@ -2235,9 +4979,102 @@
       }
     });
 
+    let stagePlaceholder = null;
+
+    function restoreStageFromWorkspace() {
+      const workspace = document.querySelector(".generator-workspace");
+      const stage = workspace?.querySelector(".stage");
+      if (stage && stagePlaceholder?.parentNode) {
+        stagePlaceholder.after(stage);
+        stagePlaceholder.remove();
+        stagePlaceholder = null;
+      }
+      workspace?.remove();
+    }
+
+    function ensureGeneratorWorkspace() {
+      let workspace = document.querySelector(".generator-workspace");
+      if (workspace) return workspace;
+
+      workspace = document.createElement("section");
+      workspace.className = "generator-workspace";
+      workspace.innerHTML = `
+        <header class="workspace-header">
+          <div class="workspace-title">
+            <h1>원본 보고 똑같이 만들기</h1>
+            <p>원본은 오른쪽에 크게 고정하고, 가운데 화면을 클릭해 바로 수정한 뒤 비교하고 추출하세요.</p>
+          </div>
+          <div class="workspace-actions">
+            <button type="button" data-workspace-compare>비교</button>
+            <button class="primary" type="button" data-workspace-export>추출 / Export</button>
+            <button class="secondary" type="button" data-workspace-close>닫기</button>
+          </div>
+        </header>
+        <main class="workspace-main">
+          <div data-workspace-slot="reference"></div>
+          <section class="workspace-live-panel">
+            <h2>2. 내가 만든 화면</h2>
+            <p>텍스트와 아이콘을 클릭하면 바로 수정할 수 있습니다.</p>
+            <div class="workspace-stage-slot" data-workspace-slot="stage"></div>
+          </section>
+          <section class="workspace-reference-panel">
+            <h2>3. 원본 크게 보기</h2>
+            <p>가운데 화면과 같은 비율/크기로 보여줍니다.</p>
+            <div class="workspace-reference-frame" data-workspace-reference-preview>
+              <div class="workspace-reference-empty">원본 이미지를 업로드하면<br>여기에 크게 표시됩니다.</div>
+            </div>
+            <div class="workspace-reference-meta" data-workspace-reference-meta>업로드 대기</div>
+          </section>
+          <div data-workspace-slot="editor"></div>
+        </main>
+      `;
+
+      const stage = document.querySelector(".stage");
+      if (stage && !stagePlaceholder) {
+        stagePlaceholder = document.createComment("stage-placeholder");
+        stage.before(stagePlaceholder);
+      }
+
+      document.body.append(workspace);
+      if (stage) workspace.querySelector('[data-workspace-slot="stage"]').append(stage);
+
+      workspace.querySelector("[data-workspace-compare]").addEventListener("click", showComparePanel);
+      workspace.querySelector("[data-workspace-export]").addEventListener("click", showExportPanel);
+      workspace.querySelector("[data-workspace-close]").addEventListener("click", closeGeneratorWorkspace);
+
+      return workspace;
+    }
+
+    function mountGeneratorWorkspacePanels() {
+      const workspace = ensureGeneratorWorkspace();
+      const referencePanel = document.querySelector(".reference-lab");
+      const editorPanel = document.querySelector(".editor-panel");
+      if (referencePanel) workspace.querySelector('[data-workspace-slot="reference"]').append(referencePanel);
+      if (editorPanel) workspace.querySelector('[data-workspace-slot="editor"]').append(editorPanel);
+    }
+
     function openGenerator() {
+      document.body.classList.remove("compare-docked", "inline-edit");
+      document.body.classList.add("generator-docked");
+      ensureGeneratorWorkspace();
+      showReferenceLab();
       showEditor();
+      mountGeneratorWorkspacePanels();
+      removeInlinePopover();
       enableInlineEditor();
+      document.querySelector(".inline-edit-toolbar")?.remove();
+      fitPhone();
+    }
+
+    function closeGeneratorWorkspace() {
+      document.querySelector(".editor-panel")?.remove();
+      document.querySelector(".reference-lab")?.remove();
+      document.querySelector(".inline-edit-toolbar")?.remove();
+      removeInlinePopover();
+      restoreStageFromWorkspace();
+      document.body.classList.remove("generator-docked", "inline-edit", "layout-edit");
+      updateReferenceOverlayVisibility();
+      fitPhone();
     }
 
     function enableLayoutEditor() {
@@ -2253,8 +5090,10 @@
       document.addEventListener("pointerdown", (event) => {
         if (event.button !== 0 || event.target.closest(".editor-panel, .inline-popover, .inline-edit-toolbar")) return;
 
-        const element = event.target.closest("[data-layout-id]");
+        const element = event.target.closest("[data-field]") || event.target.closest("[data-icon-slot]") || event.target.closest("[data-layout-id]");
         if (!element) return;
+        const id = layoutKeyForElement(element);
+        if (!id) return;
 
         event.preventDefault();
         activeElement?.classList.remove("layout-selected");
@@ -2262,7 +5101,6 @@
         activeElement.classList.add("layout-selected");
         activeElement.setPointerCapture?.(event.pointerId);
 
-        const id = activeElement.dataset.layoutId;
         startClientX = event.clientX;
         startClientY = event.clientY;
         startPoint = LAYOUT_SETTINGS[id] || { x: 0, y: 0 };
@@ -2273,7 +5111,8 @@
         if (!activeElement) return;
 
         const scale = currentScale();
-        const id = activeElement.dataset.layoutId;
+        const id = layoutKeyForElement(activeElement);
+        if (!id) return;
         const point = {
           x: Math.round(startPoint.x + (event.clientX - startClientX) / scale),
           y: Math.round(startPoint.y + (event.clientY - startClientY) / scale)
@@ -2306,14 +5145,15 @@
 
       const editor = document.createElement("aside");
       editor.className = "editor-panel";
-      editor.innerHTML = "<h2>뱅킹 UI 생성기</h2>";
+      editor.innerHTML = "<h2>2. 생성하기</h2>";
 
       const intro = document.createElement("div");
       intro.className = "generator-intro";
       intro.innerHTML = `
+        <span><strong>왼쪽 원본</strong>을 보면서 가운데 실시간 화면을 맞춥니다.</span>
         <span><strong>텍스트/숫자</strong>는 아래 입력칸에서 바꾸거나 화면에서 직접 클릭해 수정합니다.</span>
         <span><strong>아이콘/로고</strong>는 드롭다운으로 교체합니다.</span>
-        <span><strong>위치</strong>는 화면의 UI 범위를 직접 드래그해 조정합니다.</span>
+        <span><strong>위치</strong>는 박스/글자/아이콘을 직접 드래그해 조정합니다.</span>
       `;
       editor.append(intro);
 
@@ -2330,11 +5170,22 @@
       dragEdit.textContent = "드래그 위치 조정";
       dragEdit.addEventListener("click", enableLayoutEditor);
 
-      const compareLink = document.createElement("a");
-      compareLink.href = compareTabURL();
-      compareLink.target = "_blank";
-      compareLink.rel = "noopener";
+      const compareLink = document.createElement("button");
+      compareLink.type = "button";
       compareLink.textContent = "비교하기";
+      compareLink.addEventListener("click", showComparePanel);
+
+      const exportPNG = document.createElement("button");
+      exportPNG.type = "button";
+      exportPNG.className = "export";
+      exportPNG.textContent = "Export";
+      exportPNG.addEventListener("click", showExportPanel);
+
+      const exportSVG = document.createElement("button");
+      exportSVG.type = "button";
+      exportSVG.className = "secondary";
+      exportSVG.textContent = "현재 SVG 저장";
+      exportSVG.addEventListener("click", exportCurrentScreenSVG);
 
       const resetAll = document.createElement("button");
       resetAll.type = "button";
@@ -2345,16 +5196,19 @@
         localStorage.removeItem(VISUAL_STORAGE_KEY);
         localStorage.removeItem(LAYOUT_STORAGE_KEY);
         localStorage.removeItem(CUSTOM_ICON_STORAGE_KEY);
+        localStorage.removeItem(ICON_SIZE_STORAGE_KEY);
         localStorage.removeItem(FONT_STORAGE_KEY);
+        localStorage.removeItem(TEXT_STYLE_STORAGE_KEY);
+        localStorage.removeItem(REFERENCE_STORAGE_KEY);
         location.reload();
       });
 
-      tools.append(clickEdit, dragEdit, compareLink, resetAll);
+      tools.append(clickEdit, dragEdit, compareLink, exportPNG, resetAll);
       editor.append(tools);
 
       const help = document.createElement("div");
       help.className = "editor-help";
-      help.textContent = "생성기는 브라우저 안에서 동작합니다. 바꾼 값은 이 브라우저에 저장되고, Reset/전체 초기화로 되돌릴 수 있습니다.";
+      help.textContent = "수정할 때마다 왼쪽 원본 분석의 유사도가 자동으로 다시 계산됩니다. 목표는 100%입니다.";
       editor.append(help);
 
       const contentTitle = document.createElement("h2");
@@ -2407,6 +5261,7 @@
         select.addEventListener("input", () => {
           FONT_SETTINGS[field] = select.value;
           applyFonts(FONT_SETTINGS);
+          applyTextStyles(TEXT_STYLE_SETTINGS);
           saveFonts(FONT_SETTINGS);
         });
 
@@ -2465,14 +5320,17 @@
         localStorage.removeItem(VISUAL_STORAGE_KEY);
         localStorage.removeItem(LAYOUT_STORAGE_KEY);
         localStorage.removeItem(CUSTOM_ICON_STORAGE_KEY);
+        localStorage.removeItem(ICON_SIZE_STORAGE_KEY);
         localStorage.removeItem(FONT_STORAGE_KEY);
+        localStorage.removeItem(TEXT_STYLE_STORAGE_KEY);
+        localStorage.removeItem(REFERENCE_STORAGE_KEY);
         location.reload();
       });
 
       const close = document.createElement("button");
       close.type = "button";
-      close.textContent = "Close";
-      close.addEventListener("click", () => editor.remove());
+      close.textContent = "작업실 닫기";
+      close.addEventListener("click", closeGeneratorWorkspace);
 
       actions.append(reset, close);
       editor.append(actions);
@@ -2480,21 +5338,84 @@
     }
 
     function fitPhone() {
-      var scale = Math.min(1, window.innerWidth / 589);
+      var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
+        !document.body.classList.contains("generator-docked") &&
+        !document.body.classList.contains("compare-docked");
+      var scale = appOnlyMode
+        ? Math.min(window.innerWidth / 589, window.innerHeight / 1280)
+        : Math.min(1, window.innerWidth / 589);
+      if (document.body.classList.contains("generator-docked")) {
+        var workspace = document.querySelector(".generator-workspace");
+        if (workspace) {
+          if (window.innerWidth <= 700) {
+            var sideBySideWidth = Math.max(160, (window.innerWidth - 34) / 2 - 16);
+            scale = Math.min(.46, Math.max(.28, sideBySideWidth / 589));
+          } else {
+            scale = Math.min(.68, Math.max(.42, (window.innerHeight - 124) / 1280));
+          }
+          document.documentElement.style.removeProperty("--generator-stage-left");
+          document.documentElement.style.removeProperty("--generator-left-width");
+          document.documentElement.style.removeProperty("--generator-right-width");
+        } else {
+          var compactGenerator = window.innerWidth <= 1180;
+          if (compactGenerator) {
+            scale = Math.min(1, Math.max(.28, (window.innerWidth - 42) / 2 / 589));
+            document.documentElement.style.removeProperty("--generator-stage-left");
+            document.documentElement.style.removeProperty("--generator-left-width");
+            document.documentElement.style.removeProperty("--generator-right-width");
+          } else {
+          var leftWidth = Math.min(360, Math.max(320, window.innerWidth * .24));
+          var rightWidth = Math.min(380, Math.max(330, window.innerWidth * .25));
+          var middleLeft = 14 + leftWidth + 18;
+          var middleRight = window.innerWidth - 14 - rightWidth - 18;
+          var middleWidth = Math.max(260, middleRight - middleLeft);
+          scale = Math.min(1, Math.max(.32, middleWidth / 589));
+          var stageLeft = Math.round(middleLeft + (middleWidth - 589 * scale) / 2);
+          document.documentElement.style.setProperty("--generator-left-width", Math.round(leftWidth) + "px");
+          document.documentElement.style.setProperty("--generator-right-width", Math.round(rightWidth) + "px");
+          document.documentElement.style.setProperty("--generator-stage-left", stageLeft + "px");
+          }
+        }
+      } else if (document.body.classList.contains("compare-docked")) {
+        var compactCompare = window.innerWidth <= 900;
+        var panelWidth = compactCompare
+          ? Math.min(420, Math.max(300, window.innerWidth * .62))
+          : Math.min(920, Math.max(680, window.innerWidth * .58));
+        var availableWidth = window.innerWidth - panelWidth - 46;
+        scale = Math.min(1, Math.max(compactCompare ? .24 : .45, availableWidth / 589));
+        document.documentElement.style.setProperty("--compare-panel-width", Math.round(panelWidth) + "px");
+      } else {
+        document.documentElement.style.removeProperty("--compare-panel-width");
+        document.documentElement.style.removeProperty("--generator-stage-left");
+        document.documentElement.style.removeProperty("--generator-left-width");
+        document.documentElement.style.removeProperty("--generator-right-width");
+      }
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
     }
 
     applyContent(SCREEN_CONTENT);
     applyFonts(FONT_SETTINGS);
     applyVisuals(VISUAL_SETTINGS);
+    applyTextStyles(TEXT_STYLE_SETTINGS);
     applyLayout(LAYOUT_SETTINGS);
 
     const pageParams = new URLSearchParams(location.search);
+    const isStandaloneApp = () =>
+      pageParams.get("app") === "1" ||
+      window.navigator.standalone === true ||
+      window.matchMedia?.("(display-mode: standalone)")?.matches;
+
+    if (isStandaloneApp()) {
+      document.body.classList.add("pwa-standalone");
+    }
 
     if (pageParams.get("edit") === "1") {
+      document.body.classList.add("generator-docked");
       showEditor();
+      showReferenceLab();
       enableLayoutEditor();
       enableInlineEditor();
+      fitPhone();
     }
 
     if (pageParams.get("compare") === "1") {
@@ -2503,15 +5424,30 @@
     }
 
     window.addEventListener("keydown", (event) => {
-      if (event.key.toLowerCase() === "e" && !["INPUT", "TEXTAREA"].includes(event.target.tagName)) {
+      if (
+        event.key.toLowerCase() === "e" &&
+        !event.metaKey && !event.ctrlKey && !event.altKey &&
+        !["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName) &&
+        !event.target.isContentEditable
+      ) {
+        document.body.classList.add("generator-docked");
         showEditor();
+        showReferenceLab();
         enableLayoutEditor();
         enableInlineEditor();
+        fitPhone();
       }
     });
 
     window.addEventListener("resize", fitPhone);
-    document.querySelector(".generator-launcher")?.addEventListener("click", openGenerator);
+    document.querySelector('[data-studio-action="generate"]')?.addEventListener("click", openGenerator);
+    document.querySelector('[data-studio-action="compare"]')?.addEventListener("click", showComparePanel);
+    document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+      });
+    }
     fitPhone();
   </script>
 </body>
