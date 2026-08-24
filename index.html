@@ -1751,23 +1751,12 @@
       width: 100vw;
       height: var(--app-view-height, 100vh);
       min-height: var(--app-view-height, 100dvh);
-      background: #f2e7e2;
+      background: #fdfcfc;
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-    }
-    body.closest-original-view:not(.generator-docked):not(.compare-docked)::after {
-      content: "";
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 41;
-      height: max(env(safe-area-inset-bottom), 34px);
-      background: #f2e7e2;
-      pointer-events: none;
     }
     body.closest-original-view .studio-bar {
       display: none !important;
@@ -6096,7 +6085,10 @@
           // visualViewport.height. Fill the complete physical screen canvas so
           // no uncovered strip remains beneath the bottom navigation.
           viewportHeight = Math.round(isIOSDevice()
-            ? Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || []))
+            ? Math.max(
+                Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || [])),
+                Math.ceil(viewportWidth * 1280 / 588)
+              )
             : Math.min.apply(Math, heightCandidates));
         }
       }
