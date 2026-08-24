@@ -141,7 +141,7 @@
       letter-spacing: .9px;
     }
     .status {
-      display: flex;
+      display: none;
       justify-content: space-between;
       align-items: center;
       height: 28px;
@@ -183,7 +183,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 76px;
+      margin-top: 104px;
     }
     .brand {
       display: flex;
@@ -583,23 +583,27 @@
       font-weight: 700;
     }
     .nav-item.fixed-nav {
-      gap: 0;
+      gap: 3px;
     }
     .nav-item.fixed-nav span {
-      display: none;
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      color: inherit;
     }
     .nav-item .fixed-nav-icon {
-      width: 58px;
-      height: 52px;
+      width: 42px;
+      height: 38px;
       max-width: none;
       max-height: none;
       object-fit: contain;
     }
-    .nav-item [data-icon-slot="navHomeIcon"] { width: 43px; height: 56px; }
-    .nav-item [data-icon-slot="navAccountsIcon"] { width: 55px; height: 48px; }
-    .nav-item [data-icon-slot="navWealthIcon"] { width: 60px; height: 58px; }
-    .nav-item [data-icon-slot="navRewardsIcon"] { width: 66px; height: 52px; }
-    .nav-item [data-icon-slot="navServicesIcon"] { width: 58px; height: 52px; }
+    .nav-item [data-icon-slot="navHomeIcon"] { width: 34px; height: 40px; }
+    .nav-item [data-icon-slot="navAccountsIcon"] { width: 39px; height: 39px; }
+    .nav-item [data-icon-slot="navWealthIcon"] { width: 40px; height: 39px; }
+    .nav-item [data-icon-slot="navRewardsIcon"] { width: 40px; height: 38px; }
+    .nav-item [data-icon-slot="navServicesIcon"] { width: 38px; height: 38px; }
     .editor-panel {
       position: fixed;
       top: 14px;
