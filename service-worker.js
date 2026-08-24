@@ -1,10 +1,11 @@
-const CACHE_NAME = "banking-assignment-demo-v32";
+const CACHE_NAME = "banking-assignment-demo-v33";
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./index.html?app=1",
   "./closest-original-demo.html",
+  "./iphone17-viewer.html",
   "./manifest.json",
   "./closest-manifest.json",
   "./assets/closest-icon-180.png",
