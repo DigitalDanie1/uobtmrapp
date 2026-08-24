@@ -6058,14 +6058,33 @@
       var layoutViewportHeight = document.documentElement.clientHeight || 0;
       var windowViewportWidth = window.innerWidth || 0;
       var windowViewportHeight = window.innerHeight || 0;
-      var viewportWidth = layoutViewportWidth || windowViewportWidth || visualViewportWidth;
-      var viewportHeight = layoutViewportHeight || windowViewportHeight || visualViewportHeight;
+      var outerViewportWidth = window.outerWidth || 0;
+      var outerViewportHeight = window.outerHeight || 0;
+      var screenViewportHeight = Math.max(
+        window.screen?.height || 0,
+        window.screen?.availHeight || 0
+      );
+      var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
+      var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
       if (appOnlyMode) {
-        viewportWidth = Math.round(viewportWidth);
-        viewportHeight = Math.round(viewportHeight);
+        var isViewerFrame = pageParams.get("viewer") === "1";
+        if (isViewerFrame) {
+          viewportWidth = Math.round(visualViewportWidth || layoutViewportWidth || windowViewportWidth);
+          viewportHeight = Math.round(visualViewportHeight || layoutViewportHeight || windowViewportHeight);
+        } else {
+          var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
+          var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
+          viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
+          // iOS may exclude the area behind collapsing browser chrome from
+          // visualViewport.height. Fill the complete physical screen canvas so
+          // no uncovered strip remains beneath the bottom navigation.
+          viewportHeight = Math.round(isIOSDevice()
+            ? Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || []))
+            : Math.min.apply(Math, heightCandidates));
+        }
       }
       var scale = appOnlyMode ? Math.max(viewportWidth / 588, viewportHeight / 1280) : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
