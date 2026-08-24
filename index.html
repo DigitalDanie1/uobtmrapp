@@ -60,7 +60,7 @@
       height: 100svh;
       height: 100dvh;
       min-height: 100dvh;
-      background: #050b1f;
+      background: #fdfcfc;
       overflow: hidden;
       padding: 0;
     }
@@ -1731,7 +1731,7 @@
       width: 100vw;
       height: var(--app-view-height, 100vh);
       min-height: var(--app-view-height, 100dvh);
-      background: #050b1f;
+      background: #fdfcfc;
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
@@ -6041,7 +6041,7 @@
         viewportWidth = window.innerWidth || viewportWidth;
         viewportHeight = window.innerHeight || viewportHeight;
       }
-      var appZoom = 1.004;
+      var appZoom = 1.006;
       var scale = appOnlyMode
         ? Math.max(viewportWidth / 589, viewportHeight / 1280) * appZoom
         : Math.min(1, viewportWidth / 589);
@@ -6094,7 +6094,7 @@
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       if (appOnlyMode) {
         var scaledPhoneHeight = 1280 * scale;
-        var phoneShift = Math.min(0, viewportHeight - scaledPhoneHeight);
+        var phoneShift = Math.min(0, (viewportHeight - scaledPhoneHeight) / scale);
         document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
         document.documentElement.style.setProperty("--app-view-height", Math.ceil(viewportHeight) + "px");
         document.documentElement.style.setProperty("--app-phone-shift", Math.floor(phoneShift) + "px");
