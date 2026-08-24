@@ -9,33 +9,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
   <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Closest%20Banking%20Demo%22%2C%22short_name%22%3A%22Banking%20Demo%22%2C%22description%22%3A%22View-only%20mobile%20UI%20demo%20for%20assignment%20review.%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23050b1f%22%2C%22theme_color%22%3A%22%230100a8%22%7D">
-  <link rel="apple-touch-icon" href="assets/embedded/img-00-b01e3ac34d9364c4.png">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png">
   <title>Closest Original Banking Demo</title>
   <style>
-    @font-face {
-      font-family: "Roboto";
-      font-style: normal;
-      font-weight: 300;
-      font-display: swap;
-      src: url("assets/embedded-fonts/font-00-0929baa9f963d7e7.ttf") format("truetype");
-    }
-
-    @font-face {
-      font-family: "Roboto";
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url("assets/embedded-fonts/font-01-8f622fed76c62b6d.ttf") format("truetype");
-    }
-
-    @font-face {
-      font-family: "Roboto";
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src: url("assets/embedded-fonts/font-02-587736377f914df0.ttf") format("truetype");
-    }
-
     @font-face {
       font-family: "DemoSFText";
       src: local("SF Pro Text"), local(".SF NS Text"), local("SF UI Text"), local("Helvetica Neue");
@@ -2471,7 +2447,7 @@
 <body class="pwa-standalone closest-original-view">
   <section class="app-intro" aria-label="인트로 화면" data-intro-screen>
     <div class="app-intro-frame">
-      <img src="assets/embedded/img-01-4a15d334aef22f8c.png" alt="인트로 데모 화면">
+      <img src="assets/closest-intro.png" alt="인트로 데모 화면">
       <button class="intro-hotspot intro-login-hotspot" type="button" data-auth-trigger aria-label="데모 로그인"></button>
       <button class="intro-hotspot intro-face-hotspot" type="button" data-auth-trigger aria-label="데모 얼굴 인증"></button>
     </div>
@@ -2521,7 +2497,7 @@
 
       <nav class="topbar" data-layout-id="brandHeader">
         <div class="brand">
-          <img class="brand-fixed-image" src="assets/embedded/img-02-da0787564931bdba.png" alt="UOB | TMRW">
+          <img class="brand-fixed-image" src="assets/brand-uob-tmrw-extracted.png" alt="UOB | TMRW">
         </div>
         <div class="links" data-layout-id="topLinksBox">
           <span data-field="inboxLabel">Inbox</span>
@@ -2541,34 +2517,34 @@
 
       <section class="quick-card" data-layout-id="quickCard">
         <div class="quick-action fixed-quick" data-layout-id="quickPayBox">
-          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/embedded/img-03-de0fa68c93d223ce.png" alt="">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/quick-paynow-icon-sharp-crisp.png" alt="">
           <span data-field="quickPayNow">PayNow</span>
         </div>
         <div class="quick-action fixed-quick" data-layout-id="quickTransferBox">
-          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/embedded/img-04-55241a01e352a1a6.png" alt="">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/quick-transfer-icon-sharp-crisp.png" alt="">
           <span data-field="quickTransfer">Pay &amp; transfer</span>
         </div>
         <div class="quick-action fixed-quick" data-layout-id="quickScanBox">
-          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/embedded/img-05-390963a14f93b23d.png" alt="">
+          <img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/quick-scan-icon-sharp-crisp.png" alt="">
           <span data-field="quickScan">Scan to pay</span>
         </div>
       </section>
 
       <section class="tools" data-layout-id="toolRow">
         <div class="tool fixed-tool" data-layout-id="toolStatementsBox">
-          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/embedded/img-06-9f803fb1ef62da99.png" alt="">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/tool-estatements-trimmed-crisp.png" alt="">
           <span data-field="toolStatements">eStatements</span>
         </div>
         <div class="tool fixed-tool" data-layout-id="toolLimitsBox">
-          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/embedded/img-07-93847f502aefdb51.png" alt="">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/tool-limits-trimmed-crisp.png" alt="">
           <span data-field="toolLimits">Transaction<br>limits</span>
         </div>
         <div class="tool fixed-tool" data-layout-id="toolApplyBox">
-          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/embedded/img-08-66a3a4ce6d53c1f3.png" alt="">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/tool-apply-trimmed-crisp.png" alt="">
           <span data-field="toolApply">Apply</span>
         </div>
         <div class="tool fixed-tool fixed-tool-fx" data-layout-id="toolFxBox">
-          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/embedded/img-09-62281c5bd74daf70.png" alt="">
+          <img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/tool-fx-icon-badge-sharp-crisp.png" alt="">
           <span class="badge" data-field="fxBadge">No FX fees</span>
           <span data-field="toolFx">FX+</span>
         </div>
@@ -2581,7 +2557,7 @@
           <div class="body-text" data-field="promoBody">Plan ahead for your next<br>trip - save first, then<br>convert any leftovers<br>with ABC FX+ to secure<br>great rates and stretch<br>your holiday budget<br>even further.</div>
         </div>
         <div class="money-art" data-layout-id="promoArt" aria-hidden="true">
-          <img class="promo-fixed-art" src="assets/embedded/img-10-f0cc275d2c0c3ff6.png" alt="">
+          <img class="promo-fixed-art" src="assets/promo-money-trip-fixed.png" alt="">
         </div>
       </article>
 
@@ -2591,23 +2567,23 @@
 
     <footer class="bottom-nav" data-layout-id="bottomNav">
       <div class="nav-item fixed-nav active" data-layout-id="navHomeBox">
-        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/embedded/img-11-c46e34b0bbd43229.png" alt="">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">
         <span data-field="navHome">Home</span>
       </div>
       <div class="nav-item fixed-nav" data-layout-id="navAccountsBox">
-        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/embedded/img-12-341543bc7246d4ed.png" alt="">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/nav-accounts-trimmed-crisp.png" alt="">
         <span data-field="navAccounts">Accounts</span>
       </div>
       <div class="nav-item fixed-nav" data-layout-id="navWealthBox">
-        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/embedded/img-13-12829cf7e36292a7.png" alt="">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/nav-wealth-trimmed-crisp.png" alt="">
         <span data-field="navWealth">Wealth</span>
       </div>
       <div class="nav-item fixed-nav" data-layout-id="navRewardsBox">
-        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/embedded/img-14-ba349216b8c1e825.png" alt="">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/nav-rewards-trimmed-crisp.png" alt="">
         <span data-field="navRewards">Rewards+</span>
       </div>
       <div class="nav-item fixed-nav" data-layout-id="navServicesBox">
-        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/embedded/img-15-aac2448b831396e2.png" alt="">
+        <img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/nav-services-trimmed-crisp.png" alt="">
         <span data-field="navServices">Services</span>
       </div>
     </footer>
@@ -2830,7 +2806,7 @@
         </svg>`
       },
       quickPayIcon: {
-        payText: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/embedded/img-03-de0fa68c93d223ce.png" alt="">`,
+        payText: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickPayIcon" src="assets/quick-paynow-icon-sharp-crisp.png" alt="">`,
         payBadge: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M12 10h34v24H12zM18 18h18M18 26h11M38 27l7-7M45 20v7h-7"></path>
         </svg>`,
@@ -2839,7 +2815,7 @@
         </svg>`
       },
       quickTransferIcon: {
-        phoneTransfer: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/embedded/img-04-55241a01e352a1a6.png" alt="">`,
+        phoneTransfer: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickTransferIcon" src="assets/quick-transfer-icon-sharp-crisp.png" alt="">`,
         twoWay: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M11 15h33m0 0-7-7m7 7-7 7M47 30H14m0 0 7-7m-7 7 7 7"></path>
         </svg>`,
@@ -2848,7 +2824,7 @@
         </svg>`
       },
       quickScanIcon: {
-        scanFrame: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/embedded/img-05-390963a14f93b23d.png" alt="">`,
+        scanFrame: `<img class="fixed-quick-icon custom-icon-image" data-icon-slot="quickScanIcon" src="assets/quick-scan-icon-sharp-crisp.png" alt="">`,
         qrScan: `<svg class="quick-icon" viewBox="0 0 58 44" aria-hidden="true">
           <path class="line" d="M10 10h11v11H10zM37 10h11v11H37zM10 27h11v11H10zM31 28h5M31 36h15M43 28h5"></path>
         </svg>`,
@@ -2857,7 +2833,7 @@
         </svg>`
       },
       toolStatementsIcon: {
-        statements: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/embedded/img-06-9f803fb1ef62da99.png" alt="">`,
+        statements: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolStatementsIcon" src="assets/tool-estatements-trimmed-crisp.png" alt="">`,
         listDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="white" d="M15 5h28v40H15z"></path>
           <rect class="cut" x="22" y="14" width="16" height="5" rx="2"></rect>
@@ -2866,20 +2842,20 @@
         </svg>`
       },
       toolLimitsIcon: {
-        limitsDoc: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/embedded/img-07-93847f502aefdb51.png" alt="">`,
+        limitsDoc: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolLimitsIcon" src="assets/tool-limits-trimmed-crisp.png" alt="">`,
         handDoc: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="white" d="M13 5h21c5 0 9 4 9 9v23H13z"></path>
           <path class="cut" d="M27 16h23l-8 8 8 8H30c-5 0-9-4-9-9 0-4 2-7 6-7z"></path>
         </svg>`
       },
       toolApplyIcon: {
-        applyCard: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/embedded/img-08-66a3a4ce6d53c1f3.png" alt="">`,
+        applyCard: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolApplyIcon" src="assets/tool-apply-trimmed-crisp.png" alt="">`,
         tapCard: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="stroke-white" d="M8 12h31v20H8zM8 19h31M31 30l15 10M46 40l4-9M46 40l-9 2"></path>
         </svg>`
       },
       toolFxIcon: {
-        fxCoins: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/embedded/img-09-62281c5bd74daf70.png" alt="">`,
+        fxCoins: `<img class="tool-icon fixed-tool-icon custom-icon-image" data-icon-slot="toolFxIcon" src="assets/tool-fx-icon-badge-sharp-crisp.png" alt="">`,
         fxArrows: `<svg class="tool-icon" viewBox="0 0 58 50" aria-hidden="true">
           <path class="stroke-white" d="M13 15h29m0 0-7-7m7 7-7 7M45 35H16m0 0 7-7m-7 7 7 7"></path>
           <circle class="stroke-white" cx="16" cy="15" r="6"></circle>
@@ -2887,23 +2863,23 @@
         </svg>`
       },
       navHomeIcon: {
-        homeFilled: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/embedded/img-11-c46e34b0bbd43229.png" alt="">`,
+        homeFilled: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navHomeIcon" src="assets/nav-home-trimmed-crisp.png" alt="">`,
         homeLine: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M5 17.2 19.5 5.8 34 17.2v16.4H23.5V24h-8v9.6H5z"></path></svg>`
       },
       navAccountsIcon: {
-        coinCircle: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/embedded/img-12-341543bc7246d4ed.png" alt="">`,
+        coinCircle: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navAccountsIcon" src="assets/nav-accounts-trimmed-crisp.png" alt="">`,
         wallet: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M6 12h27v20H6zM10 8h20v8M27 22h6"></path></svg>`
       },
       navWealthIcon: {
-        growthChart: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/embedded/img-13-12829cf7e36292a7.png" alt="">`,
+        growthChart: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navWealthIcon" src="assets/nav-wealth-trimmed-crisp.png" alt="">`,
         bars: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="M7 32h27M11 29V18M20 29V10M29 29V14"></path></svg>`
       },
       navRewardsIcon: {
-        giftBox: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/embedded/img-14-ba349216b8c1e825.png" alt="">`,
+        giftBox: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navRewardsIcon" src="assets/nav-rewards-trimmed-crisp.png" alt="">`,
         star: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-line" d="m19.5 5 4.3 9 9.8 1.4-7.1 6.9 1.7 9.8-8.7-4.6-8.7 4.6 1.7-9.8-7.1-6.9 9.8-1.4z"></path></svg>`
       },
       navServicesIcon: {
-        serviceGrid: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/embedded/img-15-aac2448b831396e2.png" alt="">`,
+        serviceGrid: `<img class="fixed-nav-icon custom-icon-image" data-icon-slot="navServicesIcon" src="assets/nav-services-trimmed-crisp.png" alt="">`,
         dots: `<svg class="nav-icon" viewBox="0 0 39 39" aria-hidden="true"><path class="nav-fill" d="M9 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm10.5 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM30 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>`
       }
     };
