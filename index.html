@@ -29,6 +29,7 @@
     :root {
       --ui-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans", Arimo, Arial, sans-serif;                                                            
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
+      --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
                            * { box-sizing: border-box; }
@@ -6084,6 +6085,14 @@
           viewportHeight = Math.round(isIOSDevice()
             ? Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || []))
             : Math.min.apply(Math, heightCandidates));
+        }
+        var isInstalledApp = window.navigator.standalone === true ||
+          window.matchMedia?.("(display-mode: standalone)")?.matches;
+        if (isInstalledApp) {
+          var safeAreaBottom = Number.parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
+          ) || 0;
+          viewportHeight = Math.max(viewportHeight + safeAreaBottom, screenViewportHeight);
         }
       }
       var scale = appOnlyMode ? Math.max(viewportWidth / 588, viewportHeight / 1280) : Math.min(1, viewportWidth / 589);
