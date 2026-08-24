@@ -60,7 +60,7 @@
       height: 100svh;
       height: 100dvh;
       min-height: 100dvh;
-      background: #fff;
+      background: #050b1f;
       overflow: hidden;
       padding: 0;
     }
@@ -635,6 +635,7 @@
       left: 0;
       right: 0;
       bottom: var(--app-bottom-lift, 0px);
+      z-index: 42;
       display: grid;
       grid-template-columns: 1fr;
       align-items: start;
@@ -741,7 +742,7 @@
     .tab-hit-zone {
       position: absolute;
       bottom: var(--app-bottom-lift, 0px);
-      z-index: 36;
+      z-index: 48;
       width: 20%;
       height: 124px;
       border: 0;
@@ -1984,12 +1985,13 @@
       bottom: max(12px, env(safe-area-inset-bottom));
       padding: 5px 8px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, .48);
-      color: rgba(255, 255, 255, .84);
+      background: rgba(0, 0, 0, .08);
+      color: rgba(255, 255, 255, .18);
       font-size: 10px;
       font-weight: 900;
       letter-spacing: .08em;
-      backdrop-filter: blur(10px);
+      opacity: .28;
+      backdrop-filter: blur(3px);
     }
     @keyframes authSpin {
       to { transform: rotate(360deg); }
