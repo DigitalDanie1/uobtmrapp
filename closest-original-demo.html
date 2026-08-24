@@ -6059,6 +6059,10 @@
       var windowViewportHeight = window.innerHeight || 0;
       var outerViewportWidth = window.outerWidth || 0;
       var outerViewportHeight = window.outerHeight || 0;
+      var screenViewportHeight = Math.max(
+        window.screen?.height || 0,
+        window.screen?.availHeight || 0
+      );
       var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
       var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
@@ -6073,7 +6077,12 @@
           var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
           var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
           viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
-          viewportHeight = Math.round(Math.min.apply(Math, heightCandidates));
+          // iOS may exclude the area behind collapsing browser chrome from
+          // visualViewport.height. Fill the complete physical screen canvas so
+          // no uncovered strip remains beneath the bottom navigation.
+          viewportHeight = Math.round(isIOSDevice()
+            ? Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || []))
+            : Math.min.apply(Math, heightCandidates));
         }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
