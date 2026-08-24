@@ -134,6 +134,21 @@
           #f2e7e2 100%);
       box-shadow: 0 18px 52px rgba(12, 21, 56, .24);
     }
+    .exact-main-shot {
+      position: absolute;
+      inset: 0;
+      z-index: 75;
+      display: block;
+      width: 588px;
+      height: 1280px;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .phone.tab-capture-active .exact-main-shot {
+      display: none;
+    }
     .content { padding: 34px 35px 136px; }
     .demo-badge {
       position: absolute;
@@ -1795,16 +1810,7 @@
       overflow: hidden;
     }
     .app-intro-frame::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      z-index: 1;
-      height: 76px;
-      background:
-        linear-gradient(180deg, rgba(36, 153, 232, .98) 0%, rgba(35, 156, 237, .96) 62%, rgba(35, 156, 237, 0) 100%);
-      pointer-events: none;
+      content: none;
     }
     .app-intro img {
       width: 100%;
@@ -1853,6 +1859,7 @@
       font-weight: 900;
       letter-spacing: .08em;
       backdrop-filter: blur(10px);
+      display: none;
     }
     body.intro-hidden .app-intro {
       display: none;
@@ -2750,6 +2757,7 @@
   </script>
   <div class="stage">
   <main class="phone" aria-label="과제용 모바일 뱅킹 데모 화면">
+    <img class="exact-main-shot" src="assets/main-screen-exact-20260824.png" alt="UOB TMRW 메인 화면">
     <div class="demo-badge" data-layout-id="demoBadge">DEMO UI</div>
     <section class="content">
       <header class="status" data-layout-id="statusBar">
@@ -6063,10 +6071,6 @@
       var windowViewportHeight = window.innerHeight || 0;
       var outerViewportWidth = window.outerWidth || 0;
       var outerViewportHeight = window.outerHeight || 0;
-      var screenViewportHeight = Math.max(
-        window.screen?.height || 0,
-        window.screen?.availHeight || 0
-      );
       var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
       var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
@@ -6081,19 +6085,17 @@
           var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
           var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
           viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
-          // iOS may exclude the area behind collapsing browser chrome from
-          // visualViewport.height. Fill the complete physical screen canvas so
-          // no uncovered strip remains beneath the bottom navigation.
-          viewportHeight = Math.round(isIOSDevice()
-            ? Math.max(
-                Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || [])),
-                Math.ceil(viewportWidth * 1280 / 588)
-              )
-            : Math.min.apply(Math, heightCandidates));
+          // Some iPhone browser shells report a shorter outer/visual viewport
+          // even though the captured screen is taller. Never select that shorter
+          // value: it clips the source image and exposes the body below it.
+          viewportHeight = Math.round(Math.max(
+            Math.max.apply(Math, heightCandidates),
+            Math.ceil(viewportWidth * 1280 / 588)
+          ));
         }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
-      var scaleY = appOnlyMode ? (viewportHeight / 1280) * 1.002 : scaleX;
+      var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
       var scale = appOnlyMode ? scaleX : scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
