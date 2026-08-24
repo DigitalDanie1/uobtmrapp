@@ -107,6 +107,7 @@
     }
     .phone {
       position: relative;
+      top: var(--app-phone-shift, 0px);
       width: 589px;
       height: 1280px;
       overflow: hidden;
@@ -634,7 +635,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: var(--app-bottom-lift, 0px);
+      bottom: 0;
       z-index: 42;
       display: grid;
       grid-template-columns: 1fr;
@@ -741,7 +742,7 @@
     }
     .tab-hit-zone {
       position: absolute;
-      bottom: var(--app-bottom-lift, 0px);
+      bottom: 0;
       z-index: 48;
       width: 20%;
       height: 124px;
@@ -1724,15 +1725,13 @@
     }
     body.closest-original-view:not(.generator-docked):not(.compare-docked) {
       display: grid;
-      place-items: center;
+      place-items: start center;
       position: fixed;
       inset: 0;
       width: 100vw;
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
-      min-height: 100dvh;
-      background: #fdfcfc;
+      height: var(--app-view-height, 100vh);
+      min-height: var(--app-view-height, 100dvh);
+      background: #050b1f;
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
@@ -6089,12 +6088,13 @@
       if (appOnlyMode) {
         var scaledPhoneHeight = 1280 * scale;
         var overflow = Math.max(0, scaledPhoneHeight - viewportHeight);
-        var lift = Math.ceil(overflow / scale);
         document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
-        document.documentElement.style.setProperty("--app-bottom-lift", lift + "px");
+        document.documentElement.style.setProperty("--app-view-height", Math.ceil(viewportHeight) + "px");
+        document.documentElement.style.setProperty("--app-phone-shift", "-" + Math.ceil(overflow) + "px");
       } else {
         document.documentElement.style.removeProperty("--stage-height");
-        document.documentElement.style.removeProperty("--app-bottom-lift");
+        document.documentElement.style.removeProperty("--app-view-height");
+        document.documentElement.style.removeProperty("--app-phone-shift");
       }
     }
 
