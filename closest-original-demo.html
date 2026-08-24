@@ -78,7 +78,7 @@
       overflow-y: auto;
     }
     .stage {
-      width: calc(589px * var(--phone-scale, 1));
+      width: calc(588px * var(--phone-scale, 1));
       height: var(--stage-height, calc(1280px * var(--phone-scale, 1)));
       overflow: hidden;
       background: #fdfcfc;
@@ -108,7 +108,7 @@
     .phone {
       position: relative;
       top: var(--app-phone-shift, 0px);
-      width: 589px;
+      width: 588px;
       height: 1280px;
       overflow: hidden;
       color: #fff;
@@ -649,7 +649,7 @@
       backdrop-filter: blur(10px);
     }
     .bottom-nav-strip {
-      width: 589px;
+      width: 588px;
       max-width: 100%;
       height: 124px;
       object-fit: fill;
@@ -6041,9 +6041,9 @@
         viewportWidth = window.innerWidth || viewportWidth;
         viewportHeight = window.innerHeight || viewportHeight;
       }
-      var appZoom = 1.006;
+      var appZoom = 1;
       var scale = appOnlyMode
-        ? Math.max(viewportWidth / 589, viewportHeight / 1280) * appZoom
+        ? Math.max(viewportWidth / 588, viewportHeight / 1280) * appZoom
         : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
