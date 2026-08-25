@@ -68,7 +68,7 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       min-height: var(--app-vh, 100vh);
-      background: #050b1f url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
+      background: #172021 url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
       overflow: hidden;
       padding: 0;
     }
@@ -826,7 +826,7 @@
       filter: grayscale(1) saturate(0) brightness(.72);
     }
     .nav-item.active .fixed-nav-icon {
-      filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(4268%) hue-rotate(213deg) brightness(96%) contrast(103%);
+      filter: none;
     }
     .nav-item.fixed-nav {
       gap: 3px;
@@ -1790,7 +1790,7 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       min-height: var(--app-vh, 100vh);
-      background: #050b1f url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
+      background: #172021 url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
@@ -1798,7 +1798,7 @@
       -webkit-touch-callout: none;
     }
     body.pwa-standalone.closest-original-view.intro-hidden:not(.generator-docked):not(.compare-docked) {
-      background: #f2e7e2 url("assets/bottom-nav-reference-20260824.png") center bottom / 100vw auto no-repeat;
+      background: #fdfcfc;
     }
     body.closest-original-view .studio-bar {
       display: none !important;
@@ -1830,7 +1830,7 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       overflow: hidden;
-      background: #050b1f;
+      background: #172021;
       cursor: pointer;
       transition: none;
       touch-action: manipulation;
@@ -1869,7 +1869,7 @@
       top: 0;
       z-index: 5;
       height: 80px;
-      background: #0700bd;
+      background: #279ce8;
       pointer-events: none;
     }
     .app-intro img {
@@ -6157,16 +6157,12 @@
           measureLargeViewportHeight(),
           layoutViewportHeight,
           windowViewportHeight,
-          visualViewportHeight
+          visualViewportHeight,
+          window.screen?.height || 0,
+          window.screen?.availHeight || 0
         ].filter(Boolean);
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
-        if (document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
-          var safeAreaBottom = parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
-          ) || 0;
-          viewportHeight += Math.round(safeAreaBottom);
-        }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
