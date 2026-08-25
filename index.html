@@ -696,6 +696,9 @@
     .phone.tab-capture-active .tab-screens {
       display: block;
     }
+    .phone.tab-capture-active .bottom-nav {
+      display: none;
+    }
     .tab-capture {
       position: absolute;
       inset: 0;
@@ -711,20 +714,18 @@
     .tab-capture.active {
       opacity: 1;
     }
-    .tab-demo-label {
+    .tab-status-cover {
       position: absolute;
-      right: 34px;
-      bottom: 126px;
-      z-index: 35;
-      padding: 3px 7px;
-      border: 1px solid rgba(70, 70, 70, .18);
-      border-radius: 5px;
-      background: rgba(255, 255, 255, .82);
-      color: rgba(35, 39, 48, .55);
-      text-align: center;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: .9px;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 36;
+      height: 78px;
+      background: linear-gradient(180deg, #0800b5 0%, #0710c8 100%);
+      pointer-events: none;
+    }
+    body.viewer-mode .tab-status-cover {
+      display: none;
     }
     .accounts-tab-overlay {
       position: absolute;
@@ -2898,7 +2899,7 @@
         <span class="accounts-tab-value withdrawable" data-field="accountsWithdrawable">2,349.48 SGD</span>
         <span class="accounts-tab-value available" data-field="accountsAvailable">2,349.48 SGD</span>
       </div>
-      <span class="tab-demo-label">DEMO UI</span>
+      <span class="tab-status-cover" aria-hidden="true"></span>
     </section>
     <button class="tab-hit-zone" type="button" data-tab-target="home" aria-label="Home"></button>
     <button class="tab-hit-zone" type="button" data-tab-target="accounts" aria-label="Accounts"></button>
@@ -6117,6 +6118,12 @@
         ].filter(Boolean);
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
+        if (document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
+          var safeAreaBottom = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
+          ) || 0;
+          viewportHeight += Math.round(safeAreaBottom);
+        }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
@@ -6218,6 +6225,7 @@
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     document.body.classList.toggle("ios-device", isIOSDevice());
     document.body.classList.toggle("preview-device", !isIOSDevice());
+    document.body.classList.toggle("viewer-mode", pageParams.get("viewer") === "1");
     const isStandaloneApp = () =>
       pageParams.get("app") === "1" ||
       window.navigator.standalone === true ||
