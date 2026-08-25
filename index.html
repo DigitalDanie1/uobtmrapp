@@ -832,11 +832,7 @@
       gap: 3px;
     }
     .nav-item.fixed-nav span {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1;
-      color: inherit;
+      display: none;
     }
     .nav-item .fixed-nav-icon {
       width: 42px;
@@ -850,6 +846,17 @@
     .nav-item [data-icon-slot="navWealthIcon"] { width: 40px; height: 39px; }
     .nav-item [data-icon-slot="navRewardsIcon"] { width: 40px; height: 38px; }
     .nav-item [data-icon-slot="navServicesIcon"] { width: 38px; height: 38px; }
+    .nav-item .fixed-nav-icon,
+    .nav-item [data-icon-slot="navHomeIcon"],
+    .nav-item [data-icon-slot="navAccountsIcon"],
+    .nav-item [data-icon-slot="navWealthIcon"],
+    .nav-item [data-icon-slot="navRewardsIcon"],
+    .nav-item [data-icon-slot="navServicesIcon"] {
+      width: auto;
+      height: 58px;
+      max-width: 88px;
+      object-fit: contain;
+    }
     .editor-panel {
       position: fixed;
       top: 14px;
