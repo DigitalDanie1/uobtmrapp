@@ -30,6 +30,7 @@
       --ui-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans", Arimo, Arial, sans-serif;                                                            
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
       --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
+      --app-stage-bottom: 0px;
     }
 
                            * { box-sizing: border-box; }
@@ -56,6 +57,8 @@
       overflow-x: hidden;
     }
     body.pwa-standalone {
+      position: fixed;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       height: 100svh;
@@ -1768,6 +1771,12 @@
       max-width: none;
       max-height: none;
       overflow: hidden;
+    }
+    body.pwa-standalone.closest-original-view:not(.generator-docked):not(.compare-docked) .stage {
+      position: fixed;
+      left: 50%;
+      bottom: var(--app-stage-bottom, 0px);
+      transform: translateX(-50%);
     }
     .app-intro {
       position: fixed;
@@ -6067,6 +6076,9 @@
       );
       var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
       var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
+      var isInstalledApp = false;
+      var safeAreaBottom = 0;
+      var installedOverscan = 0;
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
@@ -6086,16 +6098,21 @@
             ? Math.max.apply(Math, heightCandidates.concat(screenViewportHeight || []))
             : Math.min.apply(Math, heightCandidates));
         }
-        var isInstalledApp = window.navigator.standalone === true ||
-          window.matchMedia?.("(display-mode: standalone)")?.matches;
+        isInstalledApp = !isViewerFrame && (
+          window.navigator.standalone === true ||
+          window.matchMedia?.("(display-mode: fullscreen)")?.matches ||
+          window.matchMedia?.("(display-mode: standalone)")?.matches
+        );
         if (isInstalledApp) {
-          var safeAreaBottom = Number.parseFloat(
+          safeAreaBottom = Number.parseFloat(
             getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
           ) || 0;
-          viewportHeight = Math.max(viewportHeight + safeAreaBottom, screenViewportHeight);
+          installedOverscan = Math.max(46, Math.round(viewportHeight * .055), Math.ceil(safeAreaBottom * 2));
+          viewportHeight = Math.max(viewportHeight, screenViewportHeight || viewportHeight);
         }
       }
-      var scale = appOnlyMode ? Math.max(viewportWidth / 588, viewportHeight / 1280) : Math.min(1, viewportWidth / 589);
+      var scaleHeight = viewportHeight + installedOverscan;
+      var scale = appOnlyMode ? Math.max(viewportWidth / 588, scaleHeight / 1280) : Math.min(1, viewportWidth / 589);
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
         if (workspace) {
@@ -6146,18 +6163,21 @@
       if (appOnlyMode) {
         var scaledPhoneWidth = 588 * scale;
         var scaledPhoneHeight = 1280 * scale;
-        var phoneShift = Math.min(0, viewportHeight - scaledPhoneHeight);
+        var stageHeightForApp = Math.ceil(viewportHeight + installedOverscan);
+        var phoneShift = Math.min(0, stageHeightForApp - scaledPhoneHeight);
         var phoneLeft = Math.min(0, (viewportWidth - scaledPhoneWidth) / 2);
         var stageWidth = Math.ceil(Math.min(viewportWidth, scaledPhoneWidth));
-        document.documentElement.style.setProperty("--stage-height", Math.ceil(viewportHeight) + "px");
+        document.documentElement.style.setProperty("--stage-height", stageHeightForApp + "px");
         document.documentElement.style.setProperty("--stage-width", stageWidth + "px");
-        document.documentElement.style.setProperty("--app-view-height", Math.ceil(viewportHeight) + "px");
+        document.documentElement.style.setProperty("--app-view-height", stageHeightForApp + "px");
+        document.documentElement.style.setProperty("--app-stage-bottom", isInstalledApp ? "-" + Math.ceil(safeAreaBottom) + "px" : "0px");
         document.documentElement.style.setProperty("--app-phone-shift", Math.floor(phoneShift) + "px");
         document.documentElement.style.setProperty("--app-phone-left", Math.floor(phoneLeft) + "px");
       } else {
         document.documentElement.style.removeProperty("--stage-height");
         document.documentElement.style.removeProperty("--stage-width");
         document.documentElement.style.removeProperty("--app-view-height");
+        document.documentElement.style.removeProperty("--app-stage-bottom");
         document.documentElement.style.removeProperty("--app-phone-shift");
         document.documentElement.style.removeProperty("--app-phone-left");
       }
