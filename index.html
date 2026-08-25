@@ -6192,13 +6192,6 @@
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
       }
       var contentViewportHeight = viewportHeight;
-      if (appOnlyMode && document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
-        var cssSafeAreaBottom = parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
-        ) || 0;
-        var systemHomeArea = Math.max(cssSafeAreaBottom, viewportHeight * 0.07);
-        contentViewportHeight = Math.max(1, viewportHeight - systemHomeArea);
-      }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
       var scale = scaleX;
