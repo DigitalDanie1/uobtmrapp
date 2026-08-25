@@ -676,12 +676,12 @@
       bottom: var(--bottom-nav-lift, 0px);
       z-index: 42;
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(5, 1fr);
       align-items: start;
-      justify-items: center;
+      justify-items: stretch;
       height: 124px;
-      padding-top: 0;
-      background: #fdfcfc;
+      padding: 13px 20px 0;
+      background: linear-gradient(180deg, rgba(249, 253, 255, .98), #fdfcfc 82%);
       color: #45464e;
       box-shadow: 0 -2px 10px rgba(0,0,0,.06);
       backdrop-filter: blur(10px);
@@ -691,7 +691,7 @@
       max-width: 100%;
       height: 124px;
       object-fit: fill;
-      display: block;
+      display: none;
       user-select: none;
       -webkit-user-drag: none;
     }
@@ -705,9 +705,6 @@
     }
     .phone.tab-capture-active .tab-screens {
       display: block;
-    }
-    .phone.tab-capture-active .bottom-nav {
-      display: none;
     }
     .phone.tab-capture-active .status {
       display: none !important;
@@ -811,9 +808,12 @@
       display: none !important;
     }
     .nav-item {
-      display: none;
+      display: grid;
       justify-items: center;
-      gap: 6px;
+      align-content: start;
+      gap: 4px;
+      min-width: 0;
+      color: #55585b;
       font-size: 15px;
       font-weight: 500;
       line-height: 1.05;
@@ -821,6 +821,12 @@
     .nav-item.active {
       color: var(--active-nav-color, #0069ee);
       font-weight: 700;
+    }
+    .nav-item .fixed-nav-icon {
+      filter: grayscale(1) saturate(0) brightness(.72);
+    }
+    .nav-item.active .fixed-nav-icon {
+      filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(4268%) hue-rotate(213deg) brightness(96%) contrast(103%);
     }
     .nav-item.fixed-nav {
       gap: 3px;
@@ -6412,6 +6418,10 @@
           phone.dataset.activeTab = tabName;
         }
         tabScreens?.setAttribute("aria-hidden", isHome ? "true" : "false");
+        const tabOrder = ["home", "accounts", "wealth", "rewards", "services"];
+        phone.querySelectorAll(".bottom-nav .nav-item").forEach((item, index) => {
+          item.classList.toggle("active", tabOrder[index] === tabName);
+        });
         if (navigator.vibrate) navigator.vibrate(6);
       };
 
@@ -6427,14 +6437,6 @@
             event.preventDefault();
             setAppTab(tabName);
           }
-        });
-      });
-
-      document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
-        const label = item.textContent.trim().replace(/\s+/g, " ");
-        wirePress(item, `${label} 탭`, (activeItem) => {
-          document.querySelectorAll(".bottom-nav .nav-item").forEach((nav) => nav.classList.remove("active"));
-          activeItem.classList.add("active");
         });
       });
 
