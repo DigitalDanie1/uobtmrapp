@@ -6283,7 +6283,10 @@
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     document.body.classList.toggle("ios-device", isIOSDevice());
     document.body.classList.toggle("preview-device", !isIOSDevice());
-    document.body.classList.toggle("viewer-mode", pageParams.get("viewer") === "1");
+    const useViewerRendering =
+      pageParams.get("viewer") === "1" ||
+      (pageParams.get("app") === "1" && pageParams.get("edit") !== "1" && pageParams.get("compare") !== "1");
+    document.body.classList.toggle("viewer-mode", useViewerRendering);
     const syncRootScreenColor = () => {
       const homeScreen = document.body.classList.contains("intro-hidden");
       const loadingScreen = document.body.classList.contains("auth-loading-visible");
