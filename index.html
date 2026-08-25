@@ -52,8 +52,9 @@
       -webkit-text-size-adjust: 100%;
       overscroll-behavior: none;
     }
-    html { background: #0078da; }
+    html { background: #172021; }
     html.home-screen { background: #fdfcfc; }
+    html.loading-screen { background: #666; }
     body {
       display: flex;
       justify-content: center;
@@ -1896,6 +1897,9 @@
       height: 80px;
       background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
       pointer-events: none;
+    }
+    .auth-loading-frame::after {
+      background: #666;
     }
     .app-intro img {
       width: 100%;
@@ -6187,8 +6191,16 @@
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
       }
+      var contentViewportHeight = viewportHeight;
+      if (appOnlyMode && document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
+        var cssSafeAreaBottom = parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
+        ) || 0;
+        var systemHomeArea = Math.max(cssSafeAreaBottom, viewportHeight * 0.07);
+        contentViewportHeight = Math.max(1, viewportHeight - systemHomeArea);
+      }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
-      var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
+      var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6246,7 +6258,7 @@
       if (appOnlyMode) {
         var stageHeight = viewportHeight;
         var phoneLeft = (viewportWidth - 588 * scaleX) / 2;
-        var phoneTop = (viewportHeight - 1280 * scaleY) / 2;
+        var phoneTop = (contentViewportHeight - 1280 * scaleY) / 2;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-height", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-width", Math.ceil(viewportWidth) + "px");
@@ -6281,10 +6293,12 @@
     document.body.classList.toggle("viewer-mode", pageParams.get("viewer") === "1");
     const syncRootScreenColor = () => {
       const homeScreen = document.body.classList.contains("intro-hidden");
+      const loadingScreen = document.body.classList.contains("auth-loading-visible");
       document.documentElement.classList.toggle("home-screen", homeScreen);
+      document.documentElement.classList.toggle("loading-screen", loadingScreen);
       document.querySelector('meta[name="theme-color"]')?.setAttribute(
         "content",
-        homeScreen ? "#fdfcfc" : "#0078da"
+        loadingScreen ? "#666666" : (homeScreen ? "#0100a8" : "#008bde")
       );
     };
     new MutationObserver(syncRootScreenColor).observe(document.body, {
