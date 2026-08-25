@@ -124,10 +124,7 @@
       font-family: var(--ui-font);
       font-synthesis: none;
       font-feature-settings: "kern" 1;
-      transform: scale(
-        var(--phone-scale-x, var(--phone-scale, 1)),
-        var(--phone-scale-y, var(--phone-scale, 1))
-      );
+      transform: scale(var(--cover-scale, var(--phone-scale, 1)));
       transform-origin: top left;
       background:
         linear-gradient(180deg,
