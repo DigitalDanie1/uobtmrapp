@@ -6194,6 +6194,10 @@
       var contentViewportHeight = viewportHeight;
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
+      var useStandaloneVerticalFill = appOnlyMode &&
+        document.body.classList.contains("ios-device") &&
+        window.navigator.standalone === true;
+      if (useStandaloneVerticalFill) scaleY *= 1.035;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6251,7 +6255,9 @@
       if (appOnlyMode) {
         var stageHeight = viewportHeight;
         var phoneLeft = (viewportWidth - 588 * scaleX) / 2;
-        var phoneTop = (contentViewportHeight - 1280 * scaleY) / 2;
+        var phoneTop = useStandaloneVerticalFill
+          ? contentViewportHeight - 1280 * scaleY
+          : (contentViewportHeight - 1280 * scaleY) / 2;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-height", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-width", Math.ceil(viewportWidth) + "px");
