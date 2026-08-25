@@ -53,12 +53,6 @@
       -webkit-text-size-adjust: 100%;
       overscroll-behavior: none;
     }
-    html {
-      background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
-    }
-    html:has(body.pwa-standalone.intro-hidden) {
-      background: #fdfcfc;
-    }
     body {
       display: flex;
       justify-content: center;
@@ -167,7 +161,7 @@
     .demo-badge {
       position: absolute;
       right: 34px;
-      bottom: calc(126px + var(--bottom-nav-lift, 0px));
+      bottom: 126px;
       z-index: 2;
       padding: 3px 7px;
       border: 1px solid rgba(70, 70, 70, .18);
@@ -694,7 +688,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: var(--bottom-nav-lift, 0px);
+      bottom: 0;
       z-index: 42;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -6201,9 +6195,7 @@
           measureLargeViewportHeight(),
           layoutViewportHeight,
           windowViewportHeight,
-          visualViewportHeight,
-          window.screen?.height || 0,
-          window.screen?.availHeight || 0
+          visualViewportHeight
         ].filter(Boolean);
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
@@ -6272,7 +6264,6 @@
       document.documentElement.style.setProperty("--cover-scale", coverScale.toFixed(8));
       if (appOnlyMode) {
         var stageHeight = viewportHeight;
-        var bottomNavLift = 0;
         var phoneLeft = (viewportWidth - 588 * coverScale) / 2;
         var phoneTop = (viewportHeight - 1280 * coverScale) / 2;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
@@ -6282,7 +6273,6 @@
         document.documentElement.style.setProperty("--app-phone-left", phoneLeft.toFixed(3) + "px");
         document.documentElement.style.setProperty("--cover-top", phoneTop.toFixed(3) + "px");
         document.documentElement.style.setProperty("--cover-left", phoneLeft.toFixed(3) + "px");
-        document.documentElement.style.setProperty("--bottom-nav-lift", bottomNavLift.toFixed(3) + "px");
       } else {
         document.documentElement.style.removeProperty("--app-vh");
         document.documentElement.style.removeProperty("--stage-height");
@@ -6291,7 +6281,6 @@
         document.documentElement.style.removeProperty("--app-phone-left");
         document.documentElement.style.removeProperty("--cover-top");
         document.documentElement.style.removeProperty("--cover-left");
-        document.documentElement.style.removeProperty("--bottom-nav-lift");
       }
     }
 
