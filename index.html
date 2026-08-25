@@ -31,6 +31,9 @@
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
       --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
       --app-vh: 100vh;
+      --cover-scale: 1;
+      --app-phone-left: 0px;
+      --app-phone-shift: 0px;
     }
 
                            * { box-sizing: border-box; }
@@ -1806,15 +1809,15 @@
     }
     .app-intro-frame {
       position: absolute;
-      left: var(--cover-left, 0px);
-      top: var(--cover-top, 0px);
+      left: var(--app-phone-left, 0px);
+      top: var(--app-phone-shift, 0px);
       width: 588px;
       height: 1280px;
       min-width: 0;
       min-height: 0;
       aspect-ratio: 588 / 1280;
       overflow: hidden;
-      transform: scale(var(--phone-scale, 1));
+      transform: scale(var(--cover-scale, var(--phone-scale, 1)));
       transform-origin: top left;
     }
     .app-intro-frame::before {
@@ -1901,15 +1904,15 @@
     }
     .auth-loading-frame {
       position: absolute;
-      left: var(--cover-left, 0px);
-      top: var(--cover-top, 0px);
+      left: var(--app-phone-left, 0px);
+      top: var(--app-phone-shift, 0px);
       width: 588px;
       height: 1280px;
       min-width: 0;
       min-height: 0;
       overflow: hidden;
       background: #666;
-      transform: scale(var(--phone-scale, 1));
+      transform: scale(var(--cover-scale, var(--phone-scale, 1)));
       transform-origin: top left;
     }
     .auth-loading-shot {

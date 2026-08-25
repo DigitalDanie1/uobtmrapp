@@ -31,6 +31,9 @@
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
       --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
       --app-vh: 100vh;
+      --cover-scale: 1;
+      --app-phone-left: 0px;
+      --app-phone-shift: 0px;
     }
 
                            * { box-sizing: border-box; }
@@ -1757,8 +1760,8 @@
       position: fixed;
       inset: 0;
       width: 100vw;
-      height: var(--app-view-height, 100vh);
-      min-height: var(--app-view-height, 100vh);
+      height: var(--app-vh, 100vh);
+      min-height: var(--app-vh, 100vh);
       background: #050b1f url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
       overflow: hidden;
       touch-action: manipulation;
@@ -1805,13 +1808,17 @@
       touch-action: manipulation;
     }
     .app-intro-frame {
-      position: relative;
-      width: var(--stage-width, 100vw);
-      height: var(--stage-height, var(--app-vh, 100vh));
+      position: absolute;
+      left: var(--app-phone-left, 0px);
+      top: var(--app-phone-shift, 0px);
+      width: 588px;
+      height: 1280px;
       min-width: 0;
       min-height: 0;
       aspect-ratio: 588 / 1280;
       overflow: hidden;
+      transform: scale(var(--cover-scale, var(--phone-scale, 1)));
+      transform-origin: top left;
     }
     .app-intro-frame::before {
       content: "";
@@ -1896,13 +1903,17 @@
       display: grid;
     }
     .auth-loading-frame {
-      position: relative;
-      width: var(--stage-width, 100vw);
-      height: var(--stage-height, var(--app-vh, 100vh));
+      position: absolute;
+      left: var(--app-phone-left, 0px);
+      top: var(--app-phone-shift, 0px);
+      width: 588px;
+      height: 1280px;
       min-width: 0;
       min-height: 0;
       overflow: hidden;
       background: #666;
+      transform: scale(var(--cover-scale, var(--phone-scale, 1)));
+      transform-origin: top left;
     }
     .auth-loading-shot {
       display: block;
@@ -6070,9 +6081,9 @@
     }
 
     function measureLargeViewportHeight() {
-      var probe = document.createElement("div");
-      probe.setAttribute("aria-hidden", "true");
-      probe.style.cssText = [
+      var vhProbe = document.createElement("div");
+      vhProbe.setAttribute("aria-hidden", "true");
+      vhProbe.style.cssText = [
         "position:fixed",
         "left:0",
         "top:0",
@@ -6083,9 +6094,9 @@
         "pointer-events:none",
         "z-index:-1"
       ].join(";");
-      document.body.appendChild(probe);
-      var height = probe.getBoundingClientRect().height || 0;
-      probe.remove();
+      document.body.appendChild(vhProbe);
+      var height = vhProbe.getBoundingClientRect().height || 0;
+      vhProbe.remove();
       return height;
     }
 
@@ -6112,6 +6123,11 @@
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
+      var coverScale = appOnlyMode ? Math.max(scaleX, scaleY) : scaleX;
+      if (appOnlyMode) {
+        scaleX = coverScale;
+        scaleY = coverScale;
+      }
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6163,26 +6179,31 @@
         scaleX = scale;
         scaleY = scale;
       }
-      document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
-      document.documentElement.style.setProperty("--phone-scale-x", scaleX.toFixed(5));
-      document.documentElement.style.setProperty("--phone-scale-y", scaleY.toFixed(5));
+      document.documentElement.style.setProperty("--phone-scale", scale.toFixed(8));
+      document.documentElement.style.setProperty("--phone-scale-x", scaleX.toFixed(8));
+      document.documentElement.style.setProperty("--phone-scale-y", scaleY.toFixed(8));
+      document.documentElement.style.setProperty("--cover-scale", coverScale.toFixed(8));
       if (appOnlyMode) {
         var stageHeight = viewportHeight;
         var bottomNavLift = 0;
+        var phoneLeft = (viewportWidth - 588 * coverScale) / 2;
+        var phoneTop = (viewportHeight - 1280 * coverScale) / 2;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-height", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-width", Math.ceil(viewportWidth) + "px");
-        document.documentElement.style.setProperty("--app-view-height", stageHeight + "px");
-        document.documentElement.style.setProperty("--app-phone-shift", "0px");
-        document.documentElement.style.setProperty("--app-phone-left", "0px");
+        document.documentElement.style.setProperty("--app-phone-shift", phoneTop.toFixed(3) + "px");
+        document.documentElement.style.setProperty("--app-phone-left", phoneLeft.toFixed(3) + "px");
+        document.documentElement.style.setProperty("--cover-top", phoneTop.toFixed(3) + "px");
+        document.documentElement.style.setProperty("--cover-left", phoneLeft.toFixed(3) + "px");
         document.documentElement.style.setProperty("--bottom-nav-lift", bottomNavLift.toFixed(3) + "px");
       } else {
         document.documentElement.style.removeProperty("--app-vh");
         document.documentElement.style.removeProperty("--stage-height");
         document.documentElement.style.removeProperty("--stage-width");
-        document.documentElement.style.removeProperty("--app-view-height");
         document.documentElement.style.removeProperty("--app-phone-shift");
         document.documentElement.style.removeProperty("--app-phone-left");
+        document.documentElement.style.removeProperty("--cover-top");
+        document.documentElement.style.removeProperty("--cover-left");
         document.documentElement.style.removeProperty("--bottom-nav-lift");
       }
     }
