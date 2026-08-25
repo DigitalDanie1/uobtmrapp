@@ -30,9 +30,7 @@
       --ui-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans", Arimo, Arial, sans-serif;                                                            
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
       --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
-      --app-stage-bottom: 0px;
-      --pwa-bottom-fill: 0px;
-      --app-vh: 100dvh;
+      --app-vh: 100vh;
     }
 
                            * { box-sizing: border-box; }
@@ -65,8 +63,8 @@
       top: 0;
       bottom: auto;
       width: 100vw;
-      height: var(--app-vh, 100dvh);
-      min-height: var(--app-vh, 100dvh);
+      height: var(--app-vh, 100vh);
+      min-height: var(--app-vh, 100vh);
       background: #050b1f url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
       overflow: hidden;
       padding: 0;
@@ -1760,7 +1758,7 @@
       inset: 0;
       width: 100vw;
       height: var(--app-view-height, 100vh);
-      min-height: var(--app-view-height, 100dvh);
+      min-height: var(--app-view-height, 100vh);
       background: #050b1f url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
       overflow: hidden;
       touch-action: manipulation;
@@ -1783,8 +1781,10 @@
     }
     body.pwa-standalone.closest-original-view:not(.generator-docked):not(.compare-docked) .stage {
       position: fixed;
+      top: 0;
       left: 50%;
-      bottom: var(--app-stage-bottom, 0px);
+      bottom: auto;
+      height: var(--app-vh, 100vh);
       transform: translateX(-50%);
     }
     .app-intro {
@@ -1797,7 +1797,7 @@
       display: grid;
       place-items: center;
       width: 100vw;
-      height: var(--app-vh, 100dvh);
+      height: var(--app-vh, 100vh);
       overflow: hidden;
       background: #050b1f;
       cursor: pointer;
@@ -1807,7 +1807,7 @@
     .app-intro-frame {
       position: relative;
       width: var(--stage-width, 100vw);
-      height: var(--stage-height, var(--app-vh, 100dvh));
+      height: var(--stage-height, var(--app-vh, 100vh));
       min-width: 0;
       min-height: 0;
       aspect-ratio: 588 / 1280;
@@ -1887,9 +1887,7 @@
       display: none;
       place-items: center;
       width: 100vw;
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
+      height: var(--app-vh, 100vh);
       background: rgba(92, 92, 90, .96);
       color: #fff;
       font-family: var(--ui-font);
@@ -1899,10 +1897,10 @@
     }
     .auth-loading-frame {
       position: relative;
-      width: 100vw;
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
+      width: var(--stage-width, 100vw);
+      height: var(--stage-height, var(--app-vh, 100vh));
+      min-width: 0;
+      min-height: 0;
       overflow: hidden;
       background: #666;
     }
@@ -6072,33 +6070,15 @@
     }
 
     function fitPhone() {
-      var visualViewportWidth = window.visualViewport?.width || 0;
-      var visualViewportHeight = window.visualViewport?.height || 0;
       var layoutViewportWidth = document.documentElement.clientWidth || 0;
       var layoutViewportHeight = document.documentElement.clientHeight || 0;
       var windowViewportWidth = window.innerWidth || 0;
       var windowViewportHeight = window.innerHeight || 0;
-      var outerViewportWidth = window.outerWidth || 0;
-      var outerViewportHeight = window.outerHeight || 0;
-      var viewportWidth = visualViewportWidth || layoutViewportWidth || windowViewportWidth;
-      var viewportHeight = visualViewportHeight || layoutViewportHeight || windowViewportHeight;
-      var isViewerFrame = false;
-      var cssBottomFill = 0;
+      var viewportWidth = Math.round(windowViewportWidth || layoutViewportWidth);
+      var viewportHeight = Math.round(windowViewportHeight || layoutViewportHeight);
       var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
         !document.body.classList.contains("generator-docked") &&
         !document.body.classList.contains("compare-docked");
-      if (appOnlyMode) {
-        isViewerFrame = pageParams.get("viewer") === "1";
-        if (isViewerFrame) {
-          viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth || visualViewportWidth);
-          viewportHeight = Math.round(layoutViewportHeight || windowViewportHeight || visualViewportHeight);
-        } else {
-          var widthCandidates = [visualViewportWidth, layoutViewportWidth, windowViewportWidth, outerViewportWidth].filter(Boolean);
-          var heightCandidates = [visualViewportHeight, layoutViewportHeight, windowViewportHeight, outerViewportHeight].filter(Boolean);
-          viewportWidth = Math.round(Math.min.apply(Math, widthCandidates));
-          viewportHeight = Math.round(Math.min.apply(Math, heightCandidates));
-        }
-      }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
       var scale = scaleX;
@@ -6155,15 +6135,13 @@
       document.documentElement.style.setProperty("--phone-scale", scale.toFixed(5));
       document.documentElement.style.setProperty("--phone-scale-x", scaleX.toFixed(5));
       document.documentElement.style.setProperty("--phone-scale-y", scaleY.toFixed(5));
-      document.documentElement.style.setProperty("--pwa-bottom-fill", cssBottomFill.toFixed(3) + "px");
       if (appOnlyMode) {
-        var stageHeight = Math.ceil(viewportHeight);
+        var stageHeight = viewportHeight;
         var bottomNavLift = 0;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-height", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-width", Math.ceil(viewportWidth) + "px");
         document.documentElement.style.setProperty("--app-view-height", stageHeight + "px");
-        document.documentElement.style.setProperty("--app-stage-bottom", "0px");
         document.documentElement.style.setProperty("--app-phone-shift", "0px");
         document.documentElement.style.setProperty("--app-phone-left", "0px");
         document.documentElement.style.setProperty("--bottom-nav-lift", bottomNavLift.toFixed(3) + "px");
@@ -6172,7 +6150,6 @@
         document.documentElement.style.removeProperty("--stage-height");
         document.documentElement.style.removeProperty("--stage-width");
         document.documentElement.style.removeProperty("--app-view-height");
-        document.documentElement.style.removeProperty("--app-stage-bottom");
         document.documentElement.style.removeProperty("--app-phone-shift");
         document.documentElement.style.removeProperty("--app-phone-left");
         document.documentElement.style.removeProperty("--bottom-nav-lift");
@@ -6248,8 +6225,6 @@
     });
 
     window.addEventListener("resize", fitPhone);
-    window.visualViewport?.addEventListener("resize", fitPhone);
-    window.visualViewport?.addEventListener("scroll", fitPhone);
     document.querySelector('[data-studio-action="generate"]')?.addEventListener("click", openGenerator);
     document.querySelector('[data-studio-action="compare"]')?.addEventListener("click", showComparePanel);
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
