@@ -832,7 +832,11 @@
       gap: 3px;
     }
     .nav-item.fixed-nav span {
-      display: none;
+      display: block;
+      color: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
     }
     .nav-item .fixed-nav-icon {
       width: 42px;
@@ -841,20 +845,20 @@
       max-height: none;
       object-fit: contain;
     }
-    .nav-item [data-icon-slot="navHomeIcon"] { width: 34px; height: 40px; }
-    .nav-item [data-icon-slot="navAccountsIcon"] { width: 39px; height: 39px; }
-    .nav-item [data-icon-slot="navWealthIcon"] { width: 40px; height: 39px; }
-    .nav-item [data-icon-slot="navRewardsIcon"] { width: 40px; height: 38px; }
-    .nav-item [data-icon-slot="navServicesIcon"] { width: 38px; height: 38px; }
+    .nav-item [data-icon-slot="navHomeIcon"] { width: 42px; height: 40px; }
+    .nav-item [data-icon-slot="navAccountsIcon"] { width: 42px; height: 40px; }
+    .nav-item [data-icon-slot="navWealthIcon"] { width: 42px; height: 40px; }
+    .nav-item [data-icon-slot="navRewardsIcon"] { width: 42px; height: 40px; }
+    .nav-item [data-icon-slot="navServicesIcon"] { width: 42px; height: 40px; }
     .nav-item .fixed-nav-icon,
     .nav-item [data-icon-slot="navHomeIcon"],
     .nav-item [data-icon-slot="navAccountsIcon"],
     .nav-item [data-icon-slot="navWealthIcon"],
     .nav-item [data-icon-slot="navRewardsIcon"],
     .nav-item [data-icon-slot="navServicesIcon"] {
-      width: auto;
-      height: 58px;
-      max-width: 88px;
+      width: 42px;
+      height: 40px;
+      max-width: 42px;
       object-fit: contain;
     }
     .editor-panel {
