@@ -2,9 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/iphone17-viewer", "destination": "/iphone17-viewer.html" },
-    { "source": "/closest-original-demo", "destination": "/closest-original-demo.html" },
-    { "source": "/app", "destination": "/app.html" }
+    { "source": "/iphone17-viewer", "destination": "/iphone17-viewer.html" }
   ],
   "headers": [
     {

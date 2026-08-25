@@ -2,7 +2,7 @@
   "name": "Closest Banking Demo",
   "short_name": "Banking Demo",
   "description": "View-only mobile banking UI demo for assignment review.",
-  "start_url": "./closest-original-demo.html",
+  "start_url": "./index.html?app=1",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
