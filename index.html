@@ -68,7 +68,8 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       min-height: var(--app-vh, 100vh);
-      background: #172021 url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
+      background: url("assets/closest-intro.png") center bottom / 100vw auto no-repeat,
+        linear-gradient(180deg, #008bde 0%, #0078da 100%);
       overflow: hidden;
       padding: 0;
     }
@@ -1813,7 +1814,8 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       min-height: var(--app-vh, 100vh);
-      background: #172021 url("assets/closest-intro.png") center bottom / 100vw auto no-repeat;
+      background: url("assets/closest-intro.png") center bottom / 100vw auto no-repeat,
+        linear-gradient(180deg, #008bde 0%, #0078da 100%);
       overflow: hidden;
       touch-action: manipulation;
       user-select: none;
@@ -1853,7 +1855,7 @@
       width: 100vw;
       height: var(--app-vh, 100vh);
       overflow: hidden;
-      background: #172021;
+      background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
       cursor: pointer;
       transition: none;
       touch-action: manipulation;
@@ -1879,8 +1881,7 @@
       top: 0;
       z-index: 1;
       height: 76px;
-      background:
-        linear-gradient(180deg, rgba(36, 153, 232, .98) 0%, rgba(35, 156, 237, .96) 62%, rgba(35, 156, 237, 0) 100%);
+      background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
       pointer-events: none;
     }
     .app-intro-frame::after,
@@ -1892,7 +1893,7 @@
       top: 0;
       z-index: 5;
       height: 80px;
-      background: #279ce8;
+      background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
       pointer-events: none;
     }
     .app-intro img {
