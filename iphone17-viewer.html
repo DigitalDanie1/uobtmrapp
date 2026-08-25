@@ -1,1 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080d1c">
+  <title>iPhone 17 Viewer</title>
+  <style>
+    :root {
+      --device-width: 1206px;
+      --device-height: 2622px;
+      --viewer-scale: .36;
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #080d1c;
+      overflow: hidden;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      place-items: center;
+      gap: 12px;
+      min-height: 100dvh;
+      padding: 14px;
+    }
+
+    .viewer-bar {
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: min(423px, calc(100vw - 28px));
+      color: rgba(255, 255, 255, .74);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .viewer-bar button,
+    .viewer-bar a {
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .9);
+      padding: 8px 11px;
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .viewer-bar button.active {
+      background: #1762ff;
+      border-color: #1762ff;
+      color: #fff;
+    }
+
+    .device-wrap {
+      width: calc(var(--device-width) * var(--viewer-scale));
+      height: calc(var(--device-height) * var(--viewer-scale));
+      display: grid;
+      place-items: start;
+      overflow: visible;
+    }
+
+    .device {
+      position: relative;
+      width: var(--device-width);
+      height: var(--device-height);
+      overflow: hidden;
+      border: 28px solid #050508;
+      border-radius: 165px;
+      background: #000;
+      box-shadow:
+        0 30px 70px rgba(0, 0, 0, .52),
+        0 0 0 1px rgba(255, 255, 255, .12);
+      transform: scale(var(--viewer-scale));
+      transform-origin: top left;
+    }
+
+    .device::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 37px;
+      z-index: 3;
+      width: 376px;
+      height: 108px;
+      border-radius: 999px;
+      background: #050508;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 137px;
+      background: #fff;
+    }
+
+    @media (max-height: 760px) {
+      body {
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .viewer-bar {
+        font-size: 11px;
+      }
+
+      .viewer-bar button,
+      .viewer-bar a {
+        padding: 7px 9px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="viewer-bar" aria-label="iPhone 17 viewer controls">
+    <button class="active" type="button" data-screen="home">Home</button>
+    <button type="button" data-screen="intro">Intro</button>
+    <a href="./index.html?screen=1&app=1&viewer=1&v=55" target="_blank" rel="noreferrer">Open</a>
+  </nav>
+
+  <main class="device-wrap" aria-label="iPhone 17 viewport">
+    <section class="device">
+      <iframe
+        id="phoneFrame"
+        title="iPhone 17 app preview"
+        src="./index.html?screen=1&app=1&viewer=1&v=55"
+        width="1206"
+        height="2622"
+      ></iframe>
+    </section>
+  </main>
+
+  <script>
+    const frame = document.getElementById("phoneFrame");
+    const buttons = [...document.querySelectorAll("[data-screen]")];
+    const fitViewer = () => {
+      const width = window.innerWidth || document.documentElement.clientWidth || 1206;
+      const height = window.innerHeight || document.documentElement.clientHeight || 2622;
+      const verticalReserve = height <= 760 ? 76 : 104;
+      const scale = Math.min((width - 34) / 1206, (height - verticalReserve) / 2622, 1);
+      document.documentElement.style.setProperty("--viewer-scale", Math.max(.1, scale).toFixed(5));
+    };
+    const urls = {
+      home: "./index.html?screen=1&app=1&viewer=1&v=55",
+      intro: "./index.html?app=1&viewer=1&v=55"
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        buttons.forEach((item) => item.classList.toggle("active", item === button));
+        frame.src = urls[button.dataset.screen];
+      });
+    });
+
+    window.addEventListener("resize", fitViewer);
+    window.visualViewport?.addEventListener("resize", fitViewer);
+    fitViewer();
+  </script>
+</body>
+</html>
