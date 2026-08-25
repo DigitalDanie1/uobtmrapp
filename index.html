@@ -79,6 +79,20 @@
       overflow: hidden;
       padding: 0;
     }
+    body.ios-device.pwa-standalone:not(.viewer-mode)::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 200;
+      height: max(env(safe-area-inset-bottom, 0px), 7vh);
+      background: #0078da;
+      pointer-events: none;
+    }
+    body.ios-device.pwa-standalone.intro-hidden:not(.viewer-mode)::after {
+      background: #fdfcfc;
+    }
     body.generator-docked {
       display: block;
       min-height: 100vh;
@@ -6193,13 +6207,6 @@
         ].filter(Boolean);
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
-        if (document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
-          var reportedSafeAreaBottom = parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
-          ) || 0;
-          var iphoneHomeArea = Math.max(reportedSafeAreaBottom, viewportHeight * 0.07);
-          viewportHeight += Math.round(iphoneHomeArea);
-        }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
