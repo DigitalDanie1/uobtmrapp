@@ -2,7 +2,7 @@
   "name": "Banking Assignment Demo",
   "short_name": "Banking Demo",
   "description": "Installable mobile banking UI assignment demo.",
-  "start_url": "./index.html?app=1&v=68",
+  "start_url": "./index.html?app=1&v=69",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],

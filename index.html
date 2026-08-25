@@ -53,6 +53,12 @@
       -webkit-text-size-adjust: 100%;
       overscroll-behavior: none;
     }
+    html {
+      background: linear-gradient(180deg, #008bde 0%, #0078da 100%);
+    }
+    html:has(body.pwa-standalone.intro-hidden) {
+      background: #fdfcfc;
+    }
     body {
       display: flex;
       justify-content: center;
@@ -6187,6 +6193,13 @@
         ].filter(Boolean);
         viewportWidth = Math.round(layoutViewportWidth || windowViewportWidth);
         viewportHeight = Math.round(Math.max.apply(Math, heightCandidates));
+        if (document.body.classList.contains("ios-device") && pageParams.get("viewer") !== "1") {
+          var reportedSafeAreaBottom = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
+          ) || 0;
+          var iphoneHomeArea = Math.max(reportedSafeAreaBottom, viewportHeight * 0.07);
+          viewportHeight += Math.round(iphoneHomeArea);
+        }
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
