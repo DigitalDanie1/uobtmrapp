@@ -692,6 +692,10 @@
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
+    body.closest-original-view.intro-hidden .bottom-nav {
+      background: transparent;
+      box-shadow: none;
+    }
     .bottom-nav-strip {
       width: 588px;
       max-width: 100%;
@@ -815,6 +819,7 @@
     }
     .nav-item {
       position: relative;
+      top: -4px;
       z-index: 1;
       display: grid;
       grid-template-rows: 40px 17px;
@@ -6216,9 +6221,8 @@
         document.body.classList.contains("ios-device") &&
         window.navigator.standalone === true;
       var safeBottom = standaloneIOS ? Math.max(0, Math.round(measureSafeAreaBottom())) : 0;
-      var usableViewportHeight = Math.max(1, viewportHeight - safeBottom);
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
-      var scaleY = appOnlyMode ? usableViewportHeight / 1280 : scaleX;
+      var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
       var fullScaleY = appOnlyMode ? viewportHeight / 1280 : scaleY;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
