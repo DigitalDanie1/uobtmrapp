@@ -29,7 +29,6 @@
     :root {
       --ui-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans", Arimo, Arial, sans-serif;                                                            
       --display-font: "Roboto", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans", Arimo, Arial, sans-serif;                                                                  
-      --ios-safe-bottom: env(safe-area-inset-bottom, 0px);
       --app-vh: 100vh;
       --app-phone-left: 0px;
       --app-phone-shift: 0px;
@@ -74,9 +73,6 @@
         linear-gradient(180deg, #008bde 0%, #0078da 100%);
       overflow: hidden;
       padding: 0;
-    }
-    body.pwa-standalone.safe-canvas {
-      background: #172021;
     }
     body.generator-docked {
       display: block;
@@ -1829,12 +1825,6 @@
     }
     body.pwa-standalone.closest-original-view.intro-hidden:not(.generator-docked):not(.compare-docked) {
       background: #fdfcfc;
-    }
-    body.pwa-standalone.closest-original-view.safe-canvas:not(.intro-hidden):not(.generator-docked):not(.compare-docked) {
-      background: #172021;
-    }
-    body.pwa-standalone.safe-canvas .app-intro {
-      background: #172021;
     }
     body.closest-original-view .studio-bar {
       display: none !important;
@@ -6204,21 +6194,8 @@
           viewportHeight = Math.round(window.screen.height || viewportHeight);
         }
       }
-      var contentViewportHeight = viewportHeight;
-      var useSafeCanvas = appOnlyMode && (
-        pageParams.get("safe") === "1" ||
-        (document.body.classList.contains("ios-device") && window.navigator.standalone === true)
-      );
-      document.body.classList.toggle("safe-canvas", useSafeCanvas);
-      if (useSafeCanvas) {
-        var cssSafeBottom = parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
-        ) || 0;
-        var homeIndicatorHeight = Math.max(cssSafeBottom, viewportHeight * 0.07);
-        contentViewportHeight = Math.max(1, viewportHeight - homeIndicatorHeight);
-      }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
-      var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
+      var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
