@@ -75,6 +75,9 @@
       overflow: hidden;
       padding: 0;
     }
+    body.pwa-standalone.safe-canvas {
+      background: #172021;
+    }
     body.generator-docked {
       display: block;
       min-height: 100vh;
@@ -6196,6 +6199,18 @@
         }
       }
       var contentViewportHeight = viewportHeight;
+      var useSafeCanvas = appOnlyMode && (
+        pageParams.get("safe") === "1" ||
+        (document.body.classList.contains("ios-device") && window.navigator.standalone === true)
+      );
+      document.body.classList.toggle("safe-canvas", useSafeCanvas);
+      if (useSafeCanvas) {
+        var cssSafeBottom = parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--ios-safe-bottom")
+        ) || 0;
+        var homeIndicatorHeight = Math.max(cssSafeBottom, viewportHeight * 0.07);
+        contentViewportHeight = Math.max(1, viewportHeight - homeIndicatorHeight);
+      }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
       var scale = scaleX;
