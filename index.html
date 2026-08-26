@@ -6194,9 +6194,10 @@
       var contentViewportHeight = viewportHeight;
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? contentViewportHeight / 1280 : scaleX;
-      var useStandaloneVerticalFill = appOnlyMode &&
-        document.body.classList.contains("ios-device") &&
-        window.navigator.standalone === true;
+      var useStandaloneVerticalFill = appOnlyMode && (
+        pageParams.get("standalone") === "1" ||
+        (document.body.classList.contains("ios-device") && window.navigator.standalone === true)
+      );
       if (useStandaloneVerticalFill) scaleY *= 1.04;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
