@@ -32,6 +32,7 @@
       --app-vh: 100vh;
       --app-phone-left: 0px;
       --app-phone-shift: 0px;
+      --nav-safe-canvas: 0px;
     }
 
                            * { box-sizing: border-box; }
@@ -687,6 +688,16 @@
       color: #45464e;
       box-shadow: 0 -2px 10px rgba(0,0,0,.06);
       backdrop-filter: blur(10px);
+    }
+    body.has-nav-safe .bottom-nav {
+      height: calc(124px + var(--nav-safe-canvas));
+    }
+    body.has-nav-safe .tab-hit-zone {
+      height: calc(124px + var(--nav-safe-canvas));
+    }
+    body.has-nav-safe .view-link {
+      position: relative;
+      top: calc(0px - var(--nav-safe-canvas));
     }
     .bottom-nav-strip {
       width: 588px;
@@ -6196,6 +6207,19 @@
       }
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
       var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
+      var useNavSafe = appOnlyMode &&
+        document.body.classList.contains("ios-device") &&
+        window.navigator.standalone === true;
+      document.body.classList.toggle("has-nav-safe", useNavSafe);
+      if (useNavSafe) {
+        var safeScreenHeight = Math.max(viewportHeight * 0.07, 1);
+        document.documentElement.style.setProperty(
+          "--nav-safe-canvas",
+          (safeScreenHeight / scaleY).toFixed(3) + "px"
+        );
+      } else {
+        document.documentElement.style.setProperty("--nav-safe-canvas", "0px");
+      }
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
