@@ -76,6 +76,11 @@
       overflow: hidden;
       padding: 0;
     }
+    body.pwa-standalone.app-sizing-pending > .stage,
+    body.pwa-standalone.app-sizing-pending > .app-intro,
+    body.pwa-standalone.app-sizing-pending > .auth-loading {
+      visibility: hidden !important;
+    }
     body.generator-docked {
       display: block;
       min-height: 100vh;
@@ -6304,6 +6309,53 @@
       }
     }
 
+    var stableFitRun = 0;
+    function viewportMeasurementSignature() {
+      return [
+        document.documentElement.clientWidth || 0,
+        document.documentElement.clientHeight || 0,
+        window.innerWidth || 0,
+        window.innerHeight || 0,
+        Math.round(window.visualViewport?.width || 0),
+        Math.round(window.visualViewport?.height || 0),
+        Math.round(measureLargeViewportHeight()),
+        Math.round(measureSafeAreaBottom())
+      ].join(":");
+    }
+
+    function scheduleStableFit() {
+      var appOnlyMode = document.body.classList.contains("pwa-standalone") &&
+        !document.body.classList.contains("generator-docked") &&
+        !document.body.classList.contains("compare-docked");
+      if (!appOnlyMode) {
+        fitPhone();
+        return;
+      }
+      var run = ++stableFitRun;
+      var previousSignature = "";
+      var matchingSamples = 0;
+      var attempts = 0;
+      document.body.classList.add("app-sizing-pending");
+      function sampleViewport() {
+        if (run !== stableFitRun) return;
+        var signature = viewportMeasurementSignature();
+        matchingSamples = signature === previousSignature ? matchingSamples + 1 : 0;
+        previousSignature = signature;
+        attempts += 1;
+        if (matchingSamples >= 2 || attempts >= 12) {
+          fitPhone();
+          requestAnimationFrame(function () {
+            if (run === stableFitRun) document.body.classList.remove("app-sizing-pending");
+          });
+          return;
+        }
+        window.setTimeout(sampleViewport, 50);
+      }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(sampleViewport);
+      });
+    }
+
     applyContent(SCREEN_CONTENT);
     applyFonts(FONT_SETTINGS);
     applyVisuals(VISUAL_SETTINGS);
@@ -6358,6 +6410,7 @@
 
     if (isStandaloneApp()) {
       document.body.classList.add("pwa-standalone");
+      document.body.classList.add("app-sizing-pending");
     }
 
     if (pageParams.get("edit") === "1") {
@@ -6391,9 +6444,14 @@
       }
     });
 
-    window.addEventListener("resize", fitPhone);
-    window.visualViewport?.addEventListener("resize", fitPhone);
-    window.visualViewport?.addEventListener("scroll", fitPhone);
+    window.addEventListener("resize", scheduleStableFit);
+    window.addEventListener("orientationchange", scheduleStableFit);
+    window.addEventListener("pageshow", scheduleStableFit);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) scheduleStableFit();
+    });
+    window.visualViewport?.addEventListener("resize", scheduleStableFit);
+    window.visualViewport?.addEventListener("scroll", scheduleStableFit);
     document.querySelector('[data-studio-action="generate"]')?.addEventListener("click", openGenerator);
     document.querySelector('[data-studio-action="compare"]')?.addEventListener("click", showComparePanel);
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
@@ -6404,7 +6462,7 @@
           .catch(() => {});
       });
     }
-    fitPhone();
+    scheduleStableFit();
   </script>
   <script>
     (() => {
