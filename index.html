@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=90">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=90">
+  <link rel="manifest" href="manifest.json?v=91">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=91">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -150,6 +150,11 @@
           #fefefe 88%,
           #f2e7e2 100%);
       box-shadow: 0 18px 52px rgba(12, 21, 56, .24);
+    }
+    .phone img,
+    .app-intro img,
+    .auth-loading img {
+      image-rendering: -webkit-optimize-contrast;
     }
     .content { padding: 34px 35px 136px; }
     .demo-badge {
@@ -6222,10 +6227,9 @@
         document.body.classList.contains("ios-device") &&
         window.navigator.standalone === true;
       var safeBottom = standaloneIOS ? Math.max(0, Math.round(measureSafeAreaBottom())) : 0;
-      var usableViewportHeight = Math.max(1, viewportHeight - safeBottom);
       var scaleX = appOnlyMode ? viewportWidth / 588 : Math.min(1, viewportWidth / 589);
-      var scaleY = appOnlyMode ? usableViewportHeight / 1280 : scaleX;
-      var fullScaleY = appOnlyMode ? viewportHeight / 1280 : scaleY;
+      var scaleY = appOnlyMode ? viewportHeight / 1280 : scaleX;
+      var fullScaleY = scaleY;
       var scale = scaleX;
       if (document.body.classList.contains("generator-docked")) {
         var workspace = document.querySelector(".generator-workspace");
@@ -6455,7 +6459,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=90", {
+        navigator.serviceWorker.register("./service-worker.js?v=91", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});

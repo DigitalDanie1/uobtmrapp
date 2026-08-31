@@ -3,7 +3,7 @@
   "short_name": "Banking Demo",
   "description": "Installable mobile banking UI assignment demo.",
   "id": "./",
-  "start_url": "./index.html?app=1&viewer=1&v=90",
+  "start_url": "./index.html?app=1&viewer=1&v=91",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
