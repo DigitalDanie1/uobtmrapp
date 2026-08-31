@@ -2,13 +2,18 @@
   "name": "Banking Assignment Demo",
   "short_name": "Banking Demo",
   "description": "Installable mobile banking UI assignment demo.",
-  "start_url": "./index.html?app=1&viewer=1&v=89",
+  "id": "./",
+  "start_url": "./index.html?app=1&viewer=1&v=90",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
   "background_color": "#0100a8",
   "theme_color": "#0100a8",
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
   "icons": [
     {
       "src": "./assets/closest-icon-180.png",
