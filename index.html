@@ -718,9 +718,13 @@
       display: none;
       overflow: hidden;
       background: #fff;
+      transform: translateY(7px);
     }
     .phone.tab-capture-active .tab-screens {
       display: block;
+    }
+    .phone.tab-capture-active .bottom-nav {
+      display: none;
     }
     .phone.tab-capture-active .status {
       display: none !important;
@@ -811,6 +815,11 @@
     }
     .tab-hit-zone:active {
       background: rgba(0, 102, 255, .04);
+    }
+    .tab-hit-zone:focus,
+    .tab-hit-zone:focus-visible {
+      outline: none;
+      box-shadow: none;
     }
     .tab-hit-zone[data-tab-target="home"] { left: 0; }
     .tab-hit-zone[data-tab-target="accounts"] { left: 20%; }
