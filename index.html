@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=91">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=91">
+  <link rel="manifest" href="manifest.json?v=92">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=92">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -825,7 +825,7 @@
     }
     .nav-item {
       position: relative;
-      top: -4px;
+      top: calc(-4px - var(--app-safe-canvas-bottom, 0px));
       z-index: 1;
       display: grid;
       grid-template-rows: 40px 17px;
@@ -6291,6 +6291,7 @@
         var phoneTop = 0;
         document.documentElement.style.setProperty("--app-vh", stageHeight + "px");
         document.documentElement.style.setProperty("--app-safe-bottom", safeBottom + "px");
+        document.documentElement.style.setProperty("--app-safe-canvas-bottom", (safeBottom / Math.max(scaleY, .001)).toFixed(3) + "px");
         document.documentElement.style.setProperty("--stage-height", stageHeight + "px");
         document.documentElement.style.setProperty("--stage-width", Math.ceil(viewportWidth) + "px");
         document.documentElement.style.setProperty("--app-phone-shift", phoneTop.toFixed(3) + "px");
@@ -6300,6 +6301,7 @@
       } else {
         document.documentElement.style.removeProperty("--app-vh");
         document.documentElement.style.removeProperty("--app-safe-bottom");
+        document.documentElement.style.removeProperty("--app-safe-canvas-bottom");
         document.documentElement.style.removeProperty("--stage-height");
         document.documentElement.style.removeProperty("--stage-width");
         document.documentElement.style.removeProperty("--app-phone-shift");
@@ -6459,7 +6461,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=91", {
+        navigator.serviceWorker.register("./service-worker.js?v=92", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
