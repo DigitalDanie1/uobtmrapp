@@ -1,13 +1,14 @@
 const CACHE_PREFIX = "banking-demo-";
-const CACHE_NAME = `${CACHE_PREFIX}v92`;
-const APP_START = "./index.html?app=1&viewer=1&v=92";
+const CACHE_NAME = `${CACHE_PREFIX}v93`;
+const APP_START = "./index.html?app=1&viewer=1&v=93";
 
 const APP_SHELL = [
   "./",
   APP_START,
-  "./manifest.json?v=92",
+  "./manifest.json?v=93",
   "./assets/brand-uob-tmrw-extracted.png",
   "./assets/merchant-insight-art-20260824.png",
+  "./assets/money-insight-art-20260930.png",
   "./assets/closest-icon-180.png",
   "./assets/closest-icon-192.png",
   "./assets/closest-icon-512.png",

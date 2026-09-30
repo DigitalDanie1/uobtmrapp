@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=92">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=92">
+  <link rel="manifest" href="manifest.json?v=93">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=93">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -541,7 +541,7 @@
     .insight-card {
       position: relative;
       display: block;
-      height: 420px;
+      height: 335px;
       margin-top: 41px;
       overflow: hidden;
       border-radius: 5px;
@@ -614,14 +614,15 @@
     }
     .merchant-fixed-art {
       position: absolute;
-      top: 30px;
-      right: 18px;
-      width: 160px;
-      height: 191px;
+      top: 28px;
+      right: 20px;
+      width: 145px;
+      height: 211px;
       object-fit: contain;
       display: block;
     }
     .merchant-metrics {
+      display: none;
       position: absolute;
       left: 23px;
       right: 22px;
@@ -2883,7 +2884,7 @@
           <span data-field="accountName">One Account</span>
           <span class="edit" data-field="editLabel">Edit</span>
         </div>
-        <div class="amount" data-field="balance">8,984.11 SGD</div>
+        <div class="amount" data-field="balance">89,300.12 SGD</div>
         <div class="caption" data-field="balanceCaption">Available balance</div>
       </section>
 
@@ -2924,12 +2925,12 @@
 
       <article class="insight-card" data-layout-id="promoCard">
         <div class="insight-copy" data-layout-id="promoTextBox">
-          <div class="date" data-field="promoDate">04 Aug 2026</div>
-          <div class="headline" data-field="promoHeadline">Review new<br>merchants you<br>spent at</div>
-          <div class="body-text" data-field="promoBody">Looks like you spent at<br>some new merchants in<br>July. Tap to see more.</div>
+          <div class="date" data-field="promoDate">30 Sep 2026</div>
+          <div class="headline" data-field="promoHeadline">Curious where<br>your money<br>went?</div>
+          <div class="body-text" data-field="promoBody">See how you saved,<br>spent or invested in<br>July.</div>
         </div>
         <div class="money-art" data-layout-id="promoArt" aria-hidden="true">
-          <img class="merchant-fixed-art" src="assets/merchant-insight-art-20260824.png" alt="">
+          <img class="merchant-fixed-art" src="assets/money-insight-art-20260930.png" alt="">
         </div>
         <div class="merchant-metrics" data-layout-id="merchantMetrics">
           <div class="merchant-metric">
@@ -3011,7 +3012,7 @@
       logoutLabel: "Log out",
       accountName: "One Account",
       editLabel: "Edit",
-      balance: "8,984.11 SGD",
+      balance: "89,300.12 SGD",
       balanceCaption: "Available balance",
       quickPayNow: "PayNow",
       quickTransfer: "Pay & transfer",
@@ -3021,12 +3022,12 @@
       toolApply: "Apply",
       fxBadge: "No FX fees",
       toolFx: "FX+",
-      promoDate: "04 Aug 2026",
-      promoHeadline: ["Review new", "merchants you", "spent at"],
+      promoDate: "30 Sep 2026",
+      promoHeadline: ["Curious where", "your money", "went?"],
       promoBody: [
-        "Looks like you spent at",
-        "some new merchants in",
-        "July. Tap to see more."
+        "See how you saved,",
+        "spent or invested in",
+        "July."
       ],
       merchantCount: "3",
       merchantLabel: "Merchants",
@@ -6470,7 +6471,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=92", {
+        navigator.serviceWorker.register("./service-worker.js?v=93", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
