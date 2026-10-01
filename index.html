@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=95">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=95">
+  <link rel="manifest" href="manifest.json?v=96">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=96">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -683,10 +683,6 @@
     }
     .teaser:nth-child(2) {
       background: radial-gradient(circle at 65% 30%, #d40018 0 18%, transparent 19%), linear-gradient(135deg, #200007, #780010 58%, #111);
-    }
-    .secondary-insight-card {
-      height: 335px;
-      margin-top: 25px;
     }
     .bottom-nav {
       position: absolute;
@@ -2949,15 +2945,6 @@
       </article>
 
       <div class="view-link" data-layout-id="insightsLink" data-field="viewInsights">View all insights</div>
-      <article class="insight-card secondary-insight-card" aria-hidden="true">
-        <div class="insight-copy">
-          <div class="date">30 Sep 2026</div>
-          <div class="headline">Your monthly<br>money story</div>
-        </div>
-        <div class="money-art">
-          <img class="merchant-fixed-art" src="assets/money-insight-art-20260930.png" alt="">
-        </div>
-      </article>
       <div class="teasers" data-layout-id="previewCards" aria-hidden="true"><div class="teaser"></div><div class="teaser"></div></div>
     </section>
 
@@ -3311,7 +3298,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "95";
+    const STORAGE_SCHEMA_VERSION = "96";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6491,7 +6478,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=95", {
+        navigator.serviceWorker.register("./service-worker.js?v=96", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
