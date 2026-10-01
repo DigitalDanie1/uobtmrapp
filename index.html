@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=94">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=94">
+  <link rel="manifest" href="manifest.json?v=95">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=95">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -628,7 +628,6 @@
       right: 22px;
       bottom: 28px;
       z-index: 3;
-      display: grid;
       grid-template-columns: 1fr 1fr;
       height: 88px;
       overflow: hidden;
@@ -3312,7 +3311,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "94";
+    const STORAGE_SCHEMA_VERSION = "95";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6492,7 +6491,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=94", {
+        navigator.serviceWorker.register("./service-worker.js?v=95", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
