@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=98">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=98">
+  <link rel="manifest" href="manifest.json?v=99">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=99">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -719,7 +719,6 @@
       display: none;
       overflow: hidden;
       background: #fff;
-      transform: translateY(7px);
     }
     .phone.tab-capture-active .tab-screens {
       display: block;
@@ -733,6 +732,8 @@
       width: 588px;
       height: 1280px;
       object-fit: fill;
+      image-rendering: -webkit-optimize-contrast;
+      filter: contrast(1.035) saturate(1.02);
       opacity: 0;
       pointer-events: none;
       transition: opacity .12s ease;
@@ -750,6 +751,7 @@
       z-index: 36;
       height: 78px;
       background: linear-gradient(180deg, #0800b5 0%, #0710c8 100%);
+      display: none;
       pointer-events: none;
     }
     body.viewer-mode .tab-status-cover {
@@ -802,7 +804,7 @@
       bottom: 0;
       z-index: 48;
       width: 20%;
-      height: 124px;
+      height: 190px;
       border: 0;
       padding: 0;
       background: transparent;
@@ -2976,8 +2978,8 @@
       <div class="accounts-tab-overlay" aria-hidden="true">
         <span class="accounts-value-cover accounts-withdrawable-cover"></span>
         <span class="accounts-value-cover accounts-available-cover"></span>
-        <span class="accounts-tab-value withdrawable" data-field="accountsWithdrawable">2,349.48 SGD</span>
-        <span class="accounts-tab-value available" data-field="accountsAvailable">2,349.48 SGD</span>
+        <span class="accounts-tab-value withdrawable" data-field="accountsWithdrawable">95,231 SGD</span>
+        <span class="accounts-tab-value available" data-field="accountsAvailable">95,231 SGD</span>
       </div>
       <span class="tab-status-cover" aria-hidden="true"></span>
     </section>
@@ -3030,8 +3032,8 @@
       merchantLabel: "Merchants",
       merchantAmount: "60.20 SGD",
       merchantAmountLabel: "Total Amount",
-      accountsWithdrawable: "2,349.48 SGD",
-      accountsAvailable: "2,349.48 SGD",
+      accountsWithdrawable: "95,231 SGD",
+      accountsAvailable: "95,231 SGD",
       viewInsights: "View all insights",
       navHome: "Home",
       navAccounts: "Accounts",
@@ -3295,7 +3297,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "98";
+    const STORAGE_SCHEMA_VERSION = "99";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6475,7 +6477,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=98", {
+        navigator.serviceWorker.register("./service-worker.js?v=99", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
