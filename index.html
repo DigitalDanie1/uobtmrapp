@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=96">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=96">
+  <link rel="manifest" href="manifest.json?v=97">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=97">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -2884,7 +2884,7 @@
           <span data-field="accountName">One Account</span>
           <span class="edit" data-field="editLabel">Edit</span>
         </div>
-        <div class="amount" data-field="balance">89,300.12 SGD</div>
+        <div class="amount" data-field="balance">95,231 SGD</div>
         <div class="caption" data-field="balanceCaption">Available balance</div>
       </section>
 
@@ -2925,7 +2925,7 @@
 
       <article class="insight-card" data-layout-id="promoCard">
         <div class="insight-copy" data-layout-id="promoTextBox">
-          <div class="date" data-field="promoDate">30 Sep 2026</div>
+          <div class="date" data-field="promoDate">2 Nov 2026</div>
           <div class="headline" data-field="promoHeadline">Curious where<br>your money<br>went?</div>
           <div class="body-text" data-field="promoBody">See how you saved,<br>spent or invested in<br>July.</div>
         </div>
@@ -3012,7 +3012,7 @@
       logoutLabel: "Log out",
       accountName: "One Account",
       editLabel: "Edit",
-      balance: "89,300.12 SGD",
+      balance: "95,231 SGD",
       balanceCaption: "Available balance",
       quickPayNow: "PayNow",
       quickTransfer: "Pay & transfer",
@@ -3022,7 +3022,7 @@
       toolApply: "Apply",
       fxBadge: "No FX fees",
       toolFx: "FX+",
-      promoDate: "30 Sep 2026",
+      promoDate: "2 Nov 2026",
       promoHeadline: ["Curious where", "your money", "went?"],
       promoBody: [
         "See how you saved,",
@@ -3298,7 +3298,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "96";
+    const STORAGE_SCHEMA_VERSION = "97";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6478,7 +6478,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=96", {
+        navigator.serviceWorker.register("./service-worker.js?v=97", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
