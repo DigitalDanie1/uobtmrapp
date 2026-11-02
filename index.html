@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=97">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=97">
+  <link rel="manifest" href="manifest.json?v=98">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=98">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -714,7 +714,7 @@
     }
     .tab-screens {
       position: absolute;
-      inset: 0;
+      inset: 0 0 124px;
       z-index: 24;
       display: none;
       overflow: hidden;
@@ -724,17 +724,14 @@
     .phone.tab-capture-active .tab-screens {
       display: block;
     }
-    .phone.tab-capture-active .bottom-nav {
-      display: none;
-    }
     .phone.tab-capture-active .status {
       display: none !important;
     }
     .tab-capture {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      width: 588px;
+      height: 1280px;
       object-fit: fill;
       opacity: 0;
       pointer-events: none;
@@ -3298,7 +3295,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "97";
+    const STORAGE_SCHEMA_VERSION = "98";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6478,7 +6475,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=97", {
+        navigator.serviceWorker.register("./service-worker.js?v=98", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
