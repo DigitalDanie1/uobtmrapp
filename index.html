@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Banking Demo">
-  <link rel="manifest" href="manifest.json?v=99">
-  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=99">
+  <link rel="manifest" href="manifest.json?v=100">
+  <link rel="apple-touch-icon" href="assets/closest-icon-180.png?v=100">
   <title>Closest Original Banking Demo</title>
   <style>
     @font-face {
@@ -714,7 +714,7 @@
     }
     .tab-screens {
       position: absolute;
-      inset: 0 0 124px;
+      inset: 8px 0 124px;
       z-index: 24;
       display: none;
       overflow: hidden;
@@ -732,8 +732,8 @@
       width: 588px;
       height: 1280px;
       object-fit: fill;
-      image-rendering: -webkit-optimize-contrast;
-      filter: contrast(1.035) saturate(1.02);
+      image-rendering: auto;
+      filter: none;
       opacity: 0;
       pointer-events: none;
       transition: opacity .12s ease;
@@ -2146,7 +2146,7 @@
     }
     body.closest-original-view.intro-hidden .phone > .content {
       position: relative;
-      top: -7px;
+      top: 5px;
     }
     .app-toast {
       position: absolute;
@@ -3297,7 +3297,7 @@
     const REFERENCE_STORAGE_KEY = "bankingDemoReferenceImage";
     const DATE_STYLE_STORAGE_KEY = "bankingDemoDateStyle";
     const STORAGE_SCHEMA_KEY = "bankingDemoSchemaVersion";
-    const STORAGE_SCHEMA_VERSION = "99";
+    const STORAGE_SCHEMA_VERSION = "100";
     try {
       if (localStorage.getItem(STORAGE_SCHEMA_KEY) !== STORAGE_SCHEMA_VERSION) {
         localStorage.removeItem(CONTENT_STORAGE_KEY);
@@ -6477,7 +6477,7 @@
     document.querySelector('[data-studio-action="export"]')?.addEventListener("click", showExportPanel);
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js?v=99", {
+        navigator.serviceWorker.register("./service-worker.js?v=100", {
           scope: "./",
           updateViaCache: "none"
         }).then((registration) => registration.update()).catch(() => {});
